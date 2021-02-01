@@ -2,35 +2,26 @@
 	<PropertyGroup>
 		<TargetFrameworks>net48;net5.0</TargetFrameworks>
 		<OutputType>Exe</OutputType>
-		<SignAssembly>true</SignAssembly>
 	</PropertyGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Flow.Core\Flow.Core.csproj" />
+	</ItemGroup>
 	<Choose>
 		<When Condition="'$(TargetFramework)'=='net48'">
 			<ItemGroup>
-				<PackageReference Include="Microsoft.Activities.Extensions" Version="2.0.6.9" />
-				<PackageReference Include="Microsoft.Xaml" Version="4.0.0.1" />
-			</ItemGroup>
-			<ItemGroup>
-				<XamlAppDef Include="Build.xaml">
+				<XamlAppDef Include="*.xaml">
 					<Generator>MSBuild:Compile</Generator>
 				</XamlAppDef>
 			</ItemGroup>
-		</When>
-		<Otherwise>
-			<ItemGroup>
-				<PackageReference Include="UiPath.Workflow" Version="1.0.0-20210111-01" />
-			</ItemGroup>
-			<ItemGroup>
-				<EmbeddedResource Include="Build.xaml" />
-			</ItemGroup>
-		</Otherwise>
-	</Choose>
-	<Choose>
-		<When Condition="'$(MSBuildProjectExtension)' != '.csproj' and '$(MSBuildProjectExtension)' != '.vbproj'">
-			<PropertyGroup>
+			<PropertyGroup Condition="'$(MSBuildProjectExtension)' != '.csproj' and '$(MSBuildProjectExtension)' != '.vbproj'">
 				<LanguageTargets Condition="Exists('$(MSBuildProjectDirectory)\$(AssemblyName).csproj')">$(MSBuildToolsPath)\Microsoft.CSharp.targets</LanguageTargets>
 				<LanguageTargets Condition="Exists('$(MSBuildProjectDirectory)\$(AssemblyName).vbproj')">$(MSBuildToolsPath)\Microsoft.VisualBasic.targets</LanguageTargets>
 			</PropertyGroup>
 		</When>
+		<Otherwise>
+			<ItemGroup>
+				<EmbeddedResource Include="*.xaml" />
+			</ItemGroup>
+		</Otherwise>
 	</Choose>
 </Project>

@@ -1,4 +1,4 @@
-﻿<Activity mc:Ignorable="sap sap2010 sads" x:Class="Build" sap2010:ExpressionActivityEditor.ExpressionActivityEditor="C#" sap2010:WorkflowViewState.IdRef="flow.Workflow1_1"
+﻿<Activity mc:Ignorable="sap sap2010 sads" x:Class="Default" sap2010:ExpressionActivityEditor.ExpressionActivityEditor="C#" sap2010:WorkflowViewState.IdRef="flow.Workflow1_1"
  xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
  xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger"
@@ -33,11 +33,11 @@
       <AssemblyReference>flow</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <WriteLine sap2010:WorkflowViewState.IdRef="WriteLine_1" Text="Hello!!!" sads:DebugSymbol.Symbol="dyhDOlxQcm9qZWN0c1xEZXZUZWFtXGZsb3dcZmxvd1xCdWlsZC54YW1sAiQDJIEBAgEBJEEkSwIBAg==" />
+  <WriteLine sap2010:WorkflowViewState.IdRef="WriteLine_1" Text="Hello!!!" sads:DebugSymbol.Symbol="dypDOlxQcm9qZWN0c1xEZXZUZWFtXGZsb3dcZmxvd1xEZWZhdWx0LnhhbWwCJAMkgQECAQEkQSRLAgEC" />
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>
-      <sap2010:ViewStateData Id="WriteLine_1" sap:VirtualizedContainerService.HintSize="209.333333333333,62.6666666666667" />
-      <sap2010:ViewStateData Id="flow.Workflow1_1" sap:VirtualizedContainerService.HintSize="249.333333333333,142.666666666667" />
+      <sap2010:ViewStateData Id="WriteLine_1" sap:VirtualizedContainerService.HintSize="210,62.4" />
+      <sap2010:ViewStateData Id="flow.Workflow1_1" sap:VirtualizedContainerService.HintSize="250,142.4" />
     </sap2010:ViewStateManager>
   </sap2010:WorkflowViewState.ViewStateManager>
 </Activity>

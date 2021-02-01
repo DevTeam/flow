@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFrameworks>net48;net5.0</TargetFrameworks>
+	</PropertyGroup>
+
+	<Choose>
+		<When Condition="'$(TargetFramework)'=='net48'">
+			<ItemGroup>
+				<PackageReference Include="Microsoft.Activities.Extensions" Version="2.0.6.9" />
+				<PackageReference Include="Microsoft.Xaml" Version="4.0.0.1" />
+			</ItemGroup>
+		</When>
+		<Otherwise>
+			<ItemGroup>
+				<PackageReference Include="UiPath.Workflow" Version="1.0.0-20210111-01" />
+			</ItemGroup>
+		</Otherwise>
+	</Choose>
+
+	<ItemGroup>
+	  <PackageReference Include="IoC.Container" Version="1.3.*" />
+	</ItemGroup>
+
+</Project>
