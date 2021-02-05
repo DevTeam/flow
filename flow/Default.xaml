@@ -1,6 +1,9 @@
-﻿<Activity mc:Ignorable="sap sap2010 sads" x:Class="Default" sap2010:ExpressionActivityEditor.ExpressionActivityEditor="C#" sap2010:WorkflowViewState.IdRef="flow.Workflow1_1"
+﻿<Activity mc:Ignorable="sap sap2010 sads" x:Class="Flow.Default" sap2010:ExpressionActivityEditor.ExpressionActivityEditor="C#" sap2010:WorkflowViewState.IdRef="Flow.Default_1"
  xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
+ xmlns:local="clr-namespace:Flow.Activities"
+ xmlns:local1="clr-namespace:Flow"
  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+ xmlns:mca="clr-namespace:Microsoft.CSharp.Activities;assembly=System.Activities"
  xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger"
  xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation"
  xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation"
@@ -26,18 +29,44 @@
       <AssemblyReference>System.Runtime.Serialization, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</AssemblyReference>
       <AssemblyReference>System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</AssemblyReference>
       <AssemblyReference>System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</AssemblyReference>
-      <AssemblyReference>mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</AssemblyReference>
-      <AssemblyReference>System.Activities, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35</AssemblyReference>
+      <AssemblyReference>IoC, Version=1.3.3.0, Culture=neutral, PublicKeyToken=620ded7f0cf61090</AssemblyReference>
+      <AssemblyReference>WindowsBase, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35</AssemblyReference>
       <AssemblyReference>System.Xaml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</AssemblyReference>
+      <AssemblyReference>System.Activities, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35</AssemblyReference>
+      <AssemblyReference>PresentationCore, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35</AssemblyReference>
+      <AssemblyReference>mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</AssemblyReference>
+      <AssemblyReference>PresentationFramework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35</AssemblyReference>
+      <AssemblyReference>TeamCity.ServiceMessages, Version=3.0.13.85, Culture=neutral, PublicKeyToken=620ded7f0cf61090</AssemblyReference>
+      <AssemblyReference>System.Design, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</AssemblyReference>
+      <AssemblyReference>UIAutomationProvider, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35</AssemblyReference>
+      <AssemblyReference>Microsoft.Activities.Extensions.Design, Version=2.0.6.9, Culture=neutral, PublicKeyToken=2c01b24ecc77349c</AssemblyReference>
+      <AssemblyReference>Microsoft.Activities.Extensions, Version=2.0.6.9, Culture=neutral, PublicKeyToken=23b0c89d0d5ad43f</AssemblyReference>
       <AssemblyReference>mscorlib</AssemblyReference>
-      <AssemblyReference>flow</AssemblyReference>
+      <AssemblyReference>Flow</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <WriteLine sap2010:WorkflowViewState.IdRef="WriteLine_1" Text="Hello!!!" sads:DebugSymbol.Symbol="dypDOlxQcm9qZWN0c1xEZXZUZWFtXGZsb3dcZmxvd1xEZWZhdWx0LnhhbWwCJAMkgQECAQEkQSRLAgEC" />
+  <local:CommandLine DisplayName="Run cmd.exe /?" sap2010:WorkflowViewState.IdRef="CommandLine_2">
+    <local:CommandLine.Arguments>
+      <InArgument x:TypeArguments="local1:Collection(local1:CommandLineArgument)">
+        <mca:CSharpValue x:TypeArguments="local1:Collection(local1:CommandLineArgument)">"/?"</mca:CSharpValue>
+      </InArgument>
+    </local:CommandLine.Arguments>
+    <local:CommandLine.Executable>
+      <InArgument x:TypeArguments="local1:Path">
+        <mca:CSharpValue x:TypeArguments="local1:Path">"cmd.exe"</mca:CSharpValue>
+      </InArgument>
+    </local:CommandLine.Executable>
+    <local:CommandLine.Variables>
+      <InArgument x:TypeArguments="local1:Collection(local1:EnvironmentVariable)">
+        <mca:CSharpValue x:TypeArguments="local1:Collection(local1:EnvironmentVariable)">"var1=val1 var2=val2"</mca:CSharpValue>
+      </InArgument>
+    </local:CommandLine.Variables>
+    <sads:DebugSymbol.Symbol>dypDOlxQcm9qZWN0c1xEZXZUZWFtXGZsb3dcRmxvd1xEZWZhdWx0LnhhbWwEMANBFwIBATgJOFMCAQQzCTNwAgEDPQk9gQECAQI=</sads:DebugSymbol.Symbol>
+  </local:CommandLine>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>
-      <sap2010:ViewStateData Id="WriteLine_1" sap:VirtualizedContainerService.HintSize="210,62.4" />
-      <sap2010:ViewStateData Id="flow.Workflow1_1" sap:VirtualizedContainerService.HintSize="250,142.4" />
+      <sap2010:ViewStateData Id="CommandLine_2" sap:VirtualizedContainerService.HintSize="200,22.2222222222222" />
+      <sap2010:ViewStateData Id="Flow.Default_1" sap:VirtualizedContainerService.HintSize="240,102.222222222222" />
     </sap2010:ViewStateManager>
   </sap2010:WorkflowViewState.ViewStateManager>
 </Activity>
