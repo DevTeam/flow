@@ -5,9 +5,10 @@
     using System.Collections.Generic;
     using System.Linq;
     using IoC;
+    using Services;
 
-    public readonly struct Collection<T>: IEnumerable<T>
-        where T : IParsable<T>, new()
+    public readonly struct Collection<T>: IEnumerable<T>, IFromText<Collection<T>>
+        where T : IFromText<T>, new()
     {
         private static readonly T[] Empty = new T[0];
         private readonly IEnumerable<T> _items;
@@ -19,11 +20,28 @@
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        public static implicit operator Collection<T>([NotNull] string items)
+        public static implicit operator Collection<T>([NotNull] string text)
         {
-            if (items == null) throw new ArgumentNullException(nameof(items));
-            var parsable = new T();
-            return new Collection<T>(items.Split(' ').Select(item => parsable.Parse(item)));
+            if (text == null) throw new ArgumentNullException(nameof(text));
+            using (var enumerator = text.GetEnumerator())
+            {
+                return new Collection<T>(enumerator.ParseEnumerable<T>());
+            }
+        }
+
+        Collection<T> IFromText<Collection<T>>.Parse(IEnumerator<char> text)
+        {
+            if (text == null) throw new ArgumentNullException(nameof(text));
+            var fromString = new T();
+            var items = text.ParseEnumerable().Select(selector: str =>
+            {
+                using (var enumerator = str.GetEnumerator())
+                {
+                    return fromString.Parse(enumerator);
+                }
+            });
+
+            return new Collection<T>(items);
         }
 
         public override string ToString()

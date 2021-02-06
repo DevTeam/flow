@@ -1,9 +1,11 @@
 ﻿namespace Flow
 {
     using System;
+    using System.Collections.Generic;
     using IoC;
+    using Services;
 
-    public readonly struct CommandLineArgument: IParsable<CommandLineArgument>
+    public readonly struct CommandLineArgument: IFromText<CommandLineArgument>
     {
         [NotNull] public readonly string Value;
 
@@ -17,12 +19,18 @@
         public static implicit operator CommandLineArgument([NotNull] string argument)
         {
             if (argument == null) throw new ArgumentNullException(nameof(argument));
-            return new CommandLineArgument(argument);
+            using (var enumerator = argument.GetEnumerator())
+            {
+                return new CommandLineArgument(enumerator.Parse());
+            }
         }
 
         public override string ToString() => Value;
 
-        CommandLineArgument IParsable<CommandLineArgument>.Parse(string text) =>
-            text ?? throw new ArgumentNullException(nameof(text));
+        CommandLineArgument IFromText<CommandLineArgument>.Parse(IEnumerator<char> text)
+        {
+            if (text == null) throw new ArgumentNullException(nameof(text));
+            return new CommandLineArgument(text.Parse());
+        }
     }
 }

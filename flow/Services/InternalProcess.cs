@@ -39,8 +39,9 @@
                 _process.ErrorDataReceived -= OnErrorDataReceived;
             }
 
-            listener.OnExitCode(_process.ExitCode);
-            return new ExitCode(_process.ExitCode);
+            ExitCode exitCode = _process.ExitCode;
+            listener.OnExitCode(exitCode);
+            return exitCode;
         }
 
         public void Dispose() => _process.Dispose();

@@ -1,9 +1,11 @@
 ﻿namespace Flow
 {
     using System;
+    using System.Collections.Generic;
     using IoC;
+    using Services;
 
-    public readonly struct Path: IParsable<Path>
+    public readonly struct Path: IFromText<Path>
     {
         [NotNull] public readonly string Value;
 
@@ -17,13 +19,19 @@
         public static implicit operator Path ([NotNull] string fileName)
         {
             if (fileName == null) throw new ArgumentNullException(nameof(fileName));
-            return new Path(fileName);
+            using (var enumerator = fileName.GetEnumerator())
+            {
+                return new Path(enumerator.Parse());
+            }
         }
 
         public override string ToString() => Value;
 
-        Path IParsable<Path>.Parse(string text) =>
-            text ?? throw new ArgumentNullException(nameof(text));
+        Path IFromText<Path>.Parse(IEnumerator<char> text)
+        {
+            if (text == null) throw new ArgumentNullException(nameof(text));
+            return new Path(text.Parse());
+        }
 
         public bool IsEmpty => string.IsNullOrWhiteSpace(Value);
     }

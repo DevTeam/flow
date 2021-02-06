@@ -1,9 +1,11 @@
 ﻿namespace Flow
 {
     using System;
+    using System.Collections.Generic;
     using IoC;
+    using Services;
 
-    public readonly struct EnvironmentVariable: IParsable<EnvironmentVariable>
+    public readonly struct EnvironmentVariable: IFromText<EnvironmentVariable>
     {
         [NotNull] public readonly string Name;
         [NotNull] public readonly string Value;
@@ -20,23 +22,20 @@
         public static implicit operator EnvironmentVariable([NotNull] string variable)
         {
             if (variable == null) throw new ArgumentNullException(nameof(variable));
-            var parts = variable.Split('=');
-            switch (parts.Length)
+            using (var enumerator = variable.GetEnumerator())
             {
-                case 1:
-                    return new EnvironmentVariable(variable, string.Empty);
-
-                case 2:
-                    return new EnvironmentVariable(parts[0].Trim(), parts[1].Trim());
-
-                default:
-                    throw new InvalidCastException();
+                var (name, value) = enumerator.ParseTuple();
+                return new EnvironmentVariable(name, value);
             }
         }
 
         public override string ToString() => $"{Name}={Value}";
 
-        EnvironmentVariable IParsable<EnvironmentVariable>.Parse(string text) =>
-            text ?? throw new ArgumentNullException(nameof(text));
+        EnvironmentVariable IFromText<EnvironmentVariable>.Parse(IEnumerator<char> text)
+        {
+            if (text == null) throw new ArgumentNullException(nameof(text));
+            var (name, value) = text.ParseTuple();
+            return new EnvironmentVariable(name, value);
+        }
     }
 }
