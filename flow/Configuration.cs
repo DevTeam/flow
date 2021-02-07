@@ -32,6 +32,7 @@
 
             yield return container
                 .Bind<IProcessFactory>().As(Singleton).To<ProcessFactory>()
+                .Bind<IConverter<CommandLineArgument, string>>().As(Singleton).To<ArgumentToStringConverter>()
                 .Bind<IEnvironment>().As(Singleton).To<InternalEnvironment>()
                 .Bind<IProcess>().To<InternalProcess>(ctx => new InternalProcess(GetValue<Process>(ctx.Args, 0, "process")))
                 .Bind<IProcessListener>().As(Singleton).Tag("stdOutErr").To<ProcessStdOutErrListener>();

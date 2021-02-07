@@ -18,9 +18,9 @@
             {
                 switch (text.Current)
                 {
-                    case '\"':
+                    case InternalEnvironment.CommandLineArgumentsQuoteChar:
                     case '\'':
-                        if (!quoted)
+                        if (!quoted && sb.Length == 0)
                         {
                             quote = text.Current;
                             quoted = true;
@@ -37,7 +37,7 @@
                         sb.Append(text.Current);
                         break;
 
-                    case ' ':
+                    case InternalEnvironment.CommandLineArgumentsSeparatorChar:
                         if (!quoted)
                         {
                             if (sb.Length > 0)

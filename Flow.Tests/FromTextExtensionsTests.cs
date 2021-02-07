@@ -29,6 +29,8 @@ namespace Flow.Tests
         [InlineData("  abc  ", 6, "abc")]
         [InlineData("'\"abc\"'", 7, "\"abc\"")]
         [InlineData("\"'abc'\"", 7, "'abc'")]
+        [InlineData("a\"\"bc", 5, "a\"\"bc")]
+        [InlineData("a''bc", 5, "a''bc")]
         public void ShouldParse(string text, int expectedOffset, string expectedText)
         {
             // Given
