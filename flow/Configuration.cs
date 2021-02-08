@@ -3,8 +3,8 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using Core;
     using IoC;
-    using Services;
     using static IoC.Lifetime;
 
     internal class Configuration: IConfiguration

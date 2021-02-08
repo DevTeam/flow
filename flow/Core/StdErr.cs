@@ -1,9 +1,9 @@
-﻿namespace Flow.Services
+﻿namespace Flow.Core
 {
     using System;
 
     // ReSharper disable once ClassNeverInstantiated.Global
-    internal class TeamCityStdErr : IStdErr
+    internal class StdErr : IStdErr
     {
         public void WriteLine(string error)
         {

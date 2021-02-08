@@ -2,8 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
+    using Core;
     using IoC;
-    using Services;
 
     public readonly struct Path: IFromText<Path>
     {

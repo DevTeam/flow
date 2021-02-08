@@ -2,7 +2,7 @@
 {
     using System;
     using System.Activities;
-    using Services;
+    using Core;
 
     public sealed class CommandLine : CodeActivity<ExitCode>
     {

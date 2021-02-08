@@ -4,8 +4,8 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
+    using Core;
     using IoC;
-    using Services;
 
     public readonly struct Enumerable<T>: IEnumerable<T>, IFromText<Enumerable<T>>
         where T : IFromText<T>, new()

@@ -1,4 +1,4 @@
-﻿namespace Flow.Services
+﻿namespace Flow.Core
 {
     internal interface IConverter<in TSource, out TDestination>
     {

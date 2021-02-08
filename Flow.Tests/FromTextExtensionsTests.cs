@@ -4,8 +4,8 @@ namespace Flow.Tests
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
+    using Core;
     using IoC;
-    using Services;
     using Shouldly;
     using Xunit;
 

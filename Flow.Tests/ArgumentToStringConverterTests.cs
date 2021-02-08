@@ -1,7 +1,7 @@
 ﻿namespace Flow.Tests
 {
+    using Core;
     using Moq;
-    using Services;
     using Shouldly;
     using Xunit;
 
