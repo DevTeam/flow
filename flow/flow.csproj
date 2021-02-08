@@ -9,6 +9,7 @@
 				<OutputType>Exe</OutputType>
 			</PropertyGroup>
 			<ItemGroup>
+				<Reference Include="System.Activities.Presentation" />
 				<PackageReference Include="Microsoft.Activities.Extensions" Version="2.0.6.9" />
 				<PackageReference Include="Microsoft.Xaml" Version="4.0.0.1" />
 				<XamlAppdef Include="Default.xaml">

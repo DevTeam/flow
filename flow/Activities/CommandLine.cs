@@ -11,9 +11,9 @@
 
         public InArgument<Path> WorkingDirectory { get; set; }
 
-        public InArgument<Collection<CommandLineArgument>> Arguments { get; set; }
+        public InArgument<Enumerable<CommandLineArgument>> Arguments { get; set; }
 
-        public InArgument<Collection<EnvironmentVariable>> Variables { get; set; }
+        public InArgument<Enumerable<EnvironmentVariable>> Variables { get; set; }
 
         protected override void CacheMetadata(CodeActivityMetadata metadata)
         {

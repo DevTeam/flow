@@ -47,8 +47,8 @@
   </TextExpression.ReferencesForImplementation>
   <local:CommandLine DisplayName="Run cmd.exe /?" sap2010:WorkflowViewState.IdRef="CommandLine_2">
     <local:CommandLine.Arguments>
-      <InArgument x:TypeArguments="local1:Collection(local1:CommandLineArgument)">
-        <mca:CSharpValue x:TypeArguments="local1:Collection(local1:CommandLineArgument)">"/?"</mca:CSharpValue>
+      <InArgument x:TypeArguments="local1:Enumerable(local1:CommandLineArgument)">
+        <mca:CSharpValue x:TypeArguments="local1:Enumerable(local1:CommandLineArgument)">"/?"</mca:CSharpValue>
       </InArgument>
     </local:CommandLine.Arguments>
     <local:CommandLine.Executable>
@@ -57,8 +57,8 @@
       </InArgument>
     </local:CommandLine.Executable>
     <local:CommandLine.Variables>
-      <InArgument x:TypeArguments="local1:Collection(local1:EnvironmentVariable)">
-        <mca:CSharpValue x:TypeArguments="local1:Collection(local1:EnvironmentVariable)">"var1=val1 var2=val2"</mca:CSharpValue>
+      <InArgument x:TypeArguments="local1:Enumerable(local1:EnvironmentVariable)">
+        <mca:CSharpValue x:TypeArguments="local1:Enumerable(local1:EnvironmentVariable)">"var1=val1 var2=val2"</mca:CSharpValue>
       </InArgument>
     </local:CommandLine.Variables>
     <sads:DebugSymbol.Symbol>dypDOlxQcm9qZWN0c1xEZXZUZWFtXGZsb3dcRmxvd1xEZWZhdWx0LnhhbWwEMANBFwIBATgJOFMCAQQzCTNwAgEDPQk9gQECAQI=</sads:DebugSymbol.Symbol>
