@@ -34,23 +34,20 @@
                 .Bind<IProcessFactory>().As(Singleton).To<ProcessFactory>()
                 .Bind<IConverter<CommandLineArgument, string>>().As(Singleton).To<ArgumentToStringConverter>()
                 .Bind<IEnvironment>().As(Singleton).To<InternalEnvironment>()
-                .Bind<IProcess>().To<InternalProcess>(ctx => new InternalProcess(GetValue<Process>(ctx.Args, 0, "process")))
+                .Bind<IProcess>().To<InternalProcess>(ctx => new InternalProcess(Arg<Process, IProcess>(ctx.Args, "process")))
                 .Bind<IProcessListener>().As(Singleton).Tag("stdOutErr").To<ProcessStdOutErrListener>();
 
             yield return container
                 .Bind<ICommandLineService>().As(Singleton).To<CommandLineService>();
         }
 
-        private bool IsUnderTeamCity => Environment.GetEnvironmentVariable("TEAMCITY_PROJECT_NAME") != null || Environment.GetEnvironmentVariable("TEAMCITY_VERSION") != null;
+        private static bool IsUnderTeamCity =>
+            Environment.GetEnvironmentVariable("TEAMCITY_PROJECT_NAME") != null
+            || Environment.GetEnvironmentVariable("TEAMCITY_VERSION") != null;
 
-        private T GetValue<T>(object[] args, int index, string name)
-        {
-            if (index < args.Length && args[index] is T value)
-            {
-                return value;
-            }
-
-            throw new ArgumentException("Please resolve using Func<>.", name);
-        }
+        private static TArg Arg<TArg, TTarget>(object[] args, string name) => 
+            args.Length == 1 && args[0] is TArg arg
+                ? arg
+                : throw new ArgumentException($"Please resolve using Func<{nameof(TArg)}, {nameof(TTarget)}>.", name);
     }
 }

@@ -7,7 +7,6 @@
  xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger"
  xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation"
  xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation"
- xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib"
  xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib"
  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <TextExpression.NamespacesForImplementation>
@@ -23,6 +22,7 @@
     <sco:Collection x:TypeArguments="AssemblyReference">
       <AssemblyReference>System.IO.Compression.FileSystem, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</AssemblyReference>
       <AssemblyReference>System.Numerics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</AssemblyReference>
+      <AssemblyReference>System.Activities.Presentation, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35</AssemblyReference>
       <AssemblyReference>System.Xml.Linq, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</AssemblyReference>
       <AssemblyReference>System.Data, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</AssemblyReference>
       <AssemblyReference>System.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</AssemblyReference>
@@ -46,37 +46,23 @@
       <AssemblyReference>Flow</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <Sequence sap2010:WorkflowViewState.IdRef="Sequence_1">
-    <local:CommandLine WorkingDirectory="{x:Null}" DisplayName="Run cmd.exe /?" sap2010:WorkflowViewState.IdRef="CommandLine_2">
-      <local:CommandLine.Arguments>
-        <InArgument x:TypeArguments="local1:Enumerable(local1:CommandLineArgument)">
-          <mca:CSharpValue x:TypeArguments="local1:Enumerable(local1:CommandLineArgument)">"/?"</mca:CSharpValue>
-        </InArgument>
-      </local:CommandLine.Arguments>
-      <local:CommandLine.Executable>
-        <InArgument x:TypeArguments="local1:Path">
-          <mca:CSharpValue x:TypeArguments="local1:Path">"cmd.exe"</mca:CSharpValue>
-        </InArgument>
-      </local:CommandLine.Executable>
-      <local:CommandLine.Variables>
-        <InArgument x:TypeArguments="local1:Enumerable(local1:EnvironmentVariable)">
-          <mca:CSharpValue x:TypeArguments="local1:Enumerable(local1:EnvironmentVariable)">"var1=val1 var2=val2"</mca:CSharpValue>
-        </InArgument>
-      </local:CommandLine.Variables>
-    </local:CommandLine>
-    <sads:DebugSymbol.Symbol>dypDOlxQcm9qZWN0c1xEZXZUZWFtXGZsb3dcRmxvd1xEZWZhdWx0LnhhbWwFMQNEDgIBATIFQhkCAQI6CzpVAgEFNQs1cgIBBD8LP4MBAgED</sads:DebugSymbol.Symbol>
-  </Sequence>
+  <local:CommandLine Variables="{x:Null}" WorkingDirectory="{x:Null}" sap2010:WorkflowViewState.IdRef="CommandLine_1">
+    <local:CommandLine.Arguments>
+      <InArgument x:TypeArguments="local1:Enumerable(local1:CommandLineArgument)">
+        <mca:CSharpValue x:TypeArguments="local1:Enumerable(local1:CommandLineArgument)">"/?"</mca:CSharpValue>
+      </InArgument>
+    </local:CommandLine.Arguments>
+    <local:CommandLine.Executable>
+      <InArgument x:TypeArguments="local1:Path">
+        <mca:CSharpValue x:TypeArguments="local1:Path">"cmd.exe"</mca:CSharpValue>
+      </InArgument>
+    </local:CommandLine.Executable>
+    <sads:DebugSymbol.Symbol>dypDOlxQcm9qZWN0c1xEZXZUZWFtXGZsb3dcRmxvd1xEZWZhdWx0LnhhbWwDMQM9FwIBATkJOVMCAQM0CTRwAgEC</sads:DebugSymbol.Symbol>
+  </local:CommandLine>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>
-      <sap2010:ViewStateData Id="CommandLine_2" sap:VirtualizedContainerService.HintSize="200,22.2222222222222" />
-      <sap2010:ViewStateData Id="Sequence_1" sap:VirtualizedContainerService.HintSize="222.222222222222,146.666666666667">
-        <sap:WorkflowViewStateService.ViewState>
-          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-          </scg:Dictionary>
-        </sap:WorkflowViewStateService.ViewState>
-      </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="Flow.Default_1" sap:VirtualizedContainerService.HintSize="262.222222222222,226.666666666667" />
+      <sap2010:ViewStateData Id="CommandLine_1" sap:VirtualizedContainerService.HintSize="200,22.2222222222222" />
+      <sap2010:ViewStateData Id="Flow.Default_1" sap:VirtualizedContainerService.HintSize="240,102.222222222222" />
     </sap2010:ViewStateManager>
   </sap2010:WorkflowViewState.ViewStateManager>
 </Activity>

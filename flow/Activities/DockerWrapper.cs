@@ -4,9 +4,7 @@
     using System.Activities.Statements;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
-    using System.Windows.Markup;
 
-    [ContentProperty("Activities")]
     [Designer("System.Activities.Core.Presentation.SequenceDesigner, System.Activities.Core.Presentation, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35")]
     public class DockerWrapper : NativeActivity
     {
