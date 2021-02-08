@@ -5,7 +5,5 @@
         char CommandLineArgumentsSeparator { get; }
 
         char CommandLineArgumentsQuote { get; }
-
-        Path WorkingDirectory { get; }
     }
 }

@@ -11,7 +11,5 @@
         public char CommandLineArgumentsSeparator => CommandLineArgumentsSeparatorChar;
 
         public char CommandLineArgumentsQuote => CommandLineArgumentsQuoteChar;
-
-        public Path WorkingDirectory => Environment.CurrentDirectory;
     }
 }

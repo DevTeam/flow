@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using IoC;
+    using static Tags;
 
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class CommandLineService : ICommandLineService
@@ -12,7 +13,7 @@
 
         public CommandLineService(
             [NotNull] IProcessFactory processFactory,
-            [NotNull, Tag("stdOutErr")] IProcessListener processListener)
+            [NotNull, Tag(StdOutErr)] IProcessListener processListener)
         {
             _processFactory = processFactory ?? throw new ArgumentNullException(nameof(processFactory));
             _processListener = processListener ?? throw new ArgumentNullException(nameof(processListener));
@@ -24,7 +25,7 @@
             if (arguments == null) throw new ArgumentNullException(nameof(arguments));
             if (variables == null) throw new ArgumentNullException(nameof(variables));
 
-            using (var process = _processFactory.Create(executable, workingDirectory, arguments, variables))
+            using (var process = _processFactory.Create(new ProcessInfo(executable, workingDirectory, arguments, variables)))
             {
                 return process.Run(_processListener);
             }

@@ -5,6 +5,7 @@
     using System.Diagnostics;
     using Core;
     using IoC;
+    using static Core.Tags;
     using static IoC.Lifetime;
 
     internal class Configuration: IConfiguration
@@ -30,15 +31,25 @@
                     .Bind<IStdErr>().As(Singleton).To<StdErr>();
             }
 
+            // Directories
             yield return container
-                .Bind<IProcessFactory>().As(Singleton).To<ProcessFactory>()
+                .Bind<Path>().Tag(WorkingDirectory).To(ctx => Environment.CurrentDirectory)
+                .Bind<Path>().Tag(TempDirectory).To(ctx => System.IO.Path.GetTempPath());
+
+            // Processes
+            yield return container
+                .Bind<ICommandLineService>().As(Singleton).To<CommandLineService>()
+                .Bind<IProcessFactory>().Bind<IProcessChain>().As(Singleton).Tag(Composite).Tag().To<CompositeProcessFactory>()
+                .Bind<IProcessFactory>().As(Singleton).Tag(Base).To<ProcessFactory>()
                 .Bind<IConverter<CommandLineArgument, string>>().As(Singleton).To<ArgumentToStringConverter>()
                 .Bind<IEnvironment>().As(Singleton).To<InternalEnvironment>()
                 .Bind<IProcess>().To<InternalProcess>(ctx => new InternalProcess(Arg<Process, IProcess>(ctx.Args, "process")))
-                .Bind<IProcessListener>().As(Singleton).Tag("stdOutErr").To<ProcessStdOutErrListener>();
+                .Bind<IProcessListener>().As(Singleton).Tag(StdOutErr).To<ProcessStdOutErrListener>();
 
+            // Docker
             yield return container
-                .Bind<ICommandLineService>().As(Singleton).To<CommandLineService>();
+                .Bind<IDockerWrapperService>().As(Singleton).Tag().To<DockerWrapperService>()
+                .Bind<IProcessWrapper>().As(Singleton).Tag(Docker).To<DockerProcessWrapper>();
         }
 
         private static bool IsUnderTeamCity =>
