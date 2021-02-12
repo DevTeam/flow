@@ -13,5 +13,9 @@
         public char CommandLineArgumentsSeparator => CommandLineArgumentsSeparatorChar;
 
         public char CommandLineArgumentsQuote => CommandLineArgumentsQuoteChar;
+
+        public bool IsUnderTeamCity =>
+            Environment.GetEnvironmentVariable("TEAMCITY_PROJECT_NAME") != null
+            || Environment.GetEnvironmentVariable("TEAMCITY_VERSION") != null;
     }
 }

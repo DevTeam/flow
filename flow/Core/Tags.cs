@@ -2,6 +2,9 @@
 {
     internal enum Tags
     {
+        Default,
+        TeamCity,
+
         // Directories
         WorkingDirectory,
         TempDirectory,

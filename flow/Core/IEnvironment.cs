@@ -9,5 +9,7 @@
         char CommandLineArgumentsSeparator { get; }
 
         char CommandLineArgumentsQuote { get; }
+
+        bool IsUnderTeamCity { get; }
     }
 }

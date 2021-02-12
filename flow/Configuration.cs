@@ -18,18 +18,13 @@
 
             container.Bind<IAutowiringStrategy>().To(ctx => autowiringStrategy);
 
-            if (IsUnderTeamCity)
-            {
-                yield return container
-                    .Bind<IStdOut>().As(Singleton).To<TeamCityStdOut>()
-                    .Bind<IStdErr>().As(Singleton).To<TeamCityStdErr>();
-            }
-            else
-            {
-                yield return container
-                    .Bind<IStdOut>().As(Singleton).To<StdOut>()
-                    .Bind<IStdErr>().As(Singleton).To<StdErr>();
-            }
+            yield return container
+                .Bind<IStdOut>().To(ctx => ctx.Container.Inject<IStdOut>(ctx.Container.Inject<IEnvironment>().IsUnderTeamCity ? TeamCity : Tags.Default))
+                .Bind<IStdOut>().As(Singleton).Tag(Tags.Default).To<TeamCityStdOut>()
+                .Bind<IStdOut>().As(Singleton).Tag(TeamCity).To<TeamCityStdOut>()
+                .Bind<IStdErr>().To(ctx => ctx.Container.Inject<IStdErr>(ctx.Container.Inject<IEnvironment>().IsUnderTeamCity ? TeamCity : Tags.Default))
+                .Bind<IStdErr>().As(Singleton).Tag(Tags.Default).To<TeamCityStdErr>()
+                .Bind<IStdErr>().As(Singleton).Tag(TeamCity).To<TeamCityStdErr>();
 
             // Environment
             yield return container
@@ -61,10 +56,6 @@
                 .Bind<IInitializableProcessWrapper<Path>, IProcessWrapper>().Tag(PlatformID.Win32NT).Tag(PlatformID.Win32Windows).To<CmdProcessWrapper>()
                 .Bind<IInitializableProcessWrapper<Path>, IProcessWrapper>().Tag(PlatformID.Unix).Tag(PlatformID.MacOSX).To<ShProcessWrapper>();
         }
-
-        private static bool IsUnderTeamCity =>
-            Environment.GetEnvironmentVariable("TEAMCITY_PROJECT_NAME") != null
-            || Environment.GetEnvironmentVariable("TEAMCITY_VERSION") != null;
 
         private static TArg Arg<TArg, TTarget>(object[] args, string name) => 
             args.Length == 1 && args[0] is TArg arg
