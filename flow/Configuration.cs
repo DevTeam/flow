@@ -31,10 +31,14 @@
                     .Bind<IStdErr>().As(Singleton).To<StdErr>();
             }
 
-            // Directories
+            // Environment
             yield return container
                 .Bind<Path>().Tag(WorkingDirectory).To(ctx => Environment.CurrentDirectory)
-                .Bind<Path>().Tag(TempDirectory).To(ctx => System.IO.Path.GetTempPath());
+                .Bind<Path>().Tag(TempDirectory).To(ctx => System.IO.Path.GetTempPath())
+                .Bind<Path>().Tag(TempFile).To(ctx => new Path(System.IO.Path.Combine(
+                    ctx.Container.Inject<Path>(TempDirectory).Value,
+                    Guid.NewGuid().ToString().Replace("-", string.Empty))))
+                .Bind<PlatformID>().To(ctx => Environment.OSVersion.Platform);
 
             // Processes
             yield return container
@@ -49,7 +53,13 @@
             // Docker
             yield return container
                 .Bind<IDockerWrapperService>().As(Singleton).Tag().To<DockerWrapperService>()
-                .Bind<IInitializableProcessWrapper<DockerWrapperInfo>, IProcessWrapper>().As(Singleton).Tag(Docker).To<DockerProcessWrapper>();
+                .Bind<IInitializableProcessWrapper<DockerWrapperInfo>, IProcessWrapper>().Tag(Docker).To<DockerProcessWrapper>();
+
+            // Command Line
+            yield return container
+                .Bind<IInitializableProcessWrapper<Path>, IProcessWrapper>().Tag(Script).To(ctx => ctx.Container.Inject<IInitializableProcessWrapper<Path>>(ctx.Container.Inject<IEnvironment>().OperatingSystem.Platform))
+                .Bind<IInitializableProcessWrapper<Path>, IProcessWrapper>().Tag(PlatformID.Win32NT).Tag(PlatformID.Win32Windows).To<CmdProcessWrapper>()
+                .Bind<IInitializableProcessWrapper<Path>, IProcessWrapper>().Tag(PlatformID.Unix).Tag(PlatformID.MacOSX).To<ShProcessWrapper>();
         }
 
         private static bool IsUnderTeamCity =>

@@ -5,6 +5,7 @@
         // Directories
         WorkingDirectory,
         TempDirectory,
+        TempFile,
 
         // ProcessListener
         StdOutErr,
@@ -13,8 +14,8 @@
         Base,
         Composite,
 
-
         // ProcessWrapper
-        Docker
+        Docker,
+        Script
     }
 }

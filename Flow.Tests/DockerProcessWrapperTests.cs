@@ -1,11 +1,20 @@
 ﻿namespace Flow.Tests
 {
     using Core;
+    using Moq;
     using Xunit;
 
     public class DockerProcessWrapperTests
     {
         private readonly Path _tempPath = "tmp";
+        private readonly Mock<IEnvironment> _environment;
+        private readonly Mock<IProcessWrapper> _processWrapper;
+
+        public DockerProcessWrapperTests()
+        {
+            _environment = new Mock<IEnvironment>();
+            _processWrapper = new Mock<IProcessWrapper>();
+        }
 
         [Fact]
         public void ShouldWrap()
@@ -24,6 +33,9 @@
         }
 
         private DockerProcessWrapper CreateInstance() => 
-            new DockerProcessWrapper(_tempPath);
+            new DockerProcessWrapper(
+                _tempPath,
+                _environment.Object,
+                _processWrapper.Object);
     }
 }
