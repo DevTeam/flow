@@ -16,8 +16,10 @@
                 .AspectOriented()
                 .Tag<TagAttribute>(i => i.Tag);
 
-            container.Bind<IAutowiringStrategy>().To(ctx => autowiringStrategy);
+            container
+                .Bind<IAutowiringStrategy>().To(ctx => autowiringStrategy);
 
+            // Std
             yield return container
                 .Bind<IStdOut>().To(ctx => ctx.Container.Inject<IStdOut>(ctx.Container.Inject<IEnvironment>().IsUnderTeamCity ? TeamCity : Tags.Default))
                 .Bind<IStdOut>().As(Singleton).Tag(Tags.Default).To<TeamCityStdOut>()
@@ -35,12 +37,17 @@
                     Guid.NewGuid().ToString().Replace("-", string.Empty))))
                 .Bind<PlatformID>().To(ctx => Environment.OSVersion.Platform);
 
+            // Common
+            yield return container
+                .Bind<IFileSystem>().As(Singleton).To<FileSystem>();
+
             // Processes
             yield return container
                 .Bind<ICommandLineService>().As(Singleton).To<CommandLineService>()
                 .Bind<IProcessFactory>().Bind<IProcessChain>().As(Singleton).Tag(Composite).Tag().To<CompositeProcessFactory>()
                 .Bind<IProcessFactory>().As(Singleton).Tag(Base).To<ProcessFactory>()
                 .Bind<IConverter<CommandLineArgument, string>>().As(Singleton).To<ArgumentToStringConverter>()
+                .Bind<IConverter<IEnumerable<CommandLineArgument>, string>>().As(Singleton).To<ArgumentsToStringConverter>()
                 .Bind<IEnvironment>().As(Singleton).To<InternalEnvironment>()
                 .Bind<IProcess>().To<InternalProcess>(ctx => new InternalProcess(Arg<Process, IProcess>(ctx.Args, "process")))
                 .Bind<IProcessListener>().As(Singleton).Tag(StdOutErr).To<ProcessStdOutErrListener>();
@@ -50,11 +57,11 @@
                 .Bind<IDockerWrapperService>().As(Singleton).Tag().To<DockerWrapperService>()
                 .Bind<IInitializableProcessWrapper<DockerWrapperInfo>, IProcessWrapper>().Tag(Docker).To<DockerProcessWrapper>();
 
-            // Command Line
+            // Script
             yield return container
-                .Bind<IInitializableProcessWrapper<Path>, IProcessWrapper>().Tag(Script).To(ctx => ctx.Container.Inject<IInitializableProcessWrapper<Path>>(ctx.Container.Inject<IEnvironment>().OperatingSystem.Platform))
-                .Bind<IInitializableProcessWrapper<Path>, IProcessWrapper>().Tag(PlatformID.Win32NT).Tag(PlatformID.Win32Windows).To<CmdProcessWrapper>()
-                .Bind<IInitializableProcessWrapper<Path>, IProcessWrapper>().Tag(PlatformID.Unix).Tag(PlatformID.MacOSX).To<ShProcessWrapper>();
+                .Bind<IProcessWrapper>().Tag(Script).To(ctx => ctx.Container.Inject<IProcessWrapper>(ctx.Container.Inject<IEnvironment>().OperatingSystem.Platform))
+                .Bind<IProcessWrapper>().Tag(PlatformID.Win32NT).Tag(PlatformID.Win32Windows).To<CmdProcessWrapper>()
+                .Bind<IProcessWrapper>().Tag(PlatformID.Unix).Tag(PlatformID.MacOSX).To<ShProcessWrapper>();
         }
 
         private static TArg Arg<TArg, TTarget>(object[] args, string name) => 

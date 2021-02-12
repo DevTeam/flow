@@ -25,6 +25,7 @@
         protected override void CacheMetadata(NativeActivityMetadata metadata)
         {
             base.CacheMetadata(metadata);
+            metadata.RequireExtension<IDockerWrapperService>();
             metadata.AddImplementationChild(_sequence);
         }
 

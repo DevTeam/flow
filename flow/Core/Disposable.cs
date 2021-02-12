@@ -22,6 +22,11 @@ namespace Flow.Core
             return new DisposableAction(action);
         }
 
+        [MethodImpl((MethodImplOptions) 0x100)]
+        [NotNull]
+        public static IDisposable Create([NotNull] [ItemCanBeNull] params IDisposable[] disposables) =>
+            Create((IEnumerable<IDisposable>) disposables);
+
         [MethodImpl((MethodImplOptions)0x100)]
         [NotNull]
         public static IDisposable Create([NotNull][ItemCanBeNull] IEnumerable<IDisposable> disposables)

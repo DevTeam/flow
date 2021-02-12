@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Flow": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "tmp": "tmp"
+      }
+    }
+  }
+}

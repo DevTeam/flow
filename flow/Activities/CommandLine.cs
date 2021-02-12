@@ -29,8 +29,7 @@
                 context.GetValue(Executable),
                 context.GetValue(WorkingDirectory),
                 context.GetValue(Arguments),
-                context.GetValue(Variables)
-                )
+                context.GetValue(Variables))
             );
         }
     }
