@@ -8,11 +8,11 @@
     internal class DockerWrapperService: IDockerWrapperService
     {
         [NotNull] private readonly IProcessChain _processChain;
-        [NotNull] private readonly Func<IProcessWrapper> _processWrapperFactory;
+        [NotNull] private readonly Func<IInitializableProcessWrapper<DockerWrapperInfo>> _processWrapperFactory;
 
         public DockerWrapperService(
             [NotNull] IProcessChain processChain,
-            [NotNull, Tag(Docker)] Func<IProcessWrapper> processWrapperFactory)
+            [NotNull, Tag(Docker)] Func<IInitializableProcessWrapper<DockerWrapperInfo>> processWrapperFactory)
         {
             _processChain = processChain ?? throw new ArgumentNullException(nameof(processChain));
             _processWrapperFactory = processWrapperFactory ?? throw new ArgumentNullException(nameof(processWrapperFactory));

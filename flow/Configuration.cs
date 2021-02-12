@@ -49,7 +49,7 @@
             // Docker
             yield return container
                 .Bind<IDockerWrapperService>().As(Singleton).Tag().To<DockerWrapperService>()
-                .Bind<IProcessWrapper>().As(Singleton).Tag(Docker).To<DockerProcessWrapper>();
+                .Bind<IInitializableProcessWrapper<DockerWrapperInfo>, IProcessWrapper>().As(Singleton).Tag(Docker).To<DockerProcessWrapper>();
         }
 
         private static bool IsUnderTeamCity =>

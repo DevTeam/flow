@@ -7,12 +7,12 @@
     public class DockerWrapperServiceTests
     {
         private readonly Mock<IProcessChain> _processChain;
-        private readonly Mock<IProcessWrapper> _processWrapper;
+        private readonly Mock<IInitializableProcessWrapper<DockerWrapperInfo>> _processWrapper;
 
         public DockerWrapperServiceTests()
         {
             _processChain = new Mock<IProcessChain>();
-            _processWrapper = new Mock<IProcessWrapper>();
+            _processWrapper = new Mock<IInitializableProcessWrapper<DockerWrapperInfo>>();
         }
 
         [Fact]
@@ -20,14 +20,14 @@
         {
             // Given
             DockerImage dockerImage = "mcr.microsoft.com/windows/servercore";
-            var dockerWrapperInfo = new DockerWrapperInfo(dockerImage);
+            var wrapperInfo = new DockerWrapperInfo(dockerImage);
             var wrapper = CreateInstance();
 
             // When
-            var wrapperToken = wrapper.Using(dockerWrapperInfo);
+            var wrapperToken = wrapper.Using(wrapperInfo);
 
             // Then
-            _processWrapper.Verify(i => i.Initialize(dockerWrapperInfo));
+            _processWrapper.Verify(i => i.Initialize(wrapperInfo));
             _processChain.Verify(i => i.Append(_processWrapper.Object));
         }
 
