@@ -5,7 +5,7 @@
     using static Tags;
 
     // ReSharper disable once ClassNeverInstantiated.Global
-    internal class DockerWrapperService : IDockerWrapperService
+    internal class DockerWrapperService: IDockerWrapperService
     {
         [NotNull] private readonly IProcessChain _processChain;
         [NotNull] private readonly Func<IProcessWrapper> _processWrapperFactory;
