@@ -13,10 +13,8 @@
         private readonly IList<IProcessWrapper> _wrappers = new List<IProcessWrapper>();
 
         public CompositeProcessFactory(
-            [NotNull, Tag(Base)] IProcessFactory processFactory)
-        {
+            [NotNull, Tag(Base)] IProcessFactory processFactory) =>
             _processFactory = processFactory ?? throw new ArgumentNullException(nameof(processFactory));
-        }
 
         public IDisposable Append(IProcessWrapper wrapper)
         {

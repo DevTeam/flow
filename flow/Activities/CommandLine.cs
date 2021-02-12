@@ -25,10 +25,12 @@
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
             return context.GetExtension<ICommandLineService>().Execute(
+                new ProcessInfo(
                 context.GetValue(Executable),
                 context.GetValue(WorkingDirectory),
                 context.GetValue(Arguments),
                 context.GetValue(Variables)
+                )
             );
         }
     }

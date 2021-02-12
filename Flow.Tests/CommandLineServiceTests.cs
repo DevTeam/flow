@@ -11,10 +11,7 @@
         public void ShouldExecute()
         {
             // Given
-            Path executable = "cmd.exe";
-            Path workingDirectory = "wd";
-            Enumerable<CommandLineArgument> arguments = "/? abc";
-            Enumerable<EnvironmentVariable> variables = "var1=va1 var2=va2";
+            var processInfo = ProcessInfoExtensions.Create();
             ExitCode exitCode = 33;
 
             var processListener = new Mock<IProcessListener>();
@@ -23,12 +20,12 @@
             process.Setup(i => i.Run(processListener.Object)).Returns(exitCode);
 
             var processFactory = new Mock<IProcessFactory>();
-            processFactory.Setup(i => i.Create(new ProcessInfo(executable, workingDirectory, arguments, variables))).Returns(process.Object);
+            processFactory.Setup(i => i.Create(processInfo)).Returns(process.Object);
 
             var commandLine = new CommandLineService(processFactory.Object, processListener.Object);
             
             // When
-            var actualExitCode = commandLine.Execute(executable, workingDirectory, arguments, variables);
+            var actualExitCode = commandLine.Execute(processInfo);
 
             // Then
             process.Verify(i => i.Run(processListener.Object));

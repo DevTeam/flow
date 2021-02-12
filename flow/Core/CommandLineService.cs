@@ -1,7 +1,6 @@
 ﻿namespace Flow.Core
 {
     using System;
-    using System.Collections.Generic;
     using IoC;
     using static Tags;
 
@@ -19,13 +18,9 @@
             _processListener = processListener ?? throw new ArgumentNullException(nameof(processListener));
         }
 
-        public ExitCode Execute(Path executable, Path workingDirectory, IEnumerable<CommandLineArgument> arguments, IEnumerable<EnvironmentVariable> variables)
+        public ExitCode Execute(ProcessInfo processInfo)
         {
-            if (executable.Value == null) throw new ArgumentNullException(nameof(executable));
-            if (arguments == null) throw new ArgumentNullException(nameof(arguments));
-            if (variables == null) throw new ArgumentNullException(nameof(variables));
-
-            using (var process = _processFactory.Create(new ProcessInfo(executable, workingDirectory, arguments, variables)))
+            using (var process = _processFactory.Create(processInfo))
             {
                 return process.Run(_processListener);
             }
