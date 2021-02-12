@@ -9,7 +9,7 @@
             Path executable = executableName;
             Path workingDirectory = "wd";
             Enumerable<CommandLineArgument> arguments = "/? abc";
-            Enumerable<EnvironmentVariable> variables = "var1=va1 var2=va2";
+            Enumerable<EnvironmentVariable> variables = "var1=val1 var2=val2";
 
             return new ProcessInfo(executable, workingDirectory, arguments, variables);
         }
