@@ -16,52 +16,54 @@
                 .AspectOriented()
                 .Tag<TagAttribute>(i => i.Tag);
 
-            container
-                .Bind<IAutowiringStrategy>().To(ctx => autowiringStrategy);
-
-            // Std
             yield return container
-                .Bind<IStdOut>().To(ctx => ctx.Container.Inject<IStdOut>(ctx.Container.Inject<IEnvironment>().IsUnderTeamCity ? TeamCity : Tags.Default))
-                .Bind<IStdOut>().As(Singleton).Tag(Tags.Default).To<TeamCityStdOut>()
-                .Bind<IStdOut>().As(Singleton).Tag(TeamCity).To<TeamCityStdOut>()
-                .Bind<IStdErr>().To(ctx => ctx.Container.Inject<IStdErr>(ctx.Container.Inject<IEnvironment>().IsUnderTeamCity ? TeamCity : Tags.Default))
-                .Bind<IStdErr>().As(Singleton).Tag(Tags.Default).To<TeamCityStdErr>()
-                .Bind<IStdErr>().As(Singleton).Tag(TeamCity).To<TeamCityStdErr>();
+                .Bind<IAutowiringStrategy>().To(ctx => autowiringStrategy)
 
-            // Environment
-            yield return container
+                // Settings
+                .Bind<IEnvironment>().As(Singleton).To<InternalEnvironment>()
+                .Bind<OperatingSystem>().To(ctx => ctx.Container.Inject<IEnvironment>().OperatingSystem)
+                .Bind<bool>().Tag(TeamCity).To(ctx => ctx.Container.Inject<IEnvironment>().IsUnderTeamCity)
+                .Bind<char>().Tag(SeparatorChar).To(ctx => ' ')
+                .Bind<char>().Tag(QuoteChar).To(ctx => '\"')
+                .Bind<string>().Tag(WindowsNewLineString).To(ctx => "\r\n")
+                .Bind<string>().Tag(LinuxNewLineString).To(ctx => "\n")
+                .Bind<string>().Tag(WindowsDirectorySeparatorString).To(ctx => "\\")
+                .Bind<string>().Tag(LinuxDirectorySeparatorString).To(ctx => "/")
                 .Bind<Path>().Tag(WorkingDirectory).To(ctx => Environment.CurrentDirectory)
                 .Bind<Path>().Tag(TempDirectory).To(ctx => System.IO.Path.GetTempPath())
                 .Bind<Path>().Tag(TempFile).To(ctx => new Path(System.IO.Path.Combine(
                     ctx.Container.Inject<Path>(TempDirectory).Value,
                     Guid.NewGuid().ToString().Replace("-", string.Empty))))
-                .Bind<PlatformID>().To(ctx => Environment.OSVersion.Platform);
 
-            // Common
-            yield return container
-                .Bind<IFileSystem>().As(Singleton).To<FileSystem>();
+                // Common
+                .Bind<IStdOut>().To(ctx => ctx.Container.Inject<IStdOut>(ctx.Container.Inject<bool>(TeamCity) ? TeamCity : Base))
+                .Bind<IStdOut>().As(Singleton).Tag(Base).To<TeamCityStdOut>()
+                .Bind<IStdOut>().As(Singleton).Tag(TeamCity).To<TeamCityStdOut>()
+                .Bind<IStdErr>().To(ctx => ctx.Container.Inject<IStdErr>(ctx.Container.Inject<bool>(TeamCity) ? TeamCity : Base))
+                .Bind<IStdErr>().As(Singleton).Tag(Base).To<TeamCityStdErr>()
+                .Bind<IStdErr>().As(Singleton).Tag(TeamCity).To<TeamCityStdErr>()
+                .Bind<IFileSystem>().As(Singleton).To<FileSystem>()
+                .Bind<IPathNormalizer>().As(Singleton).To<PathNormalizer>()
 
-            // Processes
-            yield return container
+                // Command Line
                 .Bind<ICommandLineService>().As(Singleton).To<CommandLineService>()
-                .Bind<IProcessFactory>().Bind<IProcessChain>().As(Singleton).Tag(Composite).Tag().To<CompositeProcessFactory>()
+                .Bind<IProcessFactory>().Bind<IProcessChain>().As(Singleton).Tag().To<CompositeProcessFactory>()
                 .Bind<IProcessFactory>().As(Singleton).Tag(Base).To<ProcessFactory>()
                 .Bind<IConverter<CommandLineArgument, string>>().As(Singleton).To<ArgumentToStringConverter>()
                 .Bind<IConverter<IEnumerable<CommandLineArgument>, string>>().As(Singleton).To<ArgumentsToStringConverter>()
-                .Bind<IEnvironment>().As(Singleton).To<InternalEnvironment>()
                 .Bind<IProcess>().To<InternalProcess>(ctx => new InternalProcess(Arg<Process, IProcess>(ctx.Args, "process")))
-                .Bind<IProcessListener>().As(Singleton).Tag(StdOutErr).To<ProcessStdOutErrListener>();
+                .Bind<IProcessListener>().As(Singleton).Tag(StdOutErr).To<ProcessStdOutErrListener>()
 
-            // Docker
-            yield return container
-                .Bind<IDockerWrapperService>().As(Singleton).Tag().To<DockerWrapperService>()
-                .Bind<IInitializableProcessWrapper<DockerWrapperInfo>, IProcessWrapper>().Tag(Docker).To<DockerProcessWrapper>();
+                // Process Wrappers
+                .Bind<IProcessWrapper>().As(Singleton).Tag(CmdScriptWrapper).To<CmdProcessWrapper>()
+                .Bind<IProcessWrapper>().As(Singleton).Tag(ShScriptWrapper).To<ShProcessWrapper>()
 
-            // Script
-            yield return container
-                .Bind<IProcessWrapper>().Tag(Script).To(ctx => ctx.Container.Inject<IProcessWrapper>(ctx.Container.Inject<IEnvironment>().OperatingSystem.Platform))
-                .Bind<IProcessWrapper>().Tag(PlatformID.Win32NT).Tag(PlatformID.Win32Windows).To<CmdProcessWrapper>()
-                .Bind<IProcessWrapper>().Tag(PlatformID.Unix).Tag(PlatformID.MacOSX).To<ShProcessWrapper>();
+                // Docker Wrapper
+                .Bind<IDockerWrapperService>().As(Singleton).To<DockerWrapperService>()
+                .Bind<IDockerArgumentsProvider>().As(Singleton).To<DockerArgumentsProvider>()
+                .Bind<IDockerArgumentsProvider>().As(Singleton).Tag(DockerEnvironment).To<DockerEnvironmentArgumentsProvider>()
+                .Bind<IDockerArgumentsProvider>().As(Singleton).Tag(DockerVolumes).To<DockerVolumesArgumentsProvider>()
+                .Bind<IInitializableProcessWrapper<DockerWrapperInfo>, IProcessWrapper>().Tag(DockerWrapper).To<DockerProcessWrapper>();
         }
 
         private static TArg Arg<TArg, TTarget>(object[] args, string name) => 

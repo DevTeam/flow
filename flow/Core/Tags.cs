@@ -2,23 +2,29 @@
 {
     internal enum Tags
     {
-        Default,
-        TeamCity,
-
-        // Directories
+        // Settings
+        SeparatorChar,
+        QuoteChar,
+        WindowsNewLineString,
+        LinuxNewLineString,
+        WindowsDirectorySeparatorString,
+        LinuxDirectorySeparatorString,
         WorkingDirectory,
         TempDirectory,
         TempFile,
+        TeamCity,
 
-        // ProcessListener
+        // Process Listeners
         StdOutErr,
 
-        // ProcessFactory
+        // Process Factories
         Base,
-        Composite,
 
-        // ProcessWrapper
-        Docker,
-        Script
+        // Process Wrappers
+        DockerWrapper,
+        DockerEnvironment,
+        DockerVolumes,
+        CmdScriptWrapper,
+        ShScriptWrapper
     }
 }

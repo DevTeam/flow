@@ -1,19 +1,17 @@
 ﻿namespace Flow.Tests
 {
+    using System.Linq;
     using Core;
     using Moq;
     using Xunit;
 
     public class DockerProcessWrapperTests
     {
-        private readonly Path _tempPath = "tmp";
-        private readonly Mock<IEnvironment> _environment;
-        private readonly Mock<IProcessWrapper> _processWrapper;
+        private readonly Mock<IDockerArgumentsProvider> _dockerArgumentsProvider;
 
         public DockerProcessWrapperTests()
         {
-            _environment = new Mock<IEnvironment>();
-            _processWrapper = new Mock<IProcessWrapper>();
+            _dockerArgumentsProvider = new Mock<IDockerArgumentsProvider>();
         }
 
         [Fact]
@@ -21,8 +19,7 @@
         {
             // Given
             var wrapper = CreateInstance();
-            DockerImage dockerImage = "mcr.microsoft.com/windows/servercore";
-            var wrapperInfo = new DockerWrapperInfo(dockerImage);
+            var wrapperInfo = DockerWrapperInfoExtensions.Create();
             wrapper.Initialize(wrapperInfo);
             var processInfo = ProcessInfoExtensions.Create();
 
@@ -33,9 +30,6 @@
         }
 
         private DockerProcessWrapper CreateInstance() => 
-            new DockerProcessWrapper(
-                _tempPath,
-                _environment.Object,
-                _processWrapper.Object);
+            new DockerProcessWrapper(_dockerArgumentsProvider.Object);
     }
 }

@@ -88,7 +88,7 @@ namespace Flow.Tests
             using (var enumerator = new TextEnumerator(text.GetEnumerator()))
             {
                 // When
-                var (name, value) = enumerator.ParseTuple();
+                var (name, value) = enumerator.ParseTuple('=');
 
                 // Then
                 enumerator.Offset.ShouldBe(expectedOffset);

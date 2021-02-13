@@ -5,6 +5,7 @@
     using System.Linq;
     using IoC;
 
+    // ReSharper disable once ClassNeverInstantiated.Global
     internal class ArgumentsToStringConverter : IConverter<IEnumerable<CommandLineArgument>, string>
     {
         [NotNull] private readonly IConverter<CommandLineArgument, string> _argumentToStringConverter;

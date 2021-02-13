@@ -1,11 +1,10 @@
 ﻿namespace Flow.Core
 {
     using System.Collections.Generic;
+    using IoC;
 
     internal interface IFileSystem
     {
-        void WriteLines(Path filePath, IEnumerable<string> lines);
-
-        IEnumerable<string> ReadLines(Path filePath);
+        void WriteLines(Path filePath, [NotNull] IEnumerable<string> lines, OperatingSystem operatingSystem);
     }
 }

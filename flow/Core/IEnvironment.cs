@@ -1,7 +1,5 @@
 ﻿namespace Flow.Core
 {
-    using System;
-
     internal interface IEnvironment
     {
         OperatingSystem OperatingSystem { get; }

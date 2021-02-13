@@ -8,19 +8,12 @@
     public readonly struct CommandLineArgument: IFromText<CommandLineArgument>
     {
         [NotNull] public readonly string Value;
-        internal readonly CommandLineArgumentType Type;
 
         public CommandLineArgument([NotNull] string value)
-        : this(value, CommandLineArgumentType.Default)
-        {
-        }
-
-        internal CommandLineArgument([NotNull] string value, CommandLineArgumentType type)
         {
             if (value == null) throw new ArgumentNullException(nameof(value));
             if (string.IsNullOrWhiteSpace(value)) throw new ArgumentException(nameof(value));
             Value = value;
-            Type = type;
         }
 
         public static implicit operator CommandLineArgument([NotNull] string argument)

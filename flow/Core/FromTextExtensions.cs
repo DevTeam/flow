@@ -95,12 +95,12 @@
                     }
                 });
 
-        public static (string name, string value) ParseTuple(this IEnumerator<char> text)
+        public static (string name, string value) ParseTuple(this IEnumerator<char> text, char delimiter)
         {
             var parts = text
                 .ParseEnumerable()
                 .Take(1)
-                .SelectMany(i => i.Split('='))
+                .SelectMany(i => i.Split(delimiter))
                 .ToArray();
             
             switch (parts.Length)

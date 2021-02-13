@@ -24,7 +24,7 @@
             if (variable == null) throw new ArgumentNullException(nameof(variable));
             using (var enumerator = variable.GetEnumerator())
             {
-                var (name, value) = enumerator.ParseTuple();
+                var (name, value) = enumerator.ParseTuple('=');
                 return new EnvironmentVariable(name, value);
             }
         }
@@ -34,7 +34,7 @@
         EnvironmentVariable IFromText<EnvironmentVariable>.Parse(IEnumerator<char> text)
         {
             if (text == null) throw new ArgumentNullException(nameof(text));
-            var (name, value) = text.ParseTuple();
+            var (name, value) = text.ParseTuple('=');
             return new EnvironmentVariable(name, value);
         }
     }

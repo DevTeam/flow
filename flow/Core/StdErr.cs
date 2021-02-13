@@ -2,7 +2,7 @@
 {
     using System;
 
-    // ReSharper disable once ClassNeverInstantiated.Global
+    // ReSharper disable once UnusedType.Global
     internal class StdErr : IStdErr
     {
         public void WriteLine(string error)

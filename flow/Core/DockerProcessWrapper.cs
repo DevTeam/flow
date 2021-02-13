@@ -1,14 +1,18 @@
 ﻿namespace Flow.Core
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
+    using IoC;
 
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class DockerProcessWrapper: IInitializableProcessWrapper<DockerWrapperInfo>
     {
+        [NotNull] private readonly IDockerArgumentsProvider _dockerArgumentsProvider;
         private bool _initialized;
         private DockerWrapperInfo _wrapperInfo;
+
+        public DockerProcessWrapper(
+            [NotNull] IDockerArgumentsProvider dockerArgumentsProvider) =>
+            _dockerArgumentsProvider = dockerArgumentsProvider;
 
         public void Initialize(DockerWrapperInfo wrapperInfo)
         {
@@ -20,35 +24,10 @@
         {
             if (!_initialized) throw new InvalidOperationException("Not initialized");
             return new ProcessInfo(
-                "docker.exe",
+                "docker",
                 processInfo.WorkingDirectory,
-                GetArgs(processInfo),
+                _dockerArgumentsProvider.GetArguments(_wrapperInfo, processInfo),
                 processInfo.Variables);
-        }
-
-        private IEnumerable<CommandLineArgument> GetArgs(ProcessInfo processInfo)
-        {
-            yield return "run";
-            yield return "-it";
-            yield return "--rm";
-            var paths = processInfo
-                .Arguments
-                .Where(i => i.Type == CommandLineArgumentType.Path)
-                .Select(i => System.IO.Path.GetDirectoryName(i.Value))
-                .Distinct();
-
-            foreach (var path in paths)
-            {
-                yield return "-v";
-                yield return $"{path}:{path}";
-            }
-            
-            yield return _wrapperInfo.Image.Name;
-            yield return processInfo.Executable.Value;
-            foreach (var arg in processInfo.Arguments)
-            {
-                yield return arg;
-            }
         }
     }
 }
