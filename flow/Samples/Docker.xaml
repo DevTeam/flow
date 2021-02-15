@@ -1,0 +1,86 @@
+﻿<Activity mc:Ignorable="sap sap2010 sads" x:Class="Flow.Samples.Docker" sap2010:ExpressionActivityEditor.ExpressionActivityEditor="C#"
+ xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
+ xmlns:local="clr-namespace:Flow.Activities"
+ xmlns:local1="clr-namespace:Flow"
+ xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+ xmlns:mca="clr-namespace:Microsoft.CSharp.Activities;assembly=System.Activities"
+ xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger"
+ xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation"
+ xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation"
+ xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib"
+ xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <TextExpression.NamespacesForImplementation>
+    <sco:Collection x:TypeArguments="x:String">
+      <x:String>System</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>System.Text</x:String>
+    </sco:Collection>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <sco:Collection x:TypeArguments="AssemblyReference">
+      <AssemblyReference>System.IO.Compression.FileSystem, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</AssemblyReference>
+      <AssemblyReference>System.Numerics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</AssemblyReference>
+      <AssemblyReference>System.Activities.Presentation, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35</AssemblyReference>
+      <AssemblyReference>System.Xml.Linq, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</AssemblyReference>
+      <AssemblyReference>System.Data, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</AssemblyReference>
+      <AssemblyReference>System.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</AssemblyReference>
+      <AssemblyReference>System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</AssemblyReference>
+      <AssemblyReference>System.Runtime.Serialization, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</AssemblyReference>
+      <AssemblyReference>System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</AssemblyReference>
+      <AssemblyReference>System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</AssemblyReference>
+      <AssemblyReference>WindowsBase, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35</AssemblyReference>
+      <AssemblyReference>System.Xaml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</AssemblyReference>
+      <AssemblyReference>System.Activities, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35</AssemblyReference>
+      <AssemblyReference>PresentationCore, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35</AssemblyReference>
+      <AssemblyReference>mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</AssemblyReference>
+      <AssemblyReference>PresentationFramework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35</AssemblyReference>
+      <AssemblyReference>IoC, Version=1.3.4.0, Culture=neutral, PublicKeyToken=620ded7f0cf61090</AssemblyReference>
+      <AssemblyReference>TeamCity.ServiceMessages, Version=3.0.13.85, Culture=neutral, PublicKeyToken=620ded7f0cf61090</AssemblyReference>
+      <AssemblyReference>System.Design, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</AssemblyReference>
+      <AssemblyReference>UIAutomationProvider, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35</AssemblyReference>
+      <AssemblyReference>Microsoft.Activities.Extensions.Design, Version=2.0.6.9, Culture=neutral, PublicKeyToken=2c01b24ecc77349c</AssemblyReference>
+      <AssemblyReference>Microsoft.Activities.Extensions, Version=2.0.6.9, Culture=neutral, PublicKeyToken=23b0c89d0d5ad43f</AssemblyReference>
+      <AssemblyReference>Microsoft.CSharp, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</AssemblyReference>
+      <AssemblyReference>System.ServiceModel, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</AssemblyReference>
+      <AssemblyReference>System.ServiceModel.Activities, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35</AssemblyReference>
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>Flow</AssemblyReference>
+    </sco:Collection>
+  </TextExpression.ReferencesForImplementation>
+  <local:DockerWrapper DockerArguments="{x:Null}" DockerEnvironmentVariables="{x:Null}" Volumes="{x:Null}" AutomaticallyRemove="True" DisplayName="Docker" Platform="Unix" Pull="Missing">
+    <local:DockerWrapper.Activities>
+      <local:CommandLine Arguments="{x:Null}" EnvironmentVariables="{x:Null}" WorkingDirectory="{x:Null}" DisplayName="Command">
+        <local:CommandLine.Executable>
+          <InArgument x:TypeArguments="local1:Path">
+            <mca:CSharpValue x:TypeArguments="local1:Path">"whoami"</mca:CSharpValue>
+          </InArgument>
+        </local:CommandLine.Executable>
+        <sap2010:WorkflowViewState.IdRef>CommandLine_1</sap2010:WorkflowViewState.IdRef>
+      </local:CommandLine>
+    </local:DockerWrapper.Activities>
+    <local:DockerWrapper.Image>
+      <InArgument x:TypeArguments="local1:DockerImage">
+        <mca:CSharpValue x:TypeArguments="local1:DockerImage">"mcr.microsoft.com/powershell"</mca:CSharpValue>
+      </InArgument>
+    </local:DockerWrapper.Image>
+    <sap2010:WorkflowViewState.IdRef>DockerWrapper_1</sap2010:WorkflowViewState.IdRef>
+    <sads:DebugSymbol.Symbol>dzFDOlxQcm9qZWN0c1xEZXZUZWFtXGZsb3dcRmxvd1xTYW1wbGVzXERvY2tlci54YW1sBDUDRxkCAQFCCUJvAgECNwc+GwIBAzoNOlYCAQQ=</sads:DebugSymbol.Symbol>
+  </local:DockerWrapper>
+  <sap2010:WorkflowViewState.IdRef>Flow.Samples.Docker_1</sap2010:WorkflowViewState.IdRef>
+  <sap2010:WorkflowViewState.ViewStateManager>
+    <sap2010:ViewStateManager>
+      <sap2010:ViewStateData Id="CommandLine_1" sap:VirtualizedContainerService.HintSize="200,22.2222222222222" />
+      <sap2010:ViewStateData Id="DockerWrapper_1" sap:VirtualizedContainerService.HintSize="222.222222222222,146.666666666667">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Flow.Samples.Docker_1" sap:VirtualizedContainerService.HintSize="262.222222222222,226.666666666667" />
+    </sap2010:ViewStateManager>
+  </sap2010:WorkflowViewState.ViewStateManager>
+</Activity>
