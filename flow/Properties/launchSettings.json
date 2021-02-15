@@ -2,7 +2,7 @@
   "profiles": {
     "Flow": {
       "commandName": "Project",
-      "commandLineArgs": "default",
+      "commandLineArgs": "wsl",
       "environmentVariables": {
         "tmp": "tmp"
       }

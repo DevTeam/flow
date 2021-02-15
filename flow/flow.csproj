@@ -30,6 +30,7 @@
 
 	<ItemGroup>
 	  <None Remove="Samples\Docker.xaml" />
+	  <None Remove="Samples\Wsl.xaml" />
 	</ItemGroup>
 
 	<ItemGroup>

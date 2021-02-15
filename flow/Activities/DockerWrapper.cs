@@ -55,9 +55,6 @@
         [Browsable(false)]
         public Collection<Activity> Activities => _sequence.Activities;
 
-        [Browsable(false)]
-        public Collection<Variable> Variables => _sequence.Variables;
-
         protected override void CacheMetadata(NativeActivityMetadata metadata)
         {
             base.CacheMetadata(metadata);
