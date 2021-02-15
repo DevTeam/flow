@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<TargetFrameworks>net48;net5.0</TargetFrameworks>
 		<IsPackable>false</IsPackable>
-		<RestoreAdditionalProjectSources>https://www.myget.org/F/uipath-dev/api/v3/index.json</RestoreAdditionalProjectSources>
+		<RestoreAdditionalProjectSources>$(RestoreAdditionalProjectSources);https://www.myget.org/F/uipath-dev/api/v3/index.json</RestoreAdditionalProjectSources>
 	</PropertyGroup>
 
 	<ItemGroup>
