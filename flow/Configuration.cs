@@ -29,6 +29,7 @@
                 .Bind<string>().Tag(LinuxNewLineString).To(ctx => "\n")
                 .Bind<string>().Tag(WindowsDirectorySeparatorString).To(ctx => "\\")
                 .Bind<string>().Tag(LinuxDirectorySeparatorString).To(ctx => "/")
+                .Bind<string>().Tag(WslRootString).To(ctx => "/mnt/c/")
                 .Bind<Path>().Tag(WorkingDirectory).To(ctx => Environment.CurrentDirectory)
                 .Bind<Path>().Tag(TempDirectory).To(ctx => System.IO.Path.GetTempPath())
                 .Bind<Path>().Tag(TempFile).To(ctx => new Path(System.IO.Path.Combine(
@@ -57,13 +58,17 @@
                 // Process Wrappers
                 .Bind<IProcessWrapper>().As(Singleton).Tag(CmdScriptWrapper).To<CmdProcessWrapper>()
                 .Bind<IProcessWrapper>().As(Singleton).Tag(ShScriptWrapper).To<ShProcessWrapper>()
+                .Bind<IProcessWrapper>().As(Singleton).Tag(WslScriptWrapper).To<ShProcessWrapper>(ctx => ctx.Container.Assign(ctx.It.OperatingSystem, OperatingSystem.Wsl))
 
                 // Docker Wrapper
                 .Bind<IDockerWrapperService>().As(Singleton).To<DockerWrapperService>()
                 .Bind<IDockerArgumentsProvider>().As(Singleton).To<DockerArgumentsProvider>()
                 .Bind<IDockerArgumentsProvider>().As(Singleton).Tag(DockerEnvironment).To<DockerEnvironmentArgumentsProvider>()
                 .Bind<IDockerArgumentsProvider>().As(Singleton).Tag(DockerVolumes).To<DockerVolumesArgumentsProvider>()
-                .Bind<IInitializableProcessWrapper<DockerWrapperInfo>, IProcessWrapper>().Tag(DockerWrapper).To<DockerProcessWrapper>();
+                .Bind<IInitializableProcessWrapper<DockerWrapperInfo>, IProcessWrapper>().Tag(DockerWrapper).To<DockerProcessWrapper>()
+
+                // Wsl                
+                .Bind<IWslWrapperService>().As(Singleton).To<WslWrapperService>();
         }
 
         private static TArg Arg<TArg, TTarget>(object[] args, string name) => 

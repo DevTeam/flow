@@ -9,6 +9,7 @@
         LinuxNewLineString,
         WindowsDirectorySeparatorString,
         LinuxDirectorySeparatorString,
+        WslRootString,
         WorkingDirectory,
         TempDirectory,
         TempFile,
@@ -25,6 +26,7 @@
         DockerEnvironment,
         DockerVolumes,
         CmdScriptWrapper,
-        ShScriptWrapper
+        ShScriptWrapper,
+        WslScriptWrapper
     }
 }

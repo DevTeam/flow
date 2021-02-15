@@ -35,6 +35,7 @@
       <AssemblyReference>System.Xaml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</AssemblyReference>
       <AssemblyReference>System.Activities, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35</AssemblyReference>
       <AssemblyReference>PresentationCore, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35</AssemblyReference>
+      <AssemblyReference>mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</AssemblyReference>
       <AssemblyReference>PresentationFramework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35</AssemblyReference>
       <AssemblyReference>IoC, Version=1.3.4.0, Culture=neutral, PublicKeyToken=620ded7f0cf61090</AssemblyReference>
       <AssemblyReference>TeamCity.ServiceMessages, Version=3.0.13.85, Culture=neutral, PublicKeyToken=620ded7f0cf61090</AssemblyReference>
@@ -42,13 +43,12 @@
       <AssemblyReference>UIAutomationProvider, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35</AssemblyReference>
       <AssemblyReference>Microsoft.Activities.Extensions.Design, Version=2.0.6.9, Culture=neutral, PublicKeyToken=2c01b24ecc77349c</AssemblyReference>
       <AssemblyReference>Microsoft.Activities.Extensions, Version=2.0.6.9, Culture=neutral, PublicKeyToken=23b0c89d0d5ad43f</AssemblyReference>
-      <AssemblyReference>mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</AssemblyReference>
       <AssemblyReference>mscorlib</AssemblyReference>
       <AssemblyReference>Flow</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
   <Sequence sap2010:WorkflowViewState.IdRef="Sequence_1">
-    <local:DockerWrapper DockerArguments="{x:Null}" DockerEnvironmentVariables="{x:Null}" Volumes="{x:Null}" AutomaticallyRemove="False" DisplayName="Docker" sap2010:WorkflowViewState.IdRef="DockerWrapper_1" Platform="Unix" Pull="Missing">
+    <local:DockerWrapper DockerArguments="{x:Null}" DockerEnvironmentVariables="{x:Null}" Volumes="{x:Null}" AutomaticallyRemove="True" DisplayName="Docker" sap2010:WorkflowViewState.IdRef="DockerWrapper_1" Platform="Unix" Pull="Missing">
       <local:DockerWrapper.Activities>
         <local:CommandLine Arguments="{x:Null}" EnvironmentVariables="{x:Null}" WorkingDirectory="{x:Null}" DisplayName="Command" sap2010:WorkflowViewState.IdRef="CommandLine_1">
           <local:CommandLine.Executable>
@@ -76,7 +76,35 @@
         </InArgument>
       </local:DockerWrapper.Image>
     </local:DockerWrapper>
-    <sads:DebugSymbol.Symbol>dypDOlxQcm9qZWN0c1xEZXZUZWFtXGZsb3dcRmxvd1xEZWZhdWx0LnhhbWwIMgNQDgIBATMFThsCAQJLC0txAgEDNQk7HQIBBzwJRx0CAQQ4DzhYAgEIRA9EVAIBBj8PP3oCAQU=</sads:DebugSymbol.Symbol>
+    <local:CommandLine EnvironmentVariables="{x:Null}" WorkingDirectory="{x:Null}" DisplayName="Command" sap2010:WorkflowViewState.IdRef="CommandLine_3">
+      <local:CommandLine.Arguments>
+        <InArgument x:TypeArguments="local1:Enumerable(local1:CommandLineArgument)">
+          <mca:CSharpValue x:TypeArguments="local1:Enumerable(local1:CommandLineArgument)">"/C dir"</mca:CSharpValue>
+        </InArgument>
+      </local:CommandLine.Arguments>
+      <local:CommandLine.Executable>
+        <InArgument x:TypeArguments="local1:Path">
+          <mca:CSharpValue x:TypeArguments="local1:Path">"cmd.exe"</mca:CSharpValue>
+        </InArgument>
+      </local:CommandLine.Executable>
+    </local:CommandLine>
+    <local:WslWrapper DisplayName="Wsl" sap2010:WorkflowViewState.IdRef="WslWrapper_1">
+      <local:WslWrapper.Activities>
+        <local:CommandLine EnvironmentVariables="{x:Null}" WorkingDirectory="{x:Null}" DisplayName="Command" sap2010:WorkflowViewState.IdRef="CommandLine_4">
+          <local:CommandLine.Arguments>
+            <InArgument x:TypeArguments="local1:Enumerable(local1:CommandLineArgument)">
+              <mca:CSharpValue x:TypeArguments="local1:Enumerable(local1:CommandLineArgument)">"-c dir"</mca:CSharpValue>
+            </InArgument>
+          </local:CommandLine.Arguments>
+          <local:CommandLine.Executable>
+            <InArgument x:TypeArguments="local1:Path">
+              <mca:CSharpValue x:TypeArguments="local1:Path">"sh"</mca:CSharpValue>
+            </InArgument>
+          </local:CommandLine.Executable>
+        </local:CommandLine>
+      </local:WslWrapper.Activities>
+    </local:WslWrapper>
+    <sads:DebugSymbol.Symbol>dypDOlxQcm9qZWN0c1xEZXZUZWFtXGZsb3dcRmxvd1xEZWZhdWx0LnhhbWwPMgNxDgIBATMFUxsCAQlUBV8ZAgEGYAVvGAIBAksLS3ECAQo1CTsdAgEUPAlHHQIBC1wLXFUCAQhXC1d2AgEHYgltHQIBAzgPOFgCARVED0RUAgEQPw8/egIBDGoPalQCAQVlD2V6AgEE</sads:DebugSymbol.Symbol>
   </Sequence>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>
@@ -89,14 +117,23 @@
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="Sequence_1" sap:VirtualizedContainerService.HintSize="244.444444444444,333.333333333333">
+      <sap2010:ViewStateData Id="CommandLine_3" sap:VirtualizedContainerService.HintSize="222.222222222222,22.2222222222222" />
+      <sap2010:ViewStateData Id="CommandLine_4" sap:VirtualizedContainerService.HintSize="200,22.2222222222222" />
+      <sap2010:ViewStateData Id="WslWrapper_1" sap:VirtualizedContainerService.HintSize="222.222222222222,146.666666666667">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="Flow.Default_1" sap:VirtualizedContainerService.HintSize="284.444444444444,413.333333333333" />
+      <sap2010:ViewStateData Id="Sequence_1" sap:VirtualizedContainerService.HintSize="244.444444444444,582.222222222222">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Flow.Default_1" sap:VirtualizedContainerService.HintSize="284.444444444444,662.222222222222" />
     </sap2010:ViewStateManager>
   </sap2010:WorkflowViewState.ViewStateManager>
 </Activity>

@@ -48,7 +48,6 @@
 
         private DockerWrapperService CreateInstance() =>
             new DockerWrapperService(
-                OperatingSystem.Windows,
                 _processChain.Object,
                 () => _dockerProcessWrapper.Object,
                 _cmdProcessWrapper.Object,

@@ -32,11 +32,13 @@
             _quote = new string(environment.CommandLineArgumentsQuote, 1);
         }
 
+        public OperatingSystem OperatingSystem { get; set; } = OperatingSystem.Unix;
+
         public ProcessInfo Wrap(ProcessInfo processInfo)
         {
             var shPath = new Path(_tempFilePathFactory().Value + ".sh");
             _fileSystem.WriteLines(shPath, GetCmdContent(processInfo), OperatingSystem.Unix);
-            shPath = _pathNormalizer.Normalize(shPath.Value, OperatingSystem.Unix).Value;
+            shPath = _pathNormalizer.Normalize(shPath.Value, OperatingSystem).Value;
             return new ProcessInfo(
                 "sh",
                 processInfo.WorkingDirectory,
