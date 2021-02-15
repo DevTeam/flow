@@ -2,6 +2,7 @@
 	<PropertyGroup>
 		<TargetFrameworks>net48;net5.0</TargetFrameworks>
 		<OutputType>Exe</OutputType>
+		<RestoreAdditionalProjectSources>https://www.myget.org/F/uipath-dev/api/v3/index.json</RestoreAdditionalProjectSources>
 	</PropertyGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\Flow\Flow.csproj" />
