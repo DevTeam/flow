@@ -2,7 +2,7 @@
   "profiles": {
     "Flow": {
       "commandName": "Project",
-      "commandLineArgs": "wsl",
+      "commandLineArgs": "docker",
       "environmentVariables": {
         "tmp": "tmp"
       }

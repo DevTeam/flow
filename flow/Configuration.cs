@@ -59,13 +59,13 @@
                 .Bind<IProcessWrapper>().As(Singleton).Tag(CmdScriptWrapper).To<CmdProcessWrapper>()
                 .Bind<IProcessWrapper>().As(Singleton).Tag(ShScriptWrapper).To<ShProcessWrapper>()
                 .Bind<IProcessWrapper>().As(Singleton).Tag(WslScriptWrapper).To<ShProcessWrapper>(ctx => ctx.Container.Assign(ctx.It.OperatingSystem, OperatingSystem.Wsl))
+                .Bind<IProcessWrapper>().Tag(DockerWrapper).To<DockerProcessWrapper>(ctx => ctx.It.Initialize(Arg<DockerWrapperInfo, DockerProcessWrapper>(ctx.Args, "info")))
 
                 // Docker Wrapper
                 .Bind<IDockerWrapperService>().As(Singleton).To<DockerWrapperService>()
                 .Bind<IDockerArgumentsProvider>().As(Singleton).To<DockerArgumentsProvider>()
                 .Bind<IDockerArgumentsProvider>().As(Singleton).Tag(DockerEnvironment).To<DockerEnvironmentArgumentsProvider>()
                 .Bind<IDockerArgumentsProvider>().As(Singleton).Tag(DockerVolumes).To<DockerVolumesArgumentsProvider>()
-                .Bind<IInitializableProcessWrapper<DockerWrapperInfo>, IProcessWrapper>().Tag(DockerWrapper).To<DockerProcessWrapper>()
 
                 // Wsl                
                 .Bind<IWslWrapperService>().As(Singleton).To<WslWrapperService>();

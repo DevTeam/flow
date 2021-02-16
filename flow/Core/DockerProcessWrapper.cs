@@ -4,7 +4,7 @@
     using IoC;
 
     // ReSharper disable once ClassNeverInstantiated.Global
-    internal class DockerProcessWrapper: IInitializableProcessWrapper<DockerWrapperInfo>
+    internal class DockerProcessWrapper: IProcessWrapper
     {
         [NotNull] private readonly IDockerArgumentsProvider _dockerArgumentsProvider;
         private bool _initialized;
