@@ -22,6 +22,8 @@
             _linuxNewLineString = linuxNewLineString ?? throw new ArgumentNullException(nameof(linuxNewLineString));
         }
 
+        public bool IsPathRooted(Path path) => System.IO.Path.IsPathRooted(path.Value);
+
         public void WriteLines(Path filePath, IEnumerable<string> lines, OperatingSystem operatingSystem)
         {
             if (lines == null) throw new ArgumentNullException(nameof(lines));

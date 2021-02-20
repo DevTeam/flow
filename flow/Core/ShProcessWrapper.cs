@@ -53,8 +53,7 @@
         private IEnumerable<string> GetCmdContent(ProcessInfo processInfo)
         {
             yield return "#!/bin/bash";
-            var hasWorkingDirectory = !string.IsNullOrWhiteSpace(processInfo.WorkingDirectory.Value);
-            if (hasWorkingDirectory)
+            if (!processInfo.WorkingDirectory.IsEmpty)
             {
                 yield return $"cd {_quote}{processInfo.WorkingDirectory.Value}{_quote}";
             }

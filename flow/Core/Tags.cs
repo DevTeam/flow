@@ -5,10 +5,12 @@
         // Settings
         SeparatorChar,
         QuoteChar,
+        DotnetExecutable,
         WindowsNewLineString,
         LinuxNewLineString,
         WindowsDirectorySeparatorString,
         LinuxDirectorySeparatorString,
+        FlowVersionString,
         WslRootString,
         WorkingDirectory,
         TempDirectory,
@@ -27,6 +29,7 @@
         DockerVolumes,
         CmdScriptWrapper,
         ShScriptWrapper,
-        WslScriptWrapper
+        WslScriptWrapper,
+        DotnetWrapper
     }
 }

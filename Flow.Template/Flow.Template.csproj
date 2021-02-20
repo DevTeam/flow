@@ -4,9 +4,15 @@
 		<OutputType>Exe</OutputType>
 		<RestoreAdditionalProjectSources>$(RestoreAdditionalProjectSources);https://www.myget.org/F/uipath-dev/api/v3/index.json</RestoreAdditionalProjectSources>
 	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(FLOW_VERSION)' != ''">
+		<OutputPath>bin/flow</OutputPath>
+	</PropertyGroup>
+
 	<ItemGroup>
 		<ProjectReference Include="..\Flow\Flow.csproj" />
 	</ItemGroup>
+
 	<Choose>
 		<When Condition="'$(TargetFramework)'=='net48'">
 			<ItemGroup>

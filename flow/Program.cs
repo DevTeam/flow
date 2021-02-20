@@ -1,4 +1,4 @@
-﻿#if NET48
+﻿#if DEBUG
 namespace Flow
 {
     using System;

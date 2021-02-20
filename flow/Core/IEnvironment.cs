@@ -9,5 +9,7 @@
         char CommandLineArgumentsQuote { get; }
 
         bool IsUnderTeamCity { get; }
+
+        Path DotnetExecutable { get; }
     }
 }

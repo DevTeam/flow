@@ -25,6 +25,8 @@
             }
         }
 
+        public static Path operator +(Path parentPath, Path path) => new Path($"{parentPath.Value}/{path.Value}");
+
         public override string ToString() => Value;
 
         Path IFromText<Path>.Parse(IEnumerator<char> text)

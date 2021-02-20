@@ -25,8 +25,10 @@
                 .Bind<bool>().Tag(TeamCity).To(ctx => ctx.Container.Inject<IEnvironment>().IsUnderTeamCity)
                 .Bind<char>().Tag(SeparatorChar).To(ctx => ' ')
                 .Bind<char>().Tag(QuoteChar).To(ctx => '\"')
+                .Bind<Path>().As(Singleton).Tag(DotnetExecutable).To(ctx => ctx.Container.Inject<IEnvironment>().DotnetExecutable)
                 .Bind<string>().Tag(WindowsNewLineString).To(ctx => "\r\n")
                 .Bind<string>().Tag(LinuxNewLineString).To(ctx => "\n")
+                .Bind<string>().Tag(FlowVersionString).To(ctx => GetType().Assembly.GetName().Version.ToString())
                 .Bind<string>().Tag(WindowsDirectorySeparatorString).To(ctx => "\\")
                 .Bind<string>().Tag(LinuxDirectorySeparatorString).To(ctx => "/")
                 .Bind<string>().Tag(WslRootString).To(ctx => "/mnt/c/")
@@ -67,8 +69,12 @@
                 .Bind<IDockerArgumentsProvider>().As(Singleton).Tag(DockerEnvironment).To<DockerEnvironmentArgumentsProvider>()
                 .Bind<IDockerArgumentsProvider>().As(Singleton).Tag(DockerVolumes).To<DockerVolumesArgumentsProvider>()
 
-                // Wsl                
-                .Bind<IWslWrapperService>().As(Singleton).To<WslWrapperService>();
+                // Wsl
+                .Bind<IWslWrapperService>().As(Singleton).To<WslWrapperService>()
+
+                // Dotnet
+                .Bind<IDotnetWrapperService>().To<DotnetWrapperService>()
+                .Bind<IDotnetBuildService>().As(Singleton).To<DotnetBuildService>();
         }
 
         private static TArg Arg<TArg, TTarget>(object[] args, string name) => 

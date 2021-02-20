@@ -47,7 +47,7 @@
         private IEnumerable<string> GetCmdContent(ProcessInfo processInfo)
         {
             yield return "@echo off";
-            var hasWorkingDirectory = !string.IsNullOrWhiteSpace(processInfo.WorkingDirectory.Value);
+            var hasWorkingDirectory = !processInfo.WorkingDirectory.IsEmpty;
             if (hasWorkingDirectory)
             {
                 yield return $"pushd {_quote}{processInfo.WorkingDirectory.Value}{_quote}";

@@ -1,1 +1,0 @@
-dotnet test Flow.Tests.csproj -f net5.0 /p:VSTestLogger=logger://teamcity/ /p:VSTestTestAdapterPath=C:\Projects\TeamCity\TeamCity.VSTest.TestAdapter\bin\Release\out\vstest15

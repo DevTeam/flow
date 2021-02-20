@@ -13,10 +13,7 @@
         private readonly Sequence _sequence = new Sequence();
         private IDisposable _token = Disposable.Empty;
 
-        public DockerWrapper()
-        {
-            DisplayName = "Docker";
-        }
+        public DockerWrapper() => DisplayName = "Docker";
 
         [RequiredArgument]
         [Category("Basic")]

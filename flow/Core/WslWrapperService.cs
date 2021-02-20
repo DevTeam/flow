@@ -22,20 +22,16 @@
             _wslProcessWrapper = wslProcessWrapper;
         }
 
-        public IDisposable Using()
-        {
-            return Disposable.Create(
+        public IDisposable Using() =>
+            Disposable.Create(
                 _processChain.Append(this),
                 _processChain.Append(_wslProcessWrapper));
-        }
 
-        public ProcessInfo Wrap(ProcessInfo processInfo)
-        {
-            return new ProcessInfo(
+        public ProcessInfo Wrap(ProcessInfo processInfo) =>
+            new ProcessInfo(
                 "wsl",
                 processInfo.WorkingDirectory,
                 new [] { new CommandLineArgument(processInfo.Executable.Value) }.Concat(processInfo.Arguments),
                 Enumerable.Empty<EnvironmentVariable>());
-        }
     }
 }
