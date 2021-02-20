@@ -7,11 +7,6 @@
 
     public sealed class CommandLine : CodeActivity<ExitCode>
     {
-        public CommandLine()
-        {
-            DisplayName = "Command";
-        }
-
         [RequiredArgument]
         [Category("Basic")]
         [DisplayName("Executable File")]

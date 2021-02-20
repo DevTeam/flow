@@ -50,8 +50,8 @@
       <AssemblyReference>Flow</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <local:DockerWrapper DockerArguments="{x:Null}" DockerEnvironmentVariables="{x:Null}" Volumes="{x:Null}" AutomaticallyRemove="True" DisplayName="Docker" Platform="Unix" Pull="Missing">
-    <local:DockerWrapper.Activities>
+  <local:Docker DockerArguments="{x:Null}" DockerEnvironmentVariables="{x:Null}" Volumes="{x:Null}" AutomaticallyRemove="True" DisplayName="Docker" Platform="Unix" Pull="Missing">
+    <local:Docker.Activities>
       <local:CommandLine Arguments="{x:Null}" EnvironmentVariables="{x:Null}" WorkingDirectory="{x:Null}" DisplayName="Command">
         <local:CommandLine.Executable>
           <InArgument x:TypeArguments="local1:Path">
@@ -60,20 +60,20 @@
         </local:CommandLine.Executable>
         <sap2010:WorkflowViewState.IdRef>CommandLine_1</sap2010:WorkflowViewState.IdRef>
       </local:CommandLine>
-    </local:DockerWrapper.Activities>
-    <local:DockerWrapper.Image>
+    </local:Docker.Activities>
+    <local:Docker.Image>
       <InArgument x:TypeArguments="local1:DockerImage">
         <mca:CSharpValue x:TypeArguments="local1:DockerImage">"mcr.microsoft.com/powershell"</mca:CSharpValue>
       </InArgument>
-    </local:DockerWrapper.Image>
-    <sap2010:WorkflowViewState.IdRef>DockerWrapper_1</sap2010:WorkflowViewState.IdRef>
+    </local:Docker.Image>
+    <sap2010:WorkflowViewState.IdRef>Docker_1</sap2010:WorkflowViewState.IdRef>
     <sads:DebugSymbol.Symbol>dzFDOlxQcm9qZWN0c1xEZXZUZWFtXGZsb3dcRmxvd1xTYW1wbGVzXERvY2tlci54YW1sBDUDRxkCAQFCCUJvAgECNwc+GwIBAzoNOlYCAQQ=</sads:DebugSymbol.Symbol>
-  </local:DockerWrapper>
+  </local:Docker>
   <sap2010:WorkflowViewState.IdRef>Flow.Samples.Docker_1</sap2010:WorkflowViewState.IdRef>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>
       <sap2010:ViewStateData Id="CommandLine_1" sap:VirtualizedContainerService.HintSize="200,22.2222222222222" />
-      <sap2010:ViewStateData Id="DockerWrapper_1" sap:VirtualizedContainerService.HintSize="222.222222222222,146.666666666667">
+      <sap2010:ViewStateData Id="Docker_1" sap:VirtualizedContainerService.HintSize="222.222222222222,146.666666666667">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>

@@ -50,8 +50,8 @@
       <AssemblyReference>Flow</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <local:WslWrapper DisplayName="Wsl" sap2010:WorkflowViewState.IdRef="WslWrapper_1">
-    <local:WslWrapper.Activities>
+  <local:Wsl DisplayName="Wsl" sap2010:WorkflowViewState.IdRef="Wsl_1">
+    <local:Wsl.Activities>
       <local:CommandLine EnvironmentVariables="{x:Null}" WorkingDirectory="{x:Null}" DisplayName="Command" sap2010:WorkflowViewState.IdRef="CommandLine_1">
         <local:CommandLine.Arguments>
           <InArgument x:TypeArguments="local1:Enumerable(local1:CommandLineArgument)">
@@ -64,13 +64,13 @@
           </InArgument>
         </local:CommandLine.Executable>
       </local:CommandLine>
-    </local:WslWrapper.Activities>
+    </local:Wsl.Activities>
     <sads:DebugSymbol.Symbol>dy5DOlxQcm9qZWN0c1xEZXZUZWFtXGZsb3dcRmxvd1xTYW1wbGVzXFdzbC54YW1sBDUDRRYCAQE3B0IbAgECPw0/UgIBBDoNOncCAQM=</sads:DebugSymbol.Symbol>
-  </local:WslWrapper>
+  </local:Wsl>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>
       <sap2010:ViewStateData Id="CommandLine_1" sap:VirtualizedContainerService.HintSize="200,22.2222222222222" />
-      <sap2010:ViewStateData Id="WslWrapper_1" sap:VirtualizedContainerService.HintSize="222.222222222222,146.666666666667">
+      <sap2010:ViewStateData Id="Wsl_1" sap:VirtualizedContainerService.HintSize="222.222222222222,146.666666666667">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
