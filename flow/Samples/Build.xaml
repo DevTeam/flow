@@ -1,9 +1,7 @@
 ﻿<Activity mc:Ignorable="sap sap2010 sads" x:Class="Flow.Samples.Build" sap2010:ExpressionActivityEditor.ExpressionActivityEditor="C#" sap2010:WorkflowViewState.IdRef="Flow.Samples.Build_1"
  xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
  xmlns:local="clr-namespace:Flow.Activities"
- xmlns:local1="clr-namespace:Flow"
  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
- xmlns:mca="clr-namespace:Microsoft.CSharp.Activities;assembly=System.Activities"
  xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger"
  xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation"
  xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation"
@@ -41,16 +39,11 @@
       <AssemblyReference>Flow</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <local:DotnetWrapper DotnetExecutable="{x:Null}" EnvironmentVariables="{x:Null}" DisplayName="Dotnet" sap2010:WorkflowViewState.IdRef="DotnetWrapper_1">
+  <local:DotnetWrapper DotnetExecutable="{x:Null}" EnvironmentVariables="{x:Null}" SolutionDirectory="{x:Null}" DisplayName="Dotnet" sap2010:WorkflowViewState.IdRef="DotnetWrapper_1">
     <local:DotnetWrapper.Activities>
       <local:Build Arguments="{x:Null}" sap2010:WorkflowViewState.IdRef="Build_1" />
     </local:DotnetWrapper.Activities>
-    <local:DotnetWrapper.SolutionDirectory>
-      <InArgument x:TypeArguments="local1:Path">
-        <mca:CSharpValue x:TypeArguments="local1:Path">"../../.."</mca:CSharpValue>
-      </InArgument>
-    </local:DotnetWrapper.SolutionDirectory>
-    <sads:DebugSymbol.Symbol>dzBDOlxQcm9qZWN0c1xEZXZUZWFtXGZsb3dcRmxvd1xTYW1wbGVzXEJ1aWxkLnhhbWwDLAM2GQIBATIJMlQCAQIuBy5VAgED</sads:DebugSymbol.Symbol>
+    <sads:DebugSymbol.Symbol>dzBDOlxQcm9qZWN0c1xEZXZUZWFtXGZsb3dcRmxvd1xTYW1wbGVzXEJ1aWxkLnhhbWwCKgMvGQIBASwHLFUCAQI=</sads:DebugSymbol.Symbol>
   </local:DotnetWrapper>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>

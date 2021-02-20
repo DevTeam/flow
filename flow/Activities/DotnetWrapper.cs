@@ -41,9 +41,15 @@
         protected override void Execute(NativeActivityContext context)
         {
             var dotnetWrapper = context.GetExtension<IDotnetWrapperService>();
+            var solutionDirectory = context.GetValue(SolutionDirectory);
+            if (solutionDirectory.IsEmpty)
+            {
+                solutionDirectory = new Path("../../..");
+            }
+
             _token = dotnetWrapper.Using(
                 new DotnetWrapperInfo(
-                    context.GetValue(SolutionDirectory),
+                    solutionDirectory,
                     context.GetValue(DotnetExecutable),
                     context.GetValue(EnvironmentVariables)));
             context.ScheduleActivity(_sequence, OnCompleted, OnFaulted);
