@@ -61,7 +61,7 @@
             _processFactory.Verify(i => i.Create(originalProcessInfo));
         }
 
-        private CompositeProcessFactory CreateInstance() =>
-            new CompositeProcessFactory(_processFactory.Object);
+        private CurrentProcessFactory CreateInstance() =>
+            new CurrentProcessFactory(_processFactory.Object);
     }
 }

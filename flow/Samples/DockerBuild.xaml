@@ -1,4 +1,4 @@
-﻿<Activity mc:Ignorable="sap sap2010 sads" x:Class="Flow.Samples.Docker" sap2010:ExpressionActivityEditor.ExpressionActivityEditor="C#" sap2010:WorkflowViewState.IdRef="Flow.Samples.Docker_1"
+﻿<Activity mc:Ignorable="sap sap2010 sads" x:Class="Flow.Samples.DockerBuild" sap2010:ExpressionActivityEditor.ExpressionActivityEditor="C#" sap2010:WorkflowViewState.IdRef="Flow.Samples.DockerBuild_1"
  xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
  xmlns:local="clr-namespace:Flow.Activities"
  xmlns:local1="clr-namespace:Flow"
@@ -35,40 +35,50 @@
       <AssemblyReference>System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</AssemblyReference>
       <AssemblyReference>System.Activities, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35</AssemblyReference>
       <AssemblyReference>System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</AssemblyReference>
-      <AssemblyReference>IoC, Version=1.3.5.0, Culture=neutral, PublicKeyToken=620ded7f0cf61090</AssemblyReference>
       <AssemblyReference>mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</AssemblyReference>
       <AssemblyReference>mscorlib</AssemblyReference>
       <AssemblyReference>Flow</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <local:Docker DockerArguments="{x:Null}" DockerEnvironmentVariables="{x:Null}" Volumes="{x:Null}" AutomaticallyRemove="True" DisplayName="Docker" sap2010:WorkflowViewState.IdRef="Docker_1" Platform="Unix" Pull="Missing">
+  <local:Docker DockerArguments="{x:Null}" DockerEnvironmentVariables="{x:Null}" Volumes="{x:Null}" AutomaticallyRemove="True" sap2010:WorkflowViewState.IdRef="Docker_1" Platform="Unix" Pull="Missing">
     <local:Docker.Activities>
-      <local:CommandLine Arguments="{x:Null}" EnvironmentVariables="{x:Null}" WorkingDirectory="{x:Null}" DisplayName="Command" sap2010:WorkflowViewState.IdRef="CommandLine_1">
-        <local:CommandLine.Executable>
-          <InArgument x:TypeArguments="local1:Path">
-            <mca:CSharpValue x:TypeArguments="local1:Path">"whoami"</mca:CSharpValue>
-          </InArgument>
-        </local:CommandLine.Executable>
-      </local:CommandLine>
+      <local:Dotnet DotnetExecutable="{x:Null}" EnvironmentVariables="{x:Null}" SolutionDirectory="{x:Null}" sap2010:WorkflowViewState.IdRef="Dotnet_1">
+        <local:Dotnet.Activities>
+          <local:Build sap2010:WorkflowViewState.IdRef="Build_2">
+            <local:Build.Arguments>
+              <InArgument x:TypeArguments="local1:Enumerable(local1:CommandLineArgument)">
+                <mca:CSharpValue x:TypeArguments="local1:Enumerable(local1:CommandLineArgument)">"-f net5.0"</mca:CSharpValue>
+              </InArgument>
+            </local:Build.Arguments>
+          </local:Build>
+        </local:Dotnet.Activities>
+      </local:Dotnet>
     </local:Docker.Activities>
     <local:Docker.Image>
       <InArgument x:TypeArguments="local1:DockerImage">
         <mca:CSharpValue x:TypeArguments="local1:DockerImage">"mcr.microsoft.com/dotnet/sdk"</mca:CSharpValue>
       </InArgument>
     </local:Docker.Image>
-    <sads:DebugSymbol.Symbol>dzFDOlxQcm9qZWN0c1xEZXZUZWFtXGZsb3dcRmxvd1xTYW1wbGVzXERvY2tlci54YW1sBCwDPBICAQE4CThvAgECLgc0GwIBAzENMVYCAQQ=</sads:DebugSymbol.Symbol>
+    <sads:DebugSymbol.Symbol>dzZDOlxQcm9qZWN0c1xEZXZUZWFtXGZsb3dcRmxvd1xTYW1wbGVzXERvY2tlckJ1aWxkLnhhbWwFKwM/EgIBATsJO28CAQItBzcWAgEDLws1GQIBBDIRMn8CAQU=</sads:DebugSymbol.Symbol>
   </local:Docker>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>
-      <sap2010:ViewStateData Id="CommandLine_1" sap:VirtualizedContainerService.HintSize="200,22.2222222222222" />
-      <sap2010:ViewStateData Id="Docker_1" sap:VirtualizedContainerService.HintSize="222.222222222222,146.666666666667">
+      <sap2010:ViewStateData Id="Build_2" sap:VirtualizedContainerService.HintSize="200,22.2222222222222" />
+      <sap2010:ViewStateData Id="Dotnet_1" sap:VirtualizedContainerService.HintSize="222.222222222222,146.666666666667">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="Flow.Samples.Docker_1" sap:VirtualizedContainerService.HintSize="262.222222222222,226.666666666667" />
+      <sap2010:ViewStateData Id="Docker_1" sap:VirtualizedContainerService.HintSize="244.444444444444,271.111111111111">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Flow.Samples.DockerBuild_1" sap:VirtualizedContainerService.HintSize="284.444444444444,351.111111111111" />
     </sap2010:ViewStateManager>
   </sap2010:WorkflowViewState.ViewStateManager>
 </Activity>

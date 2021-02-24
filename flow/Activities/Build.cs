@@ -21,7 +21,8 @@
         protected override BuildResult Execute(CodeActivityContext context)
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
-            return context.GetExtension<IDotnetBuildService>().Execute();
+            return context.GetExtension<IDotnetBuildService>().Execute(new DotnetBuildInfo(
+                context.GetValue(Arguments)));
         }
     }
 }

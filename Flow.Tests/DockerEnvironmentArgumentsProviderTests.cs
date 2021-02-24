@@ -16,23 +16,24 @@
         public DockerEnvironmentArgumentsProviderTests()
         {
             _fileSystem = new Mock<IFileSystem>();
-            _fileSystem.Setup(i => i.WriteLines(It.IsAny<Path>(), It.IsAny<IEnumerable<string>>(), It.IsAny<OperatingSystem>()))
-                .Callback<Path, IEnumerable<string>, OperatingSystem>((path, lines, os) =>
+            _fileSystem.Setup(i => i.WriteLines(It.IsAny<Path>(), It.IsAny<IEnumerable<string>>()))
+                .Callback<Path, IEnumerable<string>>((path, lines) =>
                 {
-                    var lineEnd = os == OperatingSystem.Windows ? "||" : "|";
-                    _fileContent[path] = string.Join(lineEnd, lines);
+                    _fileContent[path] = string.Join("|", lines);
                 });
         }
 
         [Theory]
-        [InlineData(OperatingSystem.Unix, "", null, "")]
-        [InlineData(OperatingSystem.Unix, "var1=val1", "var1=\"val1\"", "--env-file abc_env.list")]
-        [InlineData(OperatingSystem.Unix, "var1=val1 var2=val2", "var1=\"val1\"|var2=\"val2\"", "--env-file abc_env.list")]
-        [InlineData(OperatingSystem.Windows, "var1=val1 var2=val2", "var1=\"val1\"||var2=\"val2\"", "--env-file abc_env.list")]
-        public void ShouldWrap(OperatingSystem operatingSystem, string envVars, string expectedEnvFile, string expectedArgs)
+        [InlineData("", null, "")]
+        [InlineData("var1=val1", "var1=\"val1\"", "--env-file abc_env.list")]
+        [InlineData("var1=val1 var2=val2", "var1=\"val1\"|var2=\"val2\"", "--env-file abc_env.list")]
+        public void ShouldWrap(
+            string envVars,
+            string expectedEnvFile,
+            string expectedArgs)
         {
             // Given
-            var provider = CreateInstance(operatingSystem);
+            var provider = CreateInstance();
             var wrapperInfo = new DockerWrapperInfo(
                 "mcr.microsoft.com/windows/servercore",
                 Enumerable.Empty<DockerVolume>(),
@@ -54,10 +55,9 @@
             actualEnvFile.ShouldBe(expectedEnvFile);
         }
 
-        private DockerEnvironmentArgumentsProvider CreateInstance(OperatingSystem operatingSystem) => 
+        private DockerEnvironmentArgumentsProvider CreateInstance() => 
             new DockerEnvironmentArgumentsProvider(
                 _fileSystem.Object,
-                operatingSystem,
                 _envFilePath);
     }
 }

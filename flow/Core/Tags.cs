@@ -3,25 +3,19 @@
     internal enum Tags
     {
         // Settings
-        SeparatorChar,
-        QuoteChar,
-        DotnetExecutable,
-        WindowsNewLineString,
-        LinuxNewLineString,
-        WindowsDirectorySeparatorString,
-        LinuxDirectorySeparatorString,
+        ArgumentsSeparatorChar,
+        ArgumentsQuoteChar,
+        NewLineString,
+        DirectorySeparatorString,
         FlowVersionString,
-        WslRootString,
         WorkingDirectory,
         TempDirectory,
         TempFile,
         TeamCity,
+        Base,
 
         // Process Listeners
         StdOutErr,
-
-        // Process Factories
-        Base,
 
         // Process Wrappers
         DockerWrapper,
@@ -29,7 +23,6 @@
         DockerVolumes,
         CmdScriptWrapper,
         ShScriptWrapper,
-        WslScriptWrapper,
-        DotnetWrapper
+        WslScriptWrapper
     }
 }

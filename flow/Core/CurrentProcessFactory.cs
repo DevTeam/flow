@@ -7,14 +7,25 @@
     using static Tags;
 
     // ReSharper disable once ClassNeverInstantiated.Global
-    internal class CompositeProcessFactory: IProcessFactory, IProcessChain
+    internal class CurrentProcessFactory: IProcessFactory, IChain<IProcessWrapper>
     {
         [NotNull] private readonly IProcessFactory _processFactory;
-        private readonly IList<IProcessWrapper> _wrappers = new List<IProcessWrapper>();
+        private readonly LinkedList<IProcessWrapper> _wrappers = new LinkedList<IProcessWrapper>();
 
-        public CompositeProcessFactory(
+        public CurrentProcessFactory(
             [NotNull, Tag(Base)] IProcessFactory processFactory) =>
             _processFactory = processFactory ?? throw new ArgumentNullException(nameof(processFactory));
+
+        public IProcessWrapper Current
+        {
+            get
+            {
+                lock (_wrappers)
+                {
+                    return _wrappers.Last.Value;
+                }
+            }
+        }
 
         public IDisposable Append(IProcessWrapper wrapper)
         {
@@ -22,7 +33,7 @@
 
             lock (_wrappers)
             {
-                _wrappers.Add(wrapper);
+                _wrappers.AddLast(wrapper);
             }
             
             return Disposable.Create(() =>

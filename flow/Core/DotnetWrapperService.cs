@@ -7,12 +7,12 @@
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class DotnetWrapperService : IDotnetWrapperService, IProcessWrapper
     {
-        [NotNull] private readonly IProcessChain _processChain;
+        [NotNull] private readonly IChain<IProcessWrapper> _processChain;
         [NotNull] private readonly IFileSystem _fileSystem;
         private DotnetWrapperInfo _info;
 
         public DotnetWrapperService(
-            [NotNull] IProcessChain processChain,
+            [NotNull] IChain<IProcessWrapper> processChain,
             [NotNull] IFileSystem fileSystem)
         {
             _processChain = processChain ?? throw new ArgumentNullException(nameof(processChain));

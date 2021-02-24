@@ -20,7 +20,7 @@
             [NotNull] Func<Process, IProcess> processFactory,
             [Tag(WorkingDirectory)] Path workingDirectory,
             [Tag(FlowVersionString)] [NotNull] string flowVersion,
-            [Tag(SeparatorChar)] char separator,
+            [Tag(ArgumentsSeparatorChar)] char separator,
             [NotNull] IConverter<CommandLineArgument, string> argumentToStringConverter)
         {
             _processFactory = processFactory ?? throw new ArgumentNullException(nameof(processFactory));

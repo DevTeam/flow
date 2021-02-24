@@ -1,7 +1,6 @@
 ﻿namespace Flow.Tests
 {
     using Core;
-    using Moq;
     using Shouldly;
     using Xunit;
 
@@ -16,10 +15,7 @@
         public void ShouldConvert(string argument, string expectedArgument)
         {
             // Given
-            var env = new Mock<IEnvironment>();
-            env.SetupGet(i => i.CommandLineArgumentsSeparator).Returns(' ');
-            env.SetupGet(i => i.CommandLineArgumentsQuote).Returns('"');
-            var argumentsFactory = new ArgumentToStringConverter(env.Object);
+            var argumentsFactory = new ArgumentToStringConverter(' ', '"');
 
             // When
             var actualArgument = argumentsFactory.Convert(new CommandLineArgument(argument));

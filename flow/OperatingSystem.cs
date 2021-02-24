@@ -4,7 +4,6 @@
     {
         Windows,
         Unix,
-        Mac,
-        Wsl,
+        Mac
     }
 }

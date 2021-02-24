@@ -8,14 +8,16 @@
 
     public class DockerWrapperServiceTests
     {
-        private readonly Mock<IProcessChain> _processChain;
+        private readonly Mock<IChain<IProcessWrapper>> _processChain;
+        private readonly Mock<IChain<OperatingSystem>> _osChain;
         private readonly Mock<IProcessWrapper> _dockerProcessWrapper;
         private readonly Mock<IProcessWrapper> _cmdProcessWrapper;
         private readonly Mock<IProcessWrapper> _shProcessWrapper;
 
         public DockerWrapperServiceTests()
         {
-            _processChain = new Mock<IProcessChain>();
+            _processChain = new Mock<IChain<IProcessWrapper>>();
+            _osChain = new Mock<IChain<OperatingSystem>>();
             _dockerProcessWrapper = new Mock<IProcessWrapper>();
             _cmdProcessWrapper = new Mock<IProcessWrapper>();
             _shProcessWrapper = new Mock<IProcessWrapper>();
@@ -59,6 +61,7 @@
         private DockerWrapperService CreateInstance() =>
             new DockerWrapperService(
                 _processChain.Object,
+                _osChain.Object,
                 info => _dockerProcessWrapper.Object,
                 _cmdProcessWrapper.Object,
                 _shProcessWrapper.Object);

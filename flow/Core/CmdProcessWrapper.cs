@@ -5,7 +5,6 @@
     using System.Linq;
     using IoC;
     using static Tags;
-    using OperatingSystem = OperatingSystem;
 
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class CmdProcessWrapper: IProcessWrapper
@@ -18,21 +17,22 @@
 
         public CmdProcessWrapper(
             [NotNull] [Tag(TempFile)] Func<Path> tempFilePathFactory,
-            [NotNull] IEnvironment environment,
+            [Tag(ArgumentsSeparatorChar)] char argumentsSeparator,
+            [Tag(ArgumentsQuoteChar)] char argumentsQuote,
             [NotNull] IFileSystem fileSystem,
             [NotNull] IConverter<IEnumerable<CommandLineArgument>, string> argumentsToStringConverter)
         {
             _tempFilePathFactory = tempFilePathFactory ?? throw new ArgumentNullException(nameof(tempFilePathFactory));
             _fileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
             _argumentsToStringConverter = argumentsToStringConverter ?? throw new ArgumentNullException(nameof(argumentsToStringConverter));
-            _separator = new string(environment.CommandLineArgumentsSeparator, 1);
-            _quote = new string(environment.CommandLineArgumentsQuote, 1);
+            _separator = new string(argumentsSeparator, 1);
+            _quote = new string(argumentsQuote, 1);
         }
 
         public ProcessInfo Wrap(ProcessInfo processInfo)
         {
             var cmdPath = new Path(_tempFilePathFactory().Value + ".cmd");
-            _fileSystem.WriteLines(cmdPath, GetCmdContent(processInfo), OperatingSystem.Windows);
+            _fileSystem.WriteLines(cmdPath, GetCmdContent(processInfo));
             return new ProcessInfo(
                 "cmd.exe",
                 processInfo.WorkingDirectory,

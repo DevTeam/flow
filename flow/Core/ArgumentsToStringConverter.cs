@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using IoC;
+    using static Tags;
 
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class ArgumentsToStringConverter : IConverter<IEnumerable<CommandLineArgument>, string>
@@ -12,11 +13,11 @@
         [NotNull] private readonly string _separator;
 
         public ArgumentsToStringConverter(
-            [NotNull] IEnvironment environment,
+            [Tag(ArgumentsSeparatorChar)] char argumentsSeparator,
             [NotNull] IConverter<CommandLineArgument, string> argumentToStringConverter)
         {
             _argumentToStringConverter = argumentToStringConverter ?? throw new ArgumentNullException(nameof(argumentToStringConverter));
-            _separator = new string(environment.CommandLineArgumentsSeparator, 1);
+            _separator = new string(argumentsSeparator, 1);
         }
 
         public string Convert(IEnumerable<CommandLineArgument> source) =>

@@ -46,6 +46,7 @@
 
 	<ItemGroup>
 	  <None Remove="Samples\Build.xaml" />
+	  <None Remove="Samples\DockerBuild.xaml" />
 	</ItemGroup>
 
 	<ItemGroup>

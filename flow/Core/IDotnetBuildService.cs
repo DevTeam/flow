@@ -3,6 +3,6 @@
     [Public]
     internal interface IDotnetBuildService
     {
-        BuildResult Execute();
+        BuildResult Execute(DotnetBuildInfo info);
     }
 }

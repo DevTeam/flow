@@ -1,7 +1,6 @@
 ﻿namespace Flow.Core
 {
-    using System;
-    using IoC;
+    using static Tags;
 
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class ArgumentToStringConverter : IConverter<CommandLineArgument, string>
@@ -9,11 +8,12 @@
         private readonly string _quote;
         private readonly string _separator;
 
-        public ArgumentToStringConverter([NotNull] IEnvironment environment)
+        public ArgumentToStringConverter(
+            [Tag(ArgumentsSeparatorChar)] char argumentsSeparator,
+            [Tag(ArgumentsQuoteChar)] char argumentsQuote)
         {
-            if (environment == null) throw new ArgumentNullException(nameof(environment));
-            _quote = new string(environment.CommandLineArgumentsQuote, 1);
-            _separator = new string(environment.CommandLineArgumentsSeparator, 1);
+            _quote = new string(argumentsQuote, 1);
+            _separator = new string(argumentsSeparator, 1);
         }
 
         public string Convert(CommandLineArgument source)

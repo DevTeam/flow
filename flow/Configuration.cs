@@ -10,6 +10,9 @@
 
     internal class Configuration: IConfiguration
     {
+        internal const char CommandLineArgumentsSeparatorChar = ' ';
+        internal const char CommandLineArgumentsQuoteChar = '"';
+
         public IEnumerable<IToken> Apply(IMutableContainer container)
         {
             var autowiringStrategy = AutowiringStrategies
@@ -18,20 +21,23 @@
 
             yield return container
                 .Bind<IAutowiringStrategy>().To(ctx => autowiringStrategy)
-
                 // Settings
-                .Bind<IEnvironment>().As(Singleton).To<InternalEnvironment>()
-                .Bind<OperatingSystem>().To(ctx => ctx.Container.Inject<IEnvironment>().OperatingSystem)
-                .Bind<bool>().Tag(TeamCity).To(ctx => ctx.Container.Inject<IEnvironment>().IsUnderTeamCity)
-                .Bind<char>().Tag(SeparatorChar).To(ctx => ' ')
-                .Bind<char>().Tag(QuoteChar).To(ctx => '\"')
-                .Bind<Path>().As(Singleton).Tag(DotnetExecutable).To(ctx => ctx.Container.Inject<IEnvironment>().DotnetExecutable)
-                .Bind<string>().Tag(WindowsNewLineString).To(ctx => "\r\n")
-                .Bind<string>().Tag(LinuxNewLineString).To(ctx => "\n")
+                .Bind<IChain<TT>>().As(Singleton).To<Chain<TT>>()
+                .Bind<OperatingSystem>().Tag(Base).To(ctx => OperatingSystem)
+                .Bind<OperatingSystem>().To(ctx => ctx.Container.Inject<IChain<OperatingSystem>>().Current)
+                .Bind<IPathNormalizer>().Tag(Base).To<BasePathNormalizer>()
+                .Bind<IPathNormalizer>().To(ctx => ctx.Container.Inject<IChain<IPathNormalizer>>().Current)
+                .Bind<ILocator>().As(Singleton).To<Locator>(ctx => ctx.Container.Assign(ctx.It.SearchTool, ctx.Container.Inject<OperatingSystem>() == OperatingSystem.Windows ? "where.exe" : "which"))
+                .Bind<IToolResolver>().As(Singleton).To<ToolResolver>()
+                .Bind<bool>().Tag(TeamCity).To(ctx =>
+                    Environment.GetEnvironmentVariable("TEAMCITY_PROJECT_NAME") != null
+                    || Environment.GetEnvironmentVariable("TEAMCITY_VERSION") != null)
+                .Bind<char>().Tag(ArgumentsSeparatorChar).To(ctx => CommandLineArgumentsSeparatorChar)
+                .Bind<char>().Tag(ArgumentsQuoteChar).To(ctx => CommandLineArgumentsQuoteChar)
+                .Bind<string>().Tag(NewLineString).To(ctx => ctx.Container.Inject<OperatingSystem>() == OperatingSystem.Windows ? "\r\n" : "\n")
                 .Bind<string>().Tag(FlowVersionString).To(ctx => GetType().Assembly.GetName().Version.ToString())
-                .Bind<string>().Tag(WindowsDirectorySeparatorString).To(ctx => "\\")
-                .Bind<string>().Tag(LinuxDirectorySeparatorString).To(ctx => "/")
-                .Bind<string>().Tag(WslRootString).To(ctx => "/mnt/c/")
+                .Bind<string>().Tag(DirectorySeparatorString).To(ctx => ctx.Container.Inject<OperatingSystem>() == OperatingSystem.Windows ? "\\" : "/")
+                .Bind<string>().To(ctx => ctx.Container.Inject<IChain<string>>().Current)
                 .Bind<Path>().Tag(WorkingDirectory).To(ctx => Environment.CurrentDirectory)
                 .Bind<Path>().Tag(TempDirectory).To(ctx => System.IO.Path.GetTempPath())
                 .Bind<Path>().Tag(TempFile).To(ctx => new Path(System.IO.Path.Combine(
@@ -46,40 +52,66 @@
                 .Bind<IStdErr>().As(Singleton).Tag(Base).To<TeamCityStdErr>()
                 .Bind<IStdErr>().As(Singleton).Tag(TeamCity).To<TeamCityStdErr>()
                 .Bind<IFileSystem>().As(Singleton).To<FileSystem>()
-                .Bind<IPathNormalizer>().As(Singleton).To<PathNormalizer>()
 
                 // Command Line
-                .Bind<ICommandLineService>().As(Singleton).To<CommandLineService>()
-                .Bind<IProcessFactory>().Bind<IProcessChain>().As(Singleton).Tag().To<CompositeProcessFactory>()
-                .Bind<IProcessFactory>().As(Singleton).Tag(Base).To<ProcessFactory>()
-                .Bind<IConverter<CommandLineArgument, string>>().As(Singleton).To<ArgumentToStringConverter>()
-                .Bind<IConverter<IEnumerable<CommandLineArgument>, string>>().As(Singleton).To<ArgumentsToStringConverter>()
+                .Bind<ICommandLineService>().To<CommandLineService>()
+                .Bind<IProcessFactory>().Bind<IChain<IProcessWrapper>>().As(Singleton).Tag().To<CurrentProcessFactory>()
+                .Bind<IProcessFactory>().Tag(Base).To<ProcessFactory>()
+                .Bind<IConverter<CommandLineArgument, string>>().To<ArgumentToStringConverter>()
+                .Bind<IConverter<IEnumerable<CommandLineArgument>, string>>().To<ArgumentsToStringConverter>()
                 .Bind<IProcess>().To<InternalProcess>(ctx => new InternalProcess(Arg<Process, IProcess>(ctx.Args, "process")))
-                .Bind<IProcessListener>().As(Singleton).Tag(StdOutErr).To<ProcessStdOutErrListener>()
+                .Bind<IProcessListener>().Tag(StdOutErr).To<ProcessStdOutErrListener>()
 
                 // Process Wrappers
-                .Bind<IProcessWrapper>().As(Singleton).Tag(CmdScriptWrapper).To<CmdProcessWrapper>()
-                .Bind<IProcessWrapper>().As(Singleton).Tag(ShScriptWrapper).To<ShProcessWrapper>()
-                .Bind<IProcessWrapper>().As(Singleton).Tag(WslScriptWrapper).To<ShProcessWrapper>(ctx => ctx.Container.Assign(ctx.It.OperatingSystem, OperatingSystem.Wsl))
+                .Bind<IProcessWrapper>().Tag(CmdScriptWrapper).To<CmdProcessWrapper>()
+                .Bind<IProcessWrapper>().Tag(ShScriptWrapper).To<ShProcessWrapper>()
+                .Bind<IProcessWrapper>().Tag(WslScriptWrapper).To<ShProcessWrapper>()
                 .Bind<IProcessWrapper>().Tag(DockerWrapper).To<DockerProcessWrapper>(ctx => ctx.It.Initialize(Arg<DockerWrapperInfo, DockerProcessWrapper>(ctx.Args, "info")))
 
                 // Docker Wrapper
-                .Bind<IDockerWrapperService>().As(Singleton).To<DockerWrapperService>()
-                .Bind<IDockerArgumentsProvider>().As(Singleton).To<DockerArgumentsProvider>()
-                .Bind<IDockerArgumentsProvider>().As(Singleton).Tag(DockerEnvironment).To<DockerEnvironmentArgumentsProvider>()
-                .Bind<IDockerArgumentsProvider>().As(Singleton).Tag(DockerVolumes).To<DockerVolumesArgumentsProvider>()
+                .Bind<IDockerWrapperService>().To<DockerWrapperService>()
+                .Bind<IDockerArgumentsProvider>().To<DockerArgumentsProvider>()
+                .Bind<IDockerArgumentsProvider>().Tag(DockerEnvironment).To<DockerEnvironmentArgumentsProvider>()
+                .Bind<IDockerArgumentsProvider>().Tag(DockerVolumes).To<DockerVolumesArgumentsProvider>()
 
                 // Wsl
-                .Bind<IWslWrapperService>().As(Singleton).To<WslWrapperService>()
+                .Bind<IWslWrapperService>().To<WslWrapperService>()
 
                 // Dotnet
                 .Bind<IDotnetWrapperService>().To<DotnetWrapperService>()
-                .Bind<IDotnetBuildService>().As(Singleton).To<DotnetBuildService>();
+                .Bind<IDotnetBuildService>().To<DotnetBuildService>();
         }
 
         private static TArg Arg<TArg, TTarget>(object[] args, string name) => 
             args.Length == 1 && args[0] is TArg arg
                 ? arg
                 : throw new ArgumentException($"Please resolve using Func<{nameof(TArg)}, {nameof(TTarget)}>.", name);
+
+        private OperatingSystem OperatingSystem
+        {
+            get
+            {
+                switch (Environment.OSVersion.Platform)
+                {
+                    case PlatformID.Win32S:
+                    case PlatformID.Win32Windows:
+                    case PlatformID.Win32NT:
+                        return OperatingSystem.Windows;
+
+                    case PlatformID.Unix:
+                        return OperatingSystem.Unix;
+
+                    case PlatformID.MacOSX:
+                        return OperatingSystem.Mac;
+
+                    case PlatformID.WinCE:
+                    case PlatformID.Xbox:
+                        throw new NotSupportedException();
+
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+        }
     }
 }

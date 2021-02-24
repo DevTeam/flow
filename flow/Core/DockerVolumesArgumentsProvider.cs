@@ -8,12 +8,12 @@
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class DockerVolumesArgumentsProvider : IDockerArgumentsProvider
     {
-        [NotNull] private readonly IPathNormalizer _pathNormalizer;
+        [NotNull] private readonly Func<IPathNormalizer> _pathNormalizer;
         private readonly Path _workingDirectory;
         private readonly Path _tempDirectory;
 
         public DockerVolumesArgumentsProvider(
-            [NotNull] IPathNormalizer pathNormalizer,
+            [NotNull] Func<IPathNormalizer> pathNormalizer,
             [Tag(Tags.WorkingDirectory)] Path workingDirectory,
             [Tag(Tags.TempDirectory)] Path tempDirectory)
         {
@@ -27,7 +27,7 @@
             foreach (var volume in GetVolumes(wrapperInfo, processInfo))
             {
                 yield return "-v";
-                yield return $"{volume.HostPath.Value}:{_pathNormalizer.Normalize(volume.ContainerPath, wrapperInfo.Platform).Value}";
+                yield return $"{volume.HostPath.Value}:{_pathNormalizer().Normalize(volume.ContainerPath).Value}";
             }
         }
 

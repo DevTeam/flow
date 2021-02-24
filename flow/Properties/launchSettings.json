@@ -2,7 +2,7 @@
   "profiles": {
     "Flow": {
       "commandName": "Project",
-      "commandLineArgs": "Build",
+      "commandLineArgs": "DockerBuild",
       "environmentVariables": {
         "tmp": "tmp"
       }

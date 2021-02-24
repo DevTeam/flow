@@ -5,26 +5,20 @@
     using System.IO;
     using IoC;
     using static Tags;
-    using OperatingSystem = OperatingSystem;
     using Path = Path;
 
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class FileSystem : IFileSystem
     {
-        [NotNull] private readonly string _windowsNewLineString;
-        [NotNull] private readonly string _linuxNewLineString;
-
+        [NotNull] private readonly Func<string> _newLineString;
+        
         public FileSystem(
-            [NotNull, Tag(WindowsNewLineString)] string windowsNewLineString,
-            [NotNull, Tag(LinuxNewLineString)] string linuxNewLineString)
-        {
-            _windowsNewLineString = windowsNewLineString ?? throw new ArgumentNullException(nameof(windowsNewLineString));
-            _linuxNewLineString = linuxNewLineString ?? throw new ArgumentNullException(nameof(linuxNewLineString));
-        }
+            [NotNull, Tag(NewLineString)] Func<string> newLineString) =>
+            _newLineString = newLineString ?? throw new ArgumentNullException(nameof(newLineString));
 
         public bool IsPathRooted(Path path) => System.IO.Path.IsPathRooted(path.Value);
 
-        public void WriteLines(Path filePath, IEnumerable<string> lines, OperatingSystem operatingSystem)
+        public void WriteLines(Path filePath, IEnumerable<string> lines)
         {
             if (lines == null) throw new ArgumentNullException(nameof(lines));
             var dir = System.IO.Path.GetDirectoryName(filePath.Value);
@@ -33,7 +27,7 @@
                 Directory.CreateDirectory(dir);
             }
 
-            var newLineString = GetNewLineString(operatingSystem);
+            var newLineString = _newLineString();
             using (var file = File.CreateText(filePath.Value))
             {
                 foreach (var line in lines)
@@ -43,8 +37,5 @@
                 }
             }
         }
-
-        private string GetNewLineString(OperatingSystem operatingSystem) =>
-            operatingSystem == OperatingSystem.Windows ? _windowsNewLineString : _linuxNewLineString;
     }
 }
