@@ -26,7 +26,12 @@
             var processInfo = new ProcessInfo(SearchTool, _workingDirectory, new[] { new CommandLineArgument(path.Value) }, Enumerable.Empty<EnvironmentVariable>());
             var process = _processFactory.Create(processInfo);
             var processListener = new ProcessListener();
-            if (process.Run(processListener).Value == 0 && !string.IsNullOrWhiteSpace(processListener.FirstLine))
+            if (process.Run(processListener).Value != 0)
+            {
+                throw new InvalidOperationException($"Cannot run {SearchTool}.");
+            }
+
+            if (!string.IsNullOrWhiteSpace(processListener.FirstLine))
             {
                 fullPath = new Path(processListener.FirstLine);
                 return true;
