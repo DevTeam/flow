@@ -9,18 +9,22 @@
     public class DockerWrapperServiceTests
     {
         private readonly Mock<IChain<IProcessWrapper>> _processChain;
-        private readonly Mock<IChain<OperatingSystem>> _osChain;
+        private readonly Mock<IChain<IEnvironment>> _envChain;
         private readonly Mock<IProcessWrapper> _dockerProcessWrapper;
         private readonly Mock<IProcessWrapper> _cmdProcessWrapper;
         private readonly Mock<IProcessWrapper> _shProcessWrapper;
+        private readonly Mock<IVirtualEnvironment> _virtualEnvironment;
 
         public DockerWrapperServiceTests()
         {
             _processChain = new Mock<IChain<IProcessWrapper>>();
-            _osChain = new Mock<IChain<OperatingSystem>>();
+            _envChain = new Mock<IChain<IEnvironment>>();
+            _virtualEnvironment = new Mock<IVirtualEnvironment>();
             _dockerProcessWrapper = new Mock<IProcessWrapper>();
             _cmdProcessWrapper = new Mock<IProcessWrapper>();
             _shProcessWrapper = new Mock<IProcessWrapper>();
+
+            _virtualEnvironment.Setup(i => i.Set(It.IsAny<OperatingSystem>())).Returns(_virtualEnvironment.Object);
         }
 
         [Theory]
@@ -46,6 +50,8 @@
             using (wrapper.Using(wrapperInfo))
             {
                 // Then
+                _virtualEnvironment.Verify(i => i.Set(operatingSystem));
+                _envChain.Verify(i => i.Append(_virtualEnvironment.Object));
                 _processChain.Verify(i => i.Append(_dockerProcessWrapper.Object));
                 if (operatingSystem == OperatingSystem.Windows)
                 {
@@ -61,7 +67,8 @@
         private DockerWrapperService CreateInstance() =>
             new DockerWrapperService(
                 _processChain.Object,
-                _osChain.Object,
+                _envChain.Object,
+                _virtualEnvironment.Object,
                 info => _dockerProcessWrapper.Object,
                 _cmdProcessWrapper.Object,
                 _shProcessWrapper.Object);

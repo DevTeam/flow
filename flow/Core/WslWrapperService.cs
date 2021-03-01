@@ -11,26 +11,25 @@
     internal class WslWrapperService : IWslWrapperService, IProcessWrapper, IPathNormalizer
     {
         [NotNull] private readonly IChain<IProcessWrapper> _processChain;
-        [NotNull] private readonly IChain<OperatingSystem> _osChain;
-        [NotNull] private readonly IChain<IPathNormalizer> _pathNormalizerChain;
+        [NotNull] private readonly IChain<IEnvironment> _envChain;
+        [NotNull] private readonly IVirtualEnvironment _virtualEnvironment;
         [NotNull] private readonly IProcessWrapper _wslProcessWrapper;
 
         public WslWrapperService(
             [NotNull] IChain<IProcessWrapper> processChain,
-            [NotNull] IChain<OperatingSystem> osChain,
-            [NotNull] IChain<IPathNormalizer> pathNormalizerChain,
+            [NotNull] IChain<IEnvironment> envChain,
+            [NotNull] IVirtualEnvironment virtualEnvironment,
             [NotNull, Tag(WslScriptWrapper)] IProcessWrapper wslProcessWrapper)
         {
             _processChain = processChain ?? throw new ArgumentNullException(nameof(processChain));
-            _osChain = osChain;
-            _pathNormalizerChain = pathNormalizerChain ?? throw new ArgumentNullException(nameof(pathNormalizerChain));
+            _envChain = envChain ?? throw new ArgumentNullException(nameof(envChain));
+            _virtualEnvironment = virtualEnvironment ?? throw new ArgumentNullException(nameof(virtualEnvironment));
             _wslProcessWrapper = wslProcessWrapper;
         }
 
         public IDisposable Using() =>
             Disposable.Create(
-                _pathNormalizerChain.Append(this),
-                _osChain.Append(OperatingSystem.Unix),
+                _envChain.Append(_virtualEnvironment.Set(OperatingSystem.Unix).Set(this)),
                 _processChain.Append(this),
                 _processChain.Append(_wslProcessWrapper));
 

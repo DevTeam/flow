@@ -23,15 +23,16 @@
                 .Bind<IAutowiringStrategy>().To(ctx => autowiringStrategy)
                 // Settings
                 .Bind<IChain<TT>>().As(Singleton).To<Chain<TT>>()
-                .Bind<OperatingSystem>().Tag(Base).To(ctx => OperatingSystem)
-                .Bind<OperatingSystem>().To(ctx => ctx.Container.Inject<IChain<OperatingSystem>>().Current)
-                .Bind<IPathNormalizer>().Tag(Base).To<BasePathNormalizer>()
-                .Bind<IPathNormalizer>().To(ctx => ctx.Container.Inject<IChain<IPathNormalizer>>().Current)
+                .Bind<IEnvironment>().Tag(Base).To<DefaultEnvironment>()
+                .Bind<IVirtualEnvironment>().To<VirtualEnvironment>()
+                .Bind<IEnvironment>().To(ctx => ctx.Container.Inject<IChain<IEnvironment>>().Current)
+                .Bind<OperatingSystem>().To(ctx => ctx.Container.Inject<IEnvironment>().OperatingSystem)
+                .Bind<IPathNormalizer>().To(ctx => ctx.Container.Inject<IEnvironment>().PathNormalizer)
+                .Bind<IEnumerable<EnvironmentVariable>>().To(ctx => ctx.Container.Inject<IEnvironment>().Variables)
+                .Bind<ITeamCitySettings>().To<TeamCitySettings>()
+                .Bind<IDebugger>().To<InternalDebugger>()
                 .Bind<ILocator>().As(Singleton).To<Locator>(ctx => ctx.Container.Assign(ctx.It.SearchTool, ctx.Container.Inject<OperatingSystem>() == OperatingSystem.Windows ? "where.exe" : "which"))
                 .Bind<IToolResolver>().As(Singleton).To<ToolResolver>()
-                .Bind<bool>().Tag(TeamCity).To(ctx =>
-                    Environment.GetEnvironmentVariable("TEAMCITY_PROJECT_NAME") != null
-                    || Environment.GetEnvironmentVariable("TEAMCITY_VERSION") != null)
                 .Bind<char>().Tag(ArgumentsSeparatorChar).To(ctx => CommandLineArgumentsSeparatorChar)
                 .Bind<char>().Tag(ArgumentsQuoteChar).To(ctx => CommandLineArgumentsQuoteChar)
                 .Bind<string>().Tag(NewLineString).To(ctx => ctx.Container.Inject<OperatingSystem>() == OperatingSystem.Windows ? "\r\n" : "\n")
@@ -45,13 +46,14 @@
                     Guid.NewGuid().ToString().Replace("-", string.Empty))))
 
                 // Common
-                .Bind<IStdOut>().To(ctx => ctx.Container.Inject<IStdOut>(ctx.Container.Inject<bool>(TeamCity) ? TeamCity : Base))
+                .Bind<IStdOut>().To(ctx => ctx.Container.Inject<IStdOut>(ctx.Container.Inject<ITeamCitySettings>().IsUnderTeamCity ? TeamCity : Base))
                 .Bind<IStdOut>().As(Singleton).Tag(Base).To<TeamCityStdOut>()
-                .Bind<IStdOut>().As(Singleton).Tag(TeamCity).To<TeamCityStdOut>()
-                .Bind<IStdErr>().To(ctx => ctx.Container.Inject<IStdErr>(ctx.Container.Inject<bool>(TeamCity) ? TeamCity : Base))
+                .Bind<IStdOut>().As(Singleton).Tag(Tags.TeamCity).To<TeamCityStdOut>()
+                .Bind<IStdErr>().To(ctx => ctx.Container.Inject<IStdErr>(ctx.Container.Inject<ITeamCitySettings>().IsUnderTeamCity ? TeamCity : Base))
                 .Bind<IStdErr>().As(Singleton).Tag(Base).To<TeamCityStdErr>()
-                .Bind<IStdErr>().As(Singleton).Tag(TeamCity).To<TeamCityStdErr>()
+                .Bind<IStdErr>().As(Singleton).Tag(Tags.TeamCity).To<TeamCityStdErr>()
                 .Bind<IFileSystem>().As(Singleton).To<FileSystem>()
+                .Bind<IConverter<MSBuildParameter, string>>().As(Singleton).To<MSBuildParameterToStringConverter>()
 
                 // Command Line
                 .Bind<ICommandLineService>().To<CommandLineService>()
@@ -78,6 +80,7 @@
                 .Bind<IWslWrapperService>().To<WslWrapperService>()
 
                 // Dotnet
+                .Bind<IResponseFile>().To<MSBuildResponseFile>()
                 .Bind<IDotnetWrapperService>().To<DotnetWrapperService>()
                 .Bind<IDotnetBuildService>().To<DotnetBuildService>();
         }
@@ -86,32 +89,5 @@
             args.Length == 1 && args[0] is TArg arg
                 ? arg
                 : throw new ArgumentException($"Please resolve using Func<{nameof(TArg)}, {nameof(TTarget)}>.", name);
-
-        private OperatingSystem OperatingSystem
-        {
-            get
-            {
-                switch (Environment.OSVersion.Platform)
-                {
-                    case PlatformID.Win32S:
-                    case PlatformID.Win32Windows:
-                    case PlatformID.Win32NT:
-                        return OperatingSystem.Windows;
-
-                    case PlatformID.Unix:
-                        return OperatingSystem.Unix;
-
-                    case PlatformID.MacOSX:
-                        return OperatingSystem.Mac;
-
-                    case PlatformID.WinCE:
-                    case PlatformID.Xbox:
-                        throw new NotSupportedException();
-
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
-        }
     }
 }

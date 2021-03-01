@@ -9,41 +9,40 @@
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class ShProcessWrapper: IProcessWrapper
     {
-        [NotNull] private readonly Func<Path> _tempFilePathFactory;
         [NotNull] private readonly IFileSystem _fileSystem;
         [NotNull] private readonly Func<IPathNormalizer> _pathNormalizer;
         [NotNull] private readonly IConverter<IEnumerable<CommandLineArgument>, string> _argumentsToStringConverter;
         [NotNull] private readonly string _quote;
         [NotNull] private readonly string _separator;
+        private readonly Path _shPath;
 
         public ShProcessWrapper(
             [Tag(ArgumentsSeparatorChar)] char argumentsSeparator,
             [Tag(ArgumentsQuoteChar)] char argumentsQuote,
-            [NotNull][Tag(TempFile)] Func<Path> tempFilePathFactory,
+            [Tag(TempFile)] Path tempFilePath,
             [NotNull] IFileSystem fileSystem,
             [NotNull] Func<IPathNormalizer> pathNormalizer,
             [NotNull] IConverter<IEnumerable<CommandLineArgument>, string> argumentsToStringConverter)
         {
-            _tempFilePathFactory = tempFilePathFactory ?? throw new ArgumentNullException(nameof(tempFilePathFactory));
             _fileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
             _pathNormalizer = pathNormalizer;
             _argumentsToStringConverter = argumentsToStringConverter ?? throw new ArgumentNullException(nameof(argumentsToStringConverter));
             _separator = new string(argumentsSeparator, 1);
             _quote = new string(argumentsQuote, 1);
+            _shPath = new Path(tempFilePath.Value + ".sh");
         }
 
         public ProcessInfo Wrap(ProcessInfo processInfo)
         {
-            var shPath = new Path(_tempFilePathFactory().Value + ".sh");
-            _fileSystem.WriteLines(shPath, GetCmdContent(processInfo));
-            shPath = _pathNormalizer().Normalize(shPath.Value).Value;
+            _fileSystem.WriteLines(_shPath, GetCmdContent(processInfo));
+            var shPath = _pathNormalizer().Normalize(_shPath.Value).Value;
             return new ProcessInfo(
                 "sh",
                 processInfo.WorkingDirectory,
                 new[]
                 {
                     "-c",
-                    new CommandLineArgument($"chmod +x {shPath.Value} && {shPath.Value}")
+                    new CommandLineArgument($"chmod +x {shPath} && {shPath}")
                 }, 
                 Enumerable.Empty<EnvironmentVariable>());
         }

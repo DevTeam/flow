@@ -56,13 +56,14 @@
             if (activity == null) throw new ArgumentNullException(nameof(activity));
 
             var invoker = new WorkflowInvoker(activity);
-            using (invoker.ConfigureExtensions())
+            using (var container = invoker.ConfigureExtensions())
             {
+                container.Resolve<IDebugger>().Debug();
                 return invoker.Invoke(timeout);
             }
         }
 
-        private static IDisposable ConfigureExtensions([NotNull] this WorkflowInvoker invoker)
+        private static IMutableContainer ConfigureExtensions([NotNull] this WorkflowInvoker invoker)
         {
             if (invoker == null) throw new ArgumentNullException(nameof(invoker));
 

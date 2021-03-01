@@ -9,37 +9,36 @@
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class CmdProcessWrapper: IProcessWrapper
     {
-        [NotNull] private readonly Func<Path> _tempFilePathFactory;
         [NotNull] private readonly IFileSystem _fileSystem;
         [NotNull] private readonly IConverter<IEnumerable<CommandLineArgument>, string> _argumentsToStringConverter;
         [NotNull] private readonly string _quote;
         [NotNull] private readonly string _separator;
+        private readonly Path _cmdPath;
 
         public CmdProcessWrapper(
-            [NotNull] [Tag(TempFile)] Func<Path> tempFilePathFactory,
+            [Tag(TempFile)] Path tempFilePath,
             [Tag(ArgumentsSeparatorChar)] char argumentsSeparator,
             [Tag(ArgumentsQuoteChar)] char argumentsQuote,
             [NotNull] IFileSystem fileSystem,
             [NotNull] IConverter<IEnumerable<CommandLineArgument>, string> argumentsToStringConverter)
         {
-            _tempFilePathFactory = tempFilePathFactory ?? throw new ArgumentNullException(nameof(tempFilePathFactory));
             _fileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
             _argumentsToStringConverter = argumentsToStringConverter ?? throw new ArgumentNullException(nameof(argumentsToStringConverter));
             _separator = new string(argumentsSeparator, 1);
             _quote = new string(argumentsQuote, 1);
+            _cmdPath = new Path(tempFilePath.Value + ".cmd");
         }
 
         public ProcessInfo Wrap(ProcessInfo processInfo)
         {
-            var cmdPath = new Path(_tempFilePathFactory().Value + ".cmd");
-            _fileSystem.WriteLines(cmdPath, GetCmdContent(processInfo));
+            _fileSystem.WriteLines(_cmdPath, GetCmdContent(processInfo));
             return new ProcessInfo(
                 "cmd.exe",
                 processInfo.WorkingDirectory,
                 new CommandLineArgument[]
                 {
                     "/C",
-                    cmdPath.Value
+                    _cmdPath.Value
                 },
                 Enumerable.Empty<EnvironmentVariable>());
         }

@@ -13,17 +13,20 @@
         [NotNull] private readonly IToolResolver _toolResolver;
         [NotNull] private readonly IProcessFactory _processFactory;
         [NotNull] private readonly IProcessListener _processListener;
+        [NotNull] private readonly IResponseFile _responseFile;
 
         public DotnetBuildService(
             [Tag(WorkingDirectory)] Path workingDirectory,
             [NotNull] IToolResolver toolResolver,
             [NotNull] IProcessFactory processFactory,
-            [NotNull, Tag(StdOutErr)] IProcessListener processListener)
+            [NotNull, Tag(StdOutErr)] IProcessListener processListener,
+            [NotNull] IResponseFile responseFile)
         {
             _workingDirectory = workingDirectory;
             _toolResolver = toolResolver ?? throw new ArgumentNullException(nameof(toolResolver));
             _processFactory = processFactory ?? throw new ArgumentNullException(nameof(processFactory));
             _processListener = processListener ?? throw new ArgumentNullException(nameof(processListener));
+            _responseFile = responseFile;
         }
 
         public BuildResult Execute(DotnetBuildInfo info)
@@ -47,6 +50,11 @@
         private IEnumerable<CommandLineArgument> GetArgs()
         {
             yield return "build";
+            var rspFile = _responseFile.Create();
+            if (!rspFile.IsEmpty)
+            {
+                yield return $"@{_responseFile.Create().Value}";
+            }
         }
     }
 }

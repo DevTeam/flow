@@ -14,7 +14,6 @@
         {
             if (name == null) throw new ArgumentNullException(nameof(name));
             if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException(nameof(name));
-            if (value == null) throw new ArgumentNullException(nameof(value));
             Name = name;
             Value = value ?? throw new ArgumentNullException(nameof(value));
         }
