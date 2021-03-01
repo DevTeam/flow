@@ -7,7 +7,6 @@
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
-    using Core;
     using IoC;
 #if !NET48
     using System.Activities.XamlIntegration;
