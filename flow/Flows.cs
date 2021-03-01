@@ -58,8 +58,11 @@
             var invoker = new WorkflowInvoker(activity);
             using (var container = invoker.ConfigureExtensions())
             {
-                container.Resolve<IDebugger>().Debug();
-                return invoker.Invoke(timeout);
+                var stages = container.Resolve<IStages>();
+                stages.Before();
+                var results = invoker.Invoke(timeout);
+                stages.After(results);
+                return results;
             }
         }
 

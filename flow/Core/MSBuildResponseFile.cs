@@ -3,8 +3,8 @@
     using System;
     using IoC;
 
-    // ReSharper disable once UnusedType.Global
     // ReSharper disable once InconsistentNaming
+    // ReSharper disable once ClassNeverInstantiated.Global
     internal class MSBuildResponseFile : IResponseFile
     {
         [NotNull] private readonly ITeamCitySettings _teamCitySettings;
@@ -34,7 +34,7 @@
                     "/noconsolelogger",
                     $"/l:TeamCity.MSBuild.Logger.TeamCityMSBuildLogger,{_teamCitySettings.MSBuildLogger.Value};TeamCity;verbosity=normal",
                     "/p:VSTestLogger=logger://teamcity",
-                    _paramConverter.Convert(new MSBuildParameter("VSTestTestAdapterPath", ".;{_teamCitySettings.VSTestLogger.Value}"))
+                    _paramConverter.Convert(new MSBuildParameter("VSTestTestAdapterPath", $".;{_teamCitySettings.VSTestLogger.Value}"))
                 });
 
                 hasFile = true;

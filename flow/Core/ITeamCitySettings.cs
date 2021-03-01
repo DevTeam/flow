@@ -7,6 +7,8 @@
     {
         bool IsUnderTeamCity { get; }
 
+        string Version { get; }
+
         Path MSBuildLogger { get; }
 
         Path VSTestLogger { get; }

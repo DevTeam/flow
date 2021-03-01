@@ -14,6 +14,10 @@
             {
                 switch (variable.Name.ToUpperInvariant())
                 {
+                    case "TEAMCITY_VERSION":
+                        Version = variable.Value;
+                        break;
+
                     case "TEAMCITY_MSBUILD_LOGGER":
                         MSBuildLogger = new Path(variable.Value);
                         break;
@@ -28,6 +32,8 @@
         }
 
         public bool IsUnderTeamCity { get; }
+
+        public string Version { get; set; }
 
         public Path MSBuildLogger { get; }
 

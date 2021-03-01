@@ -30,7 +30,7 @@
                 .Bind<IPathNormalizer>().To(ctx => ctx.Container.Inject<IEnvironment>().PathNormalizer)
                 .Bind<IEnumerable<EnvironmentVariable>>().To(ctx => ctx.Container.Inject<IEnvironment>().Variables)
                 .Bind<ITeamCitySettings>().To<TeamCitySettings>()
-                .Bind<IDebugger>().To<InternalDebugger>()
+                .Bind<IStages>().To<Stages>()
                 .Bind<ILocator>().As(Singleton).To<Locator>(ctx => ctx.Container.Assign(ctx.It.SearchTool, ctx.Container.Inject<OperatingSystem>() == OperatingSystem.Windows ? "where.exe" : "which"))
                 .Bind<IToolResolver>().As(Singleton).To<ToolResolver>()
                 .Bind<char>().Tag(ArgumentsSeparatorChar).To(ctx => CommandLineArgumentsSeparatorChar)
