@@ -20,7 +20,7 @@
 
         [Category("Basic")]
         [Description("Docker container platform")]
-        public Flow.OperatingSystem Platform { get; set; }
+        public global::Flow.OperatingSystem Platform { get; set; }
 
         // Automatically remove the container
         [Category("Advanced")]

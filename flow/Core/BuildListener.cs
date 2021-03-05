@@ -7,8 +7,9 @@
     using JetBrains.TeamCity.ServiceMessages.Read;
 
     // ReSharper disable once ClassNeverInstantiated.Global
-    internal class TeamCityBuildListener: IProcessListener<BuildResult>, IBuildVisitor, IServiceMessageProcessor
+    internal class BuildListener: IProcessListener<BuildResult>, IBuildVisitor, IServiceMessageProcessor
     {
+        [NotNull] private readonly ILog<BuildListener> _log;
         private readonly IColorfulStdOut _stdOut;
         [NotNull] private readonly IStdErr _stdErr;
         [NotNull] private readonly IServiceMessageParser _serviceMessageParser;
@@ -18,12 +19,14 @@
         [NotNull] private readonly List<BuildWarning> _warnings = new List<BuildWarning>();
         private ExitCode? _exitCode;
 
-        public TeamCityBuildListener(
+        public BuildListener(
+            [NotNull] ILog<BuildListener> log,
             [NotNull] IColorfulStdOut stdOut,
             [NotNull] IStdErr stdErr,
             [NotNull] IServiceMessageParser serviceMessageParser,
             [NotNull] Func<IBuildLogFlow> flowFactory)
         {
+            _log = log ?? throw new ArgumentNullException(nameof(log));
             _stdOut = stdOut ?? throw new ArgumentNullException(nameof(stdOut));
             _stdErr = stdErr ?? throw new ArgumentNullException(nameof(stdErr));
             _serviceMessageParser = serviceMessageParser ?? throw new ArgumentNullException(nameof(serviceMessageParser));
@@ -32,8 +35,8 @@
 
         public void OnStart(ProcessStartInfo startInfo)
         {
-            _stdOut.WriteLine(new Text("Starting: ", Color.Header), new Text($"{System.IO.Path.GetFullPath(startInfo.FileName)} {startInfo.Arguments}"));
-            _stdOut.WriteLine(new Text("in directory: ", Color.Header), new Text($"{System.IO.Path.GetFullPath(startInfo.WorkingDirectory)}"));
+            _log.Info(() => new Text("Starting: ", Color.Header) + new Text($"{System.IO.Path.GetFullPath(startInfo.FileName)} {startInfo.Arguments}"));
+            _log.Info(() => new Text("in directory: ", Color.Header) + new Text($"{System.IO.Path.GetFullPath(startInfo.WorkingDirectory)}"));
         }
 
         public void OnStdOut(string line)
@@ -54,7 +57,7 @@
         public void OnExitCode(ExitCode exitCode)
         {
             _exitCode = exitCode;
-            _stdOut.WriteLine(new Text("Exit code: ", Color.Header), new Text(exitCode.ToString(), exitCode.Value == 0 ? Color.Success : Color.Error));
+            _log.Info(() => new Text("Exit code: ", Color.Header) + new Text(exitCode.ToString(), exitCode.Value == 0 ? Color.Success : Color.Error));
         }
 
         public bool ProcessServiceMessages(string text)

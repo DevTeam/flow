@@ -7,6 +7,7 @@
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class MSBuildResponseFile : IResponseFile
     {
+        private readonly Verbosity _verbosity;
         [NotNull] private readonly ITeamCitySettings _teamCitySettings;
         [NotNull] private readonly IFileSystem _fileSystem;
         [NotNull] private readonly IConverter<MSBuildParameter, string> _paramConverter;
@@ -14,12 +15,14 @@
         private readonly Path _rspPath;
 
         public MSBuildResponseFile(
+            Verbosity verbosity,
             [Tag(Tags.TempFile)] Path tempFilePath,
             [NotNull] ITeamCitySettings teamCitySettings,
             [NotNull] IFileSystem fileSystem,
             [NotNull] IConverter<MSBuildParameter, string> paramConverter,
             [NotNull] Func<IPathNormalizer> pathNormalizer)
         {
+            _verbosity = verbosity;
             _teamCitySettings = teamCitySettings ?? throw new ArgumentNullException(nameof(teamCitySettings));
             _fileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
             _paramConverter = paramConverter ?? throw new ArgumentNullException(nameof(paramConverter));
@@ -33,7 +36,7 @@
             _fileSystem.WriteLines(_rspPath, new[]
             {
                 "/noconsolelogger",
-                $"/l:TeamCity.MSBuild.Logger.TeamCityMSBuildLogger,{pathNormalizer.Normalize(_teamCitySettings.MSBuildLogger).Value};TeamCity;verbosity=normal",
+                $"/l:TeamCity.MSBuild.Logger.TeamCityMSBuildLogger,{pathNormalizer.Normalize(_teamCitySettings.MSBuildLogger).Value};TeamCity;verbosity={_verbosity}",
                 "/p:VSTestLogger=logger://teamcity",
                 _paramConverter.Convert(new MSBuildParameter("VSTestTestAdapterPath", $".;{pathNormalizer.Normalize(_teamCitySettings.VSTestLogger).Value}"))
             });

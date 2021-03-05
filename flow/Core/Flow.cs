@@ -10,20 +10,23 @@
     using static Tags;
 
     // ReSharper disable once ClassNeverInstantiated.Global
-    internal class Stages : IStages
+    internal class Flow : IStages
     {
+        [NotNull] private readonly ILog<Flow> _log;
         [NotNull] private readonly string _version;
         [NotNull] private readonly ITeamCitySettings _teamCitySettings;
         [NotNull] private readonly IColorfulStdOut _stdOut;
         private readonly bool _debug;
 
-        public Stages(
+        public Flow(
+            [NotNull] ILog<Flow> log,
             [NotNull, Tag(FlowVersionString)] string version,
             [NotNull] ITeamCitySettings teamCitySettings,
             [NotNull] IEnvironment environment,
             [NotNull] IColorfulStdOut stdOut)
         {
             if (environment == null) throw new ArgumentNullException(nameof(environment));
+            _log = log ?? throw new ArgumentNullException(nameof(log));
             _version = version ?? throw new ArgumentNullException(nameof(version));
             _teamCitySettings = teamCitySettings ?? throw new ArgumentNullException(nameof(teamCitySettings));
             _stdOut = stdOut ?? throw new ArgumentNullException(nameof(stdOut));
@@ -36,18 +39,12 @@
 
         public void Before()
         {
-            var header = new StringBuilder($"Flow {_version}");
-            if (_teamCitySettings.IsUnderTeamCity)
-            {
-                header.Append($" under TeamCity {_teamCitySettings.Version}");
-            }
-
-            _stdOut.WriteLine(new Text(header.ToString(), Color.Header));
+            _log.Info(() => new Text($"Flow {_version}", Color.Header) + (_teamCitySettings.IsUnderTeamCity ? $" under TeamCity {_teamCitySettings.Version}" : string.Empty));
             if (_debug)
             {
-                _stdOut.WriteLine(new Text(""));
-                _stdOut.WriteLine(new Text("Waiting for debugger in process: ", Color.Header), new Text($"[{Process.GetCurrentProcess().Id}] \"{Process.GetCurrentProcess().ProcessName}\""));
-                _stdOut.WriteLine(new Text(""));
+                _stdOut.WriteLine(string.Empty);
+                _stdOut.WriteLine(new Text("Waiting for debugger in process: ", Color.Header), $"[{Process.GetCurrentProcess().Id}] \"{Process.GetCurrentProcess().ProcessName}\"");
+                _stdOut.WriteLine(string.Empty);
                 while (!Debugger.IsAttached)
                 {
                     Thread.Sleep(100);
@@ -59,6 +56,7 @@
 
         public void After(IDictionary<string, object> results)
         {
+            _log.Trace(() => new Text("Completed"));
         }
     }
 }

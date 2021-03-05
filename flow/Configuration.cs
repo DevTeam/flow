@@ -14,8 +14,14 @@
 
     internal class Configuration: IConfiguration
     {
+        private readonly Verbosity _verbosity;
         internal const char CommandLineArgumentsSeparatorChar = ' ';
         internal const char CommandLineArgumentsQuoteChar = '"';
+
+        public Configuration(Verbosity verbosity)
+        {
+            _verbosity = verbosity;
+        }
 
         public IEnumerable<IToken> Apply(IMutableContainer container)
         {
@@ -26,6 +32,8 @@
             yield return container
                 .Bind<IAutowiringStrategy>().To(ctx => autowiringStrategy)
                 // Settings
+                .Bind<Verbosity>().To(ctx => _verbosity)
+                .Bind<ILog<TT>>().To<Log<TT>>()
                 .Bind<IChain<TT>>().As(Singleton).To<Chain<TT>>()
                 .Bind<IEnvironment>().Tag(Base).To<DefaultEnvironment>()
                 .Bind<IVirtualEnvironment>().To<VirtualEnvironment>()
@@ -34,7 +42,7 @@
                 .Bind<IPathNormalizer>().To(ctx => ctx.Container.Inject<IEnvironment>().PathNormalizer)
                 .Bind<IEnumerable<EnvironmentVariable>>().To(ctx => ctx.Container.Inject<IEnvironment>().Variables)
                 .Bind<ITeamCitySettings>().To<TeamCitySettings>()
-                .Bind<IStages>().To<Stages>()
+                .Bind<IStages>().To<Flow>()
                 .Bind<ILocator>().As(Singleton).To<Locator>(ctx => ctx.Container.Assign(ctx.It.SearchTool, ctx.Container.Inject<OperatingSystem>() == OperatingSystem.Windows ? "where.exe" : "which"))
                 .Bind<IToolResolver>().As(Singleton).To<ToolResolver>()
                 .Bind<char>().Tag(ArgumentsSeparatorChar).To(ctx => CommandLineArgumentsSeparatorChar)
@@ -68,7 +76,7 @@
                 .Bind<IConverter<CommandLineArgument, string>>().To<ArgumentToStringConverter>()
                 .Bind<IConverter<IEnumerable<CommandLineArgument>, string>>().To<ArgumentsToStringConverter>()
                 .Bind<IProcess>().To<InternalProcess>(ctx => new InternalProcess(Arg<Process, IProcess>(ctx.Args, "process")))
-                .Bind<IProcessListener>().Tag(StdOutErr).To<ProcessStdOutErrListener>()
+                .Bind<IProcessListener>().Tag(StdOutErr).To<ProcessListener>()
                 
                 // Process Wrappers
                 .Bind<IProcessWrapper>().Tag(CmdScriptWrapper).To<CmdProcessWrapper>()
@@ -89,7 +97,7 @@
                 .Bind<IResponseFile>().To<MSBuildResponseFile>()
                 .Bind<IDotnetWrapperService>().To<DotnetWrapperService>()
                 .Bind<IDotnetBuildService>().To<DotnetBuildService>()
-                .Bind<IProcessListener<BuildResult>>().To<TeamCityBuildListener>()
+                .Bind<IProcessListener<BuildResult>>().To<BuildListener>()
                 .Bind<IBuildLogFlow>().To<BuildLogFlow>()
 
                 // TeamCity messages
