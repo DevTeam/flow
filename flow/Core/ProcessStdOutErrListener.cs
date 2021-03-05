@@ -36,7 +36,6 @@
             _stdErr.WriteLine(line);
         }
 
-        public void OnExitCode(ExitCode exitCode) =>
-            _stdOut.WriteLine($"Exit code: {exitCode}");
+        public void OnExitCode(ExitCode exitCode) => _stdOut.WriteLine($"Exit code: {exitCode}");
     }
 }

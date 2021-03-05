@@ -6,10 +6,11 @@
     using IoC;
     using static Tags;
 
-    internal class Locator: ILocator
+    internal class Locator: ILocator, IProcessListener
     {
         [NotNull] private readonly IProcessFactory _processFactory;
         private readonly Path _workingDirectory;
+        private string _firstLine;
 
         public Locator(
             [NotNull] IProcessFactory processFactory,
@@ -25,15 +26,14 @@
         {
             var processInfo = new ProcessInfo(SearchTool, _workingDirectory, new[] { new CommandLineArgument(path.Value) }, Enumerable.Empty<EnvironmentVariable>());
             var process = _processFactory.Create(processInfo);
-            var processListener = new ProcessListener();
-            if (process.Run(processListener).Value != 0)
+            if (process.Run(this).Value != 0)
             {
                 throw new InvalidOperationException($"Cannot run {SearchTool}.");
             }
 
-            if (!string.IsNullOrWhiteSpace(processListener.FirstLine))
+            if (!string.IsNullOrWhiteSpace(_firstLine))
             {
-                fullPath = new Path(processListener.FirstLine);
+                fullPath = new Path(_firstLine);
                 return true;
             }
 
@@ -41,34 +41,18 @@
             return false;
         }
 
-        private class ProcessListener : IProcessListener
+        void IProcessListener.OnStart(ProcessStartInfo startInfo) { }
+
+        void IProcessListener.OnStdOut(string line)
         {
-            private bool _hasLine;
-
-            [NotNull] public string FirstLine { get; private set; } = string.Empty;
-
-            public void OnStart(ProcessStartInfo startInfo) { }
-
-            public void OnStdOut(string line)
+            if (_firstLine == null)
             {
-                if (_hasLine)
-                {
-                    return;
-                }
-
-                FirstLine = line;
-                _hasLine = true;
-            }
-
-            public void OnStdErr(string line) { }
-
-            public void OnExitCode(ExitCode exitCode)
-            {
-                if (exitCode.Value != 0)
-                {
-                    FirstLine = string.Empty;
-                }
+                _firstLine = line;
             }
         }
+
+        void IProcessListener.OnStdErr(string line) { }
+
+        void IProcessListener.OnExitCode(ExitCode exitCode) { }
     }
 }

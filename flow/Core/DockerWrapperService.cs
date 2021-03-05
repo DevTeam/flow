@@ -33,7 +33,7 @@
 
         public IDisposable Using(DockerWrapperInfo info) =>
             Disposable.Create(
-                _envChain.Append(_virtualEnvironment.Set(info.Platform)),
+                _envChain.Append(_virtualEnvironment.Set(info.Platform).Set(info.Platform)),
                 _processChain.Append(_dockerProcessWrapperFactory(info)),
                 _processChain.Append(info.Platform == OperatingSystem.Windows ? _cmdProcessWrapper : _shProcessWrapper));
     }

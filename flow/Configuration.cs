@@ -5,6 +5,10 @@
     using System.Diagnostics;
     using Core;
     using IoC;
+    using JetBrains.TeamCity.ServiceMessages.Read;
+    using JetBrains.TeamCity.ServiceMessages.Write;
+    using JetBrains.TeamCity.ServiceMessages.Write.Special;
+    using JetBrains.TeamCity.ServiceMessages.Write.Special.Impl.Updater;
     using static Core.Tags;
     using static IoC.Lifetime;
 
@@ -63,7 +67,7 @@
                 .Bind<IConverter<IEnumerable<CommandLineArgument>, string>>().To<ArgumentsToStringConverter>()
                 .Bind<IProcess>().To<InternalProcess>(ctx => new InternalProcess(Arg<Process, IProcess>(ctx.Args, "process")))
                 .Bind<IProcessListener>().Tag(StdOutErr).To<ProcessStdOutErrListener>()
-
+                
                 // Process Wrappers
                 .Bind<IProcessWrapper>().Tag(CmdScriptWrapper).To<CmdProcessWrapper>()
                 .Bind<IProcessWrapper>().Tag(ShScriptWrapper).To<ShProcessWrapper>()
@@ -82,12 +86,26 @@
                 // Dotnet
                 .Bind<IResponseFile>().To<MSBuildResponseFile>()
                 .Bind<IDotnetWrapperService>().To<DotnetWrapperService>()
-                .Bind<IDotnetBuildService>().To<DotnetBuildService>();
+                .Bind<IDotnetBuildService>().To<DotnetBuildService>()
+                .Bind<IProcessListener<BuildResult>>().To<TeamCityBuildListener>()
+                .Bind<IBuildLogFlow>().To<BuildLogFlow>()
+
+                // TeamCity messages
+                .Bind<ITeamCityWriter>().To(ctx => CreateWriter(ctx.Container.Inject<IStdOut>(Base)))
+                .Bind<IServiceMessageParser>().As(Singleton).To<ServiceMessageParser>();
         }
 
         private static TArg Arg<TArg, TTarget>(object[] args, string name) => 
             args.Length == 1 && args[0] is TArg arg
                 ? arg
                 : throw new ArgumentException($"Please resolve using Func<{nameof(TArg)}, {nameof(TTarget)}>.", name);
+
+        private static ITeamCityWriter CreateWriter(IStdOut stdOut)
+        {
+            return new TeamCityServiceMessages(
+                new ServiceMessageFormatter(),
+                new FlowIdGenerator(),
+                new IServiceMessageUpdater[] { new TimestampUpdater(() => DateTime.Now) }).CreateWriter(stdOut.WriteLine);
+        }
     }
 }

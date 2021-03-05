@@ -37,5 +37,7 @@
                 }
             }
         }
+
+        public bool DirectoryExists(Path path) => Directory.Exists(path.Value);
     }
 }

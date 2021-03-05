@@ -43,5 +43,17 @@
 		</Otherwise>
 	</Choose>
 
+	<ItemGroup>
+		<PackageReference Include="TeamCity.Dotnet.Integration" Version="1.0.13" GeneratePathProperty="true">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<DotnetIntegrationFiles Include="$(PkgTeamCity_Dotnet_Integration)/build/_common/**/*.*" />
+	</ItemGroup>
+
+	<Target Name="CopyDotnetIntegration" AfterTargets="Build" Condition="'$(FLOW_VERSION)' == ''">
+		<Copy OverwriteReadOnlyFiles="true" SourceFiles="@(DotnetIntegrationFiles)" DestinationFiles="@(DotnetIntegrationFiles->'$(OutputPath)\.flow\%(RecursiveDir)%(Filename)%(Extension)')" />
+	</Target>
+
 	<Target Name="MarkupCompilePass1"/>
 </Project>

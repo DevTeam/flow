@@ -11,15 +11,18 @@
         [NotNull] private readonly Func<IPathNormalizer> _pathNormalizer;
         private readonly Path _workingDirectory;
         private readonly Path _tempDirectory;
+        [NotNull] private readonly IFileSystem _fileSystem;
 
         public DockerVolumesArgumentsProvider(
             [NotNull] Func<IPathNormalizer> pathNormalizer,
             [Tag(Tags.WorkingDirectory)] Path workingDirectory,
-            [Tag(Tags.TempDirectory)] Path tempDirectory)
+            [Tag(Tags.TempDirectory)] Path tempDirectory,
+            [NotNull] IFileSystem fileSystem)
         {
             _pathNormalizer = pathNormalizer ?? throw new ArgumentNullException(nameof(pathNormalizer));
             _workingDirectory = workingDirectory;
             _tempDirectory = tempDirectory;
+            _fileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
         }
 
         public IEnumerable<CommandLineArgument> GetArguments(DockerWrapperInfo wrapperInfo, ProcessInfo processInfo)
@@ -33,15 +36,23 @@
 
         private IEnumerable<DockerVolume> GetVolumes(DockerWrapperInfo wrapperInfo, ProcessInfo processInfo)
         {
-            var values = new[]
+            var baseValues = new []
             {
                 _tempDirectory.Value,
                 _workingDirectory.Value,
                 processInfo.WorkingDirectory.Value
             };
 
-            return values
-                .Where(value => !string.IsNullOrWhiteSpace(value))
+            return baseValues
+                .Where(i => !string.IsNullOrWhiteSpace(i))
+                .Select(System.IO.Path.GetFullPath)
+                .Distinct()
+                .Select(System.IO.Path.GetDirectoryName)
+                .Where(i => !string.IsNullOrWhiteSpace(i))
+                .Distinct()
+                .Select(i => new Path(i))
+                .Where(_fileSystem.DirectoryExists)
+                .Select(i => i.Value)
                 .Select(value => new DockerVolume(value, value))
                 .Concat(wrapperInfo.Volumes)
                 .Distinct();

@@ -8,5 +8,7 @@
         bool IsPathRooted(Path path);
 
         void WriteLines(Path filePath, [NotNull] IEnumerable<string> lines);
+        
+        bool DirectoryExists(Path path);
     }
 }

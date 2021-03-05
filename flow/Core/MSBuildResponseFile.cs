@@ -10,42 +10,35 @@
         [NotNull] private readonly ITeamCitySettings _teamCitySettings;
         [NotNull] private readonly IFileSystem _fileSystem;
         [NotNull] private readonly IConverter<MSBuildParameter, string> _paramConverter;
+        [NotNull] private readonly Func<IPathNormalizer> _pathNormalizer;
         private readonly Path _rspPath;
 
         public MSBuildResponseFile(
             [Tag(Tags.TempFile)] Path tempFilePath,
             [NotNull] ITeamCitySettings teamCitySettings,
             [NotNull] IFileSystem fileSystem,
-            [NotNull] IConverter<MSBuildParameter, string> paramConverter)
+            [NotNull] IConverter<MSBuildParameter, string> paramConverter,
+            [NotNull] Func<IPathNormalizer> pathNormalizer)
         {
             _teamCitySettings = teamCitySettings ?? throw new ArgumentNullException(nameof(teamCitySettings));
             _fileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
             _paramConverter = paramConverter ?? throw new ArgumentNullException(nameof(paramConverter));
+            _pathNormalizer = pathNormalizer ?? throw new ArgumentNullException(nameof(pathNormalizer));
             _rspPath = new Path(tempFilePath.Value + ".rsp");
         }
 
         public Path Create()
         {
-            var hasFile = false;
-            if (_teamCitySettings.IsUnderTeamCity)
+            var pathNormalizer = _pathNormalizer();
+            _fileSystem.WriteLines(_rspPath, new[]
             {
-                _fileSystem.WriteLines(_rspPath, new[]
-                {
-                    "/noconsolelogger",
-                    $"/l:TeamCity.MSBuild.Logger.TeamCityMSBuildLogger,{_teamCitySettings.MSBuildLogger.Value};TeamCity;verbosity=normal",
-                    "/p:VSTestLogger=logger://teamcity",
-                    _paramConverter.Convert(new MSBuildParameter("VSTestTestAdapterPath", $".;{_teamCitySettings.VSTestLogger.Value}"))
-                });
+                "/noconsolelogger",
+                $"/l:TeamCity.MSBuild.Logger.TeamCityMSBuildLogger,{pathNormalizer.Normalize(_teamCitySettings.MSBuildLogger).Value};TeamCity;verbosity=normal",
+                "/p:VSTestLogger=logger://teamcity",
+                _paramConverter.Convert(new MSBuildParameter("VSTestTestAdapterPath", $".;{pathNormalizer.Normalize(_teamCitySettings.VSTestLogger).Value}"))
+            });
 
-                hasFile = true;
-            }
-
-            if (hasFile)
-            {
-                return _rspPath;
-            }
-
-            return new Path();
+            return pathNormalizer.Normalize(_rspPath);
         }
     }
 }
