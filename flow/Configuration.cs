@@ -33,7 +33,7 @@
                 .Bind<IAutowiringStrategy>().To(ctx => autowiringStrategy)
                 // Settings
                 .Bind<Verbosity>().To(ctx => _verbosity)
-                .Bind<ILog<TT>>().To<Log<TT>>()
+                .Bind<ILog<TT>>().As(Singleton).To<Log<TT>>()
                 .Bind<IChain<TT>>().As(Singleton).To<Chain<TT>>()
                 .Bind<IEnvironment>().Tag(Base).To<DefaultEnvironment>()
                 .Bind<IVirtualEnvironment>().To<VirtualEnvironment>()
