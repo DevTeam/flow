@@ -1,7 +1,9 @@
 ﻿<Activity mc:Ignorable="sap sap2010 sads" x:Class="Flow.Samples.Build" sap2010:ExpressionActivityEditor.ExpressionActivityEditor="C#" sap2010:WorkflowViewState.IdRef="Flow.Samples.Build_1"
  xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
  xmlns:local="clr-namespace:Flow.Activities"
+ xmlns:local1="clr-namespace:Flow"
  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+ xmlns:mca="clr-namespace:Microsoft.CSharp.Activities;assembly=System.Activities"
  xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger"
  xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation"
  xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation"
@@ -20,30 +22,35 @@
   <TextExpression.ReferencesForImplementation>
     <sco:Collection x:TypeArguments="AssemblyReference">
       <AssemblyReference>System.ServiceModel.Activities, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35</AssemblyReference>
-      <AssemblyReference>System.IO.Compression.FileSystem, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</AssemblyReference>
-      <AssemblyReference>System.ServiceModel, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</AssemblyReference>
-      <AssemblyReference>System.Numerics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</AssemblyReference>
+      <AssemblyReference>System.Activities, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35</AssemblyReference>
+      <AssemblyReference>System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</AssemblyReference>
       <AssemblyReference>System.Xml.Linq, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</AssemblyReference>
-      <AssemblyReference>System.Data, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</AssemblyReference>
+      <AssemblyReference>Microsoft.CSharp, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</AssemblyReference>
+      <AssemblyReference>System.Numerics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</AssemblyReference>
       <AssemblyReference>System.Xaml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</AssemblyReference>
+      <AssemblyReference>System.Data, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</AssemblyReference>
+      <AssemblyReference>System.ServiceModel, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</AssemblyReference>
+      <AssemblyReference>System.Runtime.Serialization, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</AssemblyReference>
+      <AssemblyReference>System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</AssemblyReference>
       <AssemblyReference>System.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</AssemblyReference>
       <AssemblyReference>System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</AssemblyReference>
-      <AssemblyReference>System.Runtime.Serialization, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</AssemblyReference>
-      <AssemblyReference>Microsoft.CSharp, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</AssemblyReference>
-      <AssemblyReference>System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</AssemblyReference>
-      <AssemblyReference>System.Activities, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35</AssemblyReference>
-      <AssemblyReference>System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</AssemblyReference>
+      <AssemblyReference>System.IO.Compression.FileSystem, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</AssemblyReference>
       <AssemblyReference>mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</AssemblyReference>
       <AssemblyReference>IoC, Version=1.3.5.0, Culture=neutral, PublicKeyToken=620ded7f0cf61090</AssemblyReference>
       <AssemblyReference>mscorlib</AssemblyReference>
       <AssemblyReference>Flow</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <local:Dotnet DotnetExecutable="{x:Null}" EnvironmentVariables="{x:Null}" SolutionDirectory="{x:Null}" DisplayName="Dotnet" sap2010:WorkflowViewState.IdRef="Dotnet_1">
+  <local:Dotnet DotnetExecutable="{x:Null}" EnvironmentVariables="{x:Null}" DisplayName="Dotnet" sap2010:WorkflowViewState.IdRef="Dotnet_1">
     <local:Dotnet.Activities>
       <local:Build Arguments="{x:Null}" sap2010:WorkflowViewState.IdRef="Build_1" />
     </local:Dotnet.Activities>
-    <sads:DebugSymbol.Symbol>dzBDOlxQcm9qZWN0c1xEZXZUZWFtXGZsb3dcRmxvd1xTYW1wbGVzXEJ1aWxkLnhhbWwCKgMvEgIBASwHLFUCAQI=</sads:DebugSymbol.Symbol>
+    <local:Dotnet.SolutionDirectory>
+      <InArgument x:TypeArguments="local1:Path">
+        <mca:CSharpValue x:TypeArguments="local1:Path">"../../.."</mca:CSharpValue>
+      </InArgument>
+    </local:Dotnet.SolutionDirectory>
+    <sads:DebugSymbol.Symbol>dzBDOlxQcm9qZWN0c1xEZXZUZWFtXGZsb3dcRmxvd1xTYW1wbGVzXEJ1aWxkLnhhbWwDLAM2EgIBATIJMlQCAQIuBy5VAgED</sads:DebugSymbol.Symbol>
   </local:Dotnet>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>

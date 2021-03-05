@@ -28,15 +28,51 @@
             _stages = stages;
         }
 
-        public IDictionary<string, object> Run([NotNull] Activity activity, TimeSpan timeout)
+        public IDictionary<string, object> Run([NotNull] string activityName, [NotNull] IDictionary<string, object> inputs, TimeSpan timeout)
+        {
+            if (activityName == null) throw new ArgumentNullException(nameof(activityName));
+            if (inputs == null) throw new ArgumentNullException(nameof(inputs));
+
+            var assembly = Assembly.GetCallingAssembly();
+
+            // Get activity by name from declared types
+            var activities =
+                from type in assembly.DefinedTypes
+                where type.Name.Equals(activityName, StringComparison.CurrentCultureIgnoreCase)
+                where !type.IsAbstract
+                where typeof(Activity).IsAssignableFrom(type)
+                where type.DeclaredConstructors.Any(ctor => ctor.IsPublic && !ctor.GetParameters().Any())
+                select (Activity)Activator.CreateInstance(type);
+
+#if !NET48
+                // Get xaml activity by name from resources
+                activities = activities.Concat(
+                    from resourceName in assembly.GetManifestResourceNames()
+                    where resourceName.EndsWith($"{activityName}.xaml", StringComparison.InvariantCultureIgnoreCase)
+                    let stream = assembly.GetManifestResourceStream(resourceName)
+                    select ActivityXamlServices.Load(stream));
+#endif
+
+            var activity = activities.FirstOrDefault();
+            if (activity == null)
+            {
+                throw new ArgumentException(nameof(activityName), $"Cannot find \"{activityName}\".");
+            }
+
+            return Run(activity, inputs, timeout);
+        }
+
+        public IDictionary<string, object> Run([NotNull] Activity activity, [NotNull] IDictionary<string, object> inputs, TimeSpan timeout)
         {
             if (activity == null) throw new ArgumentNullException(nameof(activity));
+            if (inputs == null) throw new ArgumentNullException(nameof(inputs));
+
             _stages.Before();
 
             var invoker = new WorkflowInvoker(activity);
             ConfigureExtensions(invoker);
             
-            var results = invoker.Invoke(timeout);
+            var results = invoker.Invoke(inputs, timeout);
             
             _stages.After(results);
             return results;

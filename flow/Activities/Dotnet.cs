@@ -15,7 +15,8 @@
 
         [Category("Basic")]
         [DisplayName("Solution Directory")]
-        public InArgument<Path> SolutionDirectory { get; set; }
+        [RequiredArgument]
+        public InArgument<Path> SolutionDirectory { get; set; } = new Path("../../..");
 
         [Category("Advanced")]
         [DisplayName("Dotnet")]
@@ -40,11 +41,6 @@
         {
             var dotnetWrapper = context.GetExtension<IDotnetWrapperService>();
             var solutionDirectory = context.GetValue(SolutionDirectory);
-            if (solutionDirectory.IsEmpty)
-            {
-                solutionDirectory = new Path("../../..");
-            }
-
             _token = dotnetWrapper.Using(
                 new DotnetWrapperInfo(
                     solutionDirectory,

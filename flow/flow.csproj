@@ -52,4 +52,6 @@
 	<ItemGroup>
 		<PackageReference Include="IoC.Container" Version="1.3.5-beta443" />
 	</ItemGroup>
+
+	<Target Name="MarkupCompilePass1"/>
 </Project>

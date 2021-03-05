@@ -20,8 +20,8 @@
 
         public void OnStart(ProcessStartInfo startInfo)
         {
-            _stdOut.WriteLine($"Starting: {startInfo.FileName} {startInfo.Arguments}");
-            _stdOut.WriteLine($"in directory: {startInfo.WorkingDirectory}");
+            _stdOut.WriteLine($"Starting: {System.IO.Path.GetFullPath(startInfo.FileName)} {startInfo.Arguments}");
+            _stdOut.WriteLine($"in directory: {System.IO.Path.GetFullPath(startInfo.WorkingDirectory)}");
         }
 
         public void OnStdOut(string line)

@@ -42,4 +42,6 @@
 			</ItemGroup>
 		</Otherwise>
 	</Choose>
+
+	<Target Name="MarkupCompilePass1"/>
 </Project>
