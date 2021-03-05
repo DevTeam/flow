@@ -2,7 +2,7 @@
   "profiles": {
     "Flow": {
       "commandName": "Project",
-      "commandLineArgs": "Default",
+      "commandLineArgs": "Build",
       "environmentVariables": {
         "tmp": "tmp"
       }

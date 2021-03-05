@@ -11,7 +11,7 @@ namespace Flow
                 args.Length > 0 ? args[0] : "Default",
                 new Dictionary<string, object>(),
                 TimeSpan.MaxValue,
-                Verbosity.Diagnostic);
+                Verbosity.Normal);
     }
 }
 #endif
