@@ -23,24 +23,27 @@
             _emptyPrefix = new Text(new string(' ', prefixStr.Length));
         }
 
-        public void Trace(Func<Text[]> message)
+        public void Trace(Func<Text[]> messageFactory)
         {
+            if (messageFactory == null) throw new ArgumentNullException(nameof(messageFactory));
             if (_verbosity > Verbosity.Detailed)
             {
-                WriteLine(message(), true, Color.Trace);
+                WriteLine(messageFactory(), true, Color.Trace);
             }
         }
 
-        public void Info(Func<Text[]> message)
+        public void Info(Func<Text[]> messageFactory)
         {
+            if (messageFactory == null) throw new ArgumentNullException(nameof(messageFactory));
             if (_verbosity > Verbosity.Minimal)
             {
-                WriteLine(message(), false, Color.Trace);
+                WriteLine(messageFactory(), false, Color.Trace);
             }
         }
 
         public void Warning(params Text[] message)
         {
+            if (message == null) throw new ArgumentNullException(nameof(message));
             if (_verbosity > Verbosity.Quiet)
             {
                 WriteLine(message, true, Color.Warning);
@@ -49,6 +52,7 @@
 
         public void Error(params Text[] message)
         {
+            if (message == null) throw new ArgumentNullException(nameof(message));
             WriteLine(message, true, Color.Error);
         }
 
