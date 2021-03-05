@@ -50,9 +50,11 @@
                     Guid.NewGuid().ToString().Replace("-", string.Empty))))
 
                 // Common
+                .Bind<IColorTheme>().As(Singleton).To<ColorTheme>()
+                .Bind<IColorfulStdOut>().As(Singleton).To<ColorfulStdOut>()
                 .Bind<IStdOut>().To(ctx => ctx.Container.Inject<IStdOut>(ctx.Container.Inject<ITeamCitySettings>().IsUnderTeamCity ? TeamCity : Base))
                 .Bind<IStdOut>().As(Singleton).Tag(Base).To<TeamCityStdOut>()
-                .Bind<IStdOut>().As(Singleton).Tag(Tags.TeamCity).To<TeamCityStdOut>()
+                .Bind<IStdOut>().As(Singleton).Tag(TeamCity).To<TeamCityStdOut>()
                 .Bind<IStdErr>().To(ctx => ctx.Container.Inject<IStdErr>(ctx.Container.Inject<ITeamCitySettings>().IsUnderTeamCity ? TeamCity : Base))
                 .Bind<IStdErr>().As(Singleton).Tag(Base).To<TeamCityStdErr>()
                 .Bind<IStdErr>().As(Singleton).Tag(Tags.TeamCity).To<TeamCityStdErr>()

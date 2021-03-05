@@ -1,7 +1,7 @@
 ﻿namespace Flow.Core
 {
     using System;
-
+    
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class TeamCityStdOut: IStdOut
     {

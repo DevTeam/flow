@@ -1,7 +1,7 @@
 ﻿namespace Flow.Core
 {
     using System;
-
+    
     // ReSharper disable once UnusedType.Global
     internal class StdOut: IStdOut
     {

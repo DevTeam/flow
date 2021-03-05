@@ -7,11 +7,11 @@
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class ProcessStdOutErrListener: IProcessListener
     {
-        private readonly IStdOut _stdOut;
+        private readonly IColorfulStdOut _stdOut;
         private readonly IStdErr _stdErr;
 
         public ProcessStdOutErrListener(
-            [NotNull] IStdOut stdOut,
+            [NotNull] IColorfulStdOut stdOut,
             [NotNull] IStdErr stdErr)
         {
             _stdOut = stdOut ?? throw new ArgumentNullException(nameof(stdOut));
@@ -20,14 +20,14 @@
 
         public void OnStart(ProcessStartInfo startInfo)
         {
-            _stdOut.WriteLine($"Starting: {System.IO.Path.GetFullPath(startInfo.FileName)} {startInfo.Arguments}");
-            _stdOut.WriteLine($"in directory: {System.IO.Path.GetFullPath(startInfo.WorkingDirectory)}");
+            _stdOut.WriteLine(new Text("Starting: ", Color.Header), new Text($"{System.IO.Path.GetFullPath(startInfo.FileName)} {startInfo.Arguments}"));
+            _stdOut.WriteLine(new Text("in directory: ", Color.Header), new Text($"{System.IO.Path.GetFullPath(startInfo.WorkingDirectory)}"));
         }
 
         public void OnStdOut(string line)
         {
             if (line == null) throw new ArgumentNullException(nameof(line));
-            _stdOut.WriteLine(line);
+            _stdOut.WriteLine(new Text(line));
         }
 
         public void OnStdErr(string line)
@@ -36,6 +36,7 @@
             _stdErr.WriteLine(line);
         }
 
-        public void OnExitCode(ExitCode exitCode) => _stdOut.WriteLine($"Exit code: {exitCode}");
+        public void OnExitCode(ExitCode exitCode) => 
+            _stdOut.WriteLine(new Text("Exit code: ", Color.Header), new Text(exitCode.ToString()));
     }
 }

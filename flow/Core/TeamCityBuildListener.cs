@@ -5,12 +5,11 @@
     using System.Diagnostics;
     using IoC;
     using JetBrains.TeamCity.ServiceMessages.Read;
-    using static Tags;
 
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class TeamCityBuildListener: IProcessListener<BuildResult>, IBuildVisitor, IServiceMessageProcessor
     {
-        [NotNull] private readonly IStdOut _stdOut;
+        private readonly IColorfulStdOut _stdOut;
         [NotNull] private readonly IStdErr _stdErr;
         [NotNull] private readonly IServiceMessageParser _serviceMessageParser;
         [NotNull] private readonly Func<IBuildLogFlow> _flowFactory;
@@ -20,7 +19,7 @@
         private ExitCode? _exitCode;
 
         public TeamCityBuildListener(
-            [NotNull, Tag(Base)] IStdOut stdOut,
+            [NotNull] IColorfulStdOut stdOut,
             [NotNull] IStdErr stdErr,
             [NotNull] IServiceMessageParser serviceMessageParser,
             [NotNull] Func<IBuildLogFlow> flowFactory)
@@ -33,8 +32,8 @@
 
         public void OnStart(ProcessStartInfo startInfo)
         {
-            _stdOut.WriteLine($"Starting: {System.IO.Path.GetFullPath(startInfo.FileName)} {startInfo.Arguments}");
-            _stdOut.WriteLine($"in directory: {System.IO.Path.GetFullPath(startInfo.WorkingDirectory)}");
+            _stdOut.WriteLine(new Text("Starting: ", Color.Header), new Text($"{System.IO.Path.GetFullPath(startInfo.FileName)} {startInfo.Arguments}"));
+            _stdOut.WriteLine(new Text("in directory: ", Color.Header), new Text($"{System.IO.Path.GetFullPath(startInfo.WorkingDirectory)}"));
         }
 
         public void OnStdOut(string line)
@@ -42,7 +41,7 @@
             if (line == null) throw new ArgumentNullException(nameof(line));
             if (!ProcessServiceMessages(line))
             {
-                _stdOut.WriteLine(line);
+                _stdOut.WriteLine(new Text(line));
             }
         }
 
@@ -55,7 +54,7 @@
         public void OnExitCode(ExitCode exitCode)
         {
             _exitCode = exitCode;
-            _stdOut.WriteLine($"Exit code: {exitCode}");
+            _stdOut.WriteLine(new Text("Exit code: ", Color.Header), new Text(exitCode.ToString(), exitCode.Value == 0 ? Color.Success : Color.Error));
         }
 
         public bool ProcessServiceMessages(string text)

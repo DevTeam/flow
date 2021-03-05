@@ -14,14 +14,14 @@
     {
         [NotNull] private readonly string _version;
         [NotNull] private readonly ITeamCitySettings _teamCitySettings;
-        [NotNull] private readonly IStdOut _stdOut;
+        [NotNull] private readonly IColorfulStdOut _stdOut;
         private readonly bool _debug;
 
         public Stages(
             [NotNull, Tag(FlowVersionString)] string version,
             [NotNull] ITeamCitySettings teamCitySettings,
             [NotNull] IEnvironment environment,
-            [NotNull] IStdOut stdOut)
+            [NotNull] IColorfulStdOut stdOut)
         {
             if (environment == null) throw new ArgumentNullException(nameof(environment));
             _version = version ?? throw new ArgumentNullException(nameof(version));
@@ -42,12 +42,12 @@
                 header.Append($" under TeamCity {_teamCitySettings.Version}");
             }
 
-            _stdOut.WriteLine(header.ToString());
+            _stdOut.WriteLine(new Text(header.ToString(), Color.Header));
             if (_debug)
             {
-                _stdOut.WriteLine("");
-                _stdOut.WriteLine($"Waiting for debugger in process: [{Process.GetCurrentProcess().Id}] \"{Process.GetCurrentProcess().ProcessName}\"");
-                _stdOut.WriteLine("");
+                _stdOut.WriteLine(new Text(""));
+                _stdOut.WriteLine(new Text("Waiting for debugger in process: ", Color.Header), new Text($"[{Process.GetCurrentProcess().Id}] \"{Process.GetCurrentProcess().ProcessName}\""));
+                _stdOut.WriteLine(new Text(""));
                 while (!Debugger.IsAttached)
                 {
                     Thread.Sleep(100);
