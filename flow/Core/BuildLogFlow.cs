@@ -64,13 +64,13 @@
                 case "blockopened":
                     WriteLine(message.GetValue("name"));
                     _tabs++;
-                    _tabsString = new string(' ', _tabs * 2);
+                    _tabsString = new string(' ', _tabs * Text.Tab.Value.Length);
                     processed = true;
                     break;
 
                 case "blockclosed":
                     _tabs--;
-                    _tabsString = new string('\t', _tabs);
+                    _tabsString = new string(' ', _tabs * Text.Tab.Value.Length);
                     processed = true;
                     break;
 

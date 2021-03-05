@@ -75,7 +75,7 @@
                 .Bind<IProcessFactory>().Tag(Base).To<ProcessFactory>()
                 .Bind<IConverter<CommandLineArgument, string>>().To<ArgumentToStringConverter>()
                 .Bind<IConverter<IEnumerable<CommandLineArgument>, string>>().To<ArgumentsToStringConverter>()
-                .Bind<IProcess>().To<InternalProcess>(ctx => new InternalProcess(Arg<Process, IProcess>(ctx.Args, "process")))
+                .Bind<IProcess>().To<FlowProcess>(ctx => new FlowProcess(ctx.Container.Inject<ILog<FlowProcess>>(),Arg<Process, IProcess>(ctx.Args, "process")))
                 .Bind<IProcessListener>().Tag(StdOutErr).To<ProcessListener>()
                 
                 // Process Wrappers

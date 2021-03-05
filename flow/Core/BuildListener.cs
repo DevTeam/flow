@@ -35,8 +35,8 @@
 
         public void OnStart(ProcessStartInfo startInfo)
         {
-            _log.Info(() => new Text("Starting: ", Color.Header) + new Text($"{System.IO.Path.GetFullPath(startInfo.FileName)} {startInfo.Arguments}"));
-            _log.Info(() => new Text("in directory: ", Color.Header) + new Text($"{System.IO.Path.GetFullPath(startInfo.WorkingDirectory)}"));
+            _log.Info(() => new Text($"Starting: {System.IO.Path.GetFileName(startInfo.FileName)} {startInfo.Arguments}", Color.Header));
+            _log.Info(() => new Text($"in directory: {System.IO.Path.GetFullPath(startInfo.WorkingDirectory)}", Color.Header));
         }
 
         public void OnStdOut(string line)

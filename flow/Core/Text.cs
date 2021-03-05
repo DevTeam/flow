@@ -5,12 +5,15 @@
 
     internal readonly struct Text
     {
-        [CanBeNull] public readonly string Value;
+        [NotNull] public readonly string Value;
         public readonly Color Color;
 
-        public Text([CanBeNull] string value, Color color = Color.Default)
+        public static readonly Text NewLine = new Text(Environment.NewLine);
+        public static readonly Text Tab = "    ";
+
+        public Text([NotNull] string value, Color color = Color.Default)
         {
-            Value = value;
+            Value = value ?? throw new ArgumentNullException(nameof(value));
             Color = color;
         }
 

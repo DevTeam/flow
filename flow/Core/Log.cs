@@ -1,6 +1,7 @@
 ﻿namespace Flow.Core
 {
     using System;
+    using System.Collections.Generic;
     using IoC;
 
     // ReSharper disable once ClassNeverInstantiated.Global
@@ -9,6 +10,7 @@
         private readonly Verbosity _verbosity;
         private readonly IColorfulStdOut _stdOut;
         private readonly Text _prefix;
+        private readonly Text _emptyPrefix;
 
         public Log(
             Verbosity verbosity,
@@ -16,7 +18,9 @@
         {
             _verbosity = verbosity;
             _stdOut = stdOut ?? throw new ArgumentNullException(nameof(stdOut));
-            _prefix = new Text($"{typeof(T).Name} -> ", Color.Trace);
+            var prefixStr = $"{typeof(T).Name} -> ";
+            _prefix = new Text(prefixStr, Color.Trace);
+            _emptyPrefix = new Text(new string(' ', prefixStr.Length));
         }
 
         public void Trace(Func<Text[]> message)
@@ -55,20 +59,6 @@
                 return;
             }
 
-            if (showPrefix)
-            {
-                var text = new Text[message.Length + 1];
-                text[0] = _prefix;
-                Array.Copy(message, 0, text, 1, message.Length);
-                message = text;
-            }
-            else
-            {
-                var text = new Text[message.Length];
-                Array.Copy(message, text, message.Length);
-                message = text;
-            }
-
             for (var i = 1; i < message.Length; i++)
             {
                 var item = message[i];
@@ -77,7 +67,33 @@
                     message[i] = new Text(item.Value, color);
                 }
             }
-            _stdOut.WriteLine(message);
+
+            if (showPrefix)
+            {
+                var line = new List<Text> { _prefix };
+                foreach (var text in message)
+                {
+                    if (text.Value == Text.NewLine.Value)
+                    {
+                        _stdOut.WriteLine(line.ToArray());
+                        line.Clear();
+                        line.Add(_emptyPrefix);
+                    }
+                    else
+                    {
+                        line.Add(text);
+                    }
+                }
+
+                if (line.Count > 0)
+                {
+                    _stdOut.WriteLine(line.ToArray());
+                }
+            }
+            else
+            {
+                _stdOut.WriteLine(message);
+            }
         }
     }
 }
