@@ -33,7 +33,6 @@
         {
             var processed = false;
 
-            var parseInternal = message.GetValue("tc:tags") == "tc:parseServiceMessagesInside";
             switch (message.Name?.ToLowerInvariant())
             {
                 case "message":
@@ -51,14 +50,15 @@
                                 buildVisitor.Visit(new BuildWarning(text));
                                 break;
                         }
-
-                        if (!parseInternal || !processor.ProcessServiceMessages(text, buildVisitor))
-                        {
-                            WriteLine(text);
-                            processed = true;
-                        }
                     }
 
+                    var parseInternal = message.GetValue("tc:tags")?.ToLowerInvariant() == "tc:parseservicemessagesinside";
+                    if (!parseInternal || !processor.ProcessServiceMessages(text, buildVisitor))
+                    {
+                        WriteLine(text);
+                    }
+
+                    processed = true;
                     break;
 
                 case "blockopened":
