@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Linq;
     using IoC;
 
     // ReSharper disable once ClassNeverInstantiated.Global
@@ -57,14 +58,14 @@
 
         public BuildResult Result => 
             new BuildResult(
-                _exitCode.HasValue && _exitCode?.Value == 0,
+                _exitCode.HasValue && _exitCode?.Value == 0 && !_errors.Any(),
                 _errors.AsReadOnly(),
                 _warnings.AsReadOnly());
 
-        void IBuildVisitor.Visit(BuildError error) =>
+        public void Visit(BuildError error) =>
             _errors.Add(error);
 
-        void IBuildVisitor.Visit(BuildWarning warning) =>
+        public void Visit(BuildWarning warning) =>
             _warnings.Add(warning);
     }
 }

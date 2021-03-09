@@ -3,6 +3,7 @@
     using System.Diagnostics;
     using Core;
     using Moq;
+    using Shouldly;
     using Xunit;
 
     public class BuildListenerTests
@@ -100,6 +101,82 @@
             // Then
             _messageProcessor.Verify(i => i.ProcessServiceMessages("Some text", listener));
             _stdOut.Verify(i => i.WriteLine(It.IsAny<Text[]>()), Times.Never);
+        }
+
+        [Fact]
+        public void ShouldProvideBuildResultWhenFailed()
+        {
+            // Given
+            var listener = CreateInstance();
+            
+            // When
+            listener.Visit(new BuildError("error 1"));
+            listener.Visit(new BuildError("error 2"));
+            listener.Visit(new BuildWarning("warning 1"));
+            listener.Visit(new BuildWarning("warning 2"));
+            listener.OnExitCode(99);
+            var result = listener.Result;
+
+            // Then
+            result.Success.ShouldBeFalse();
+            result.Errors.ShouldBe(new[] { new BuildError("error 1"), new BuildError("error 2") });
+            result.Warnings.ShouldBe(new[] { new BuildWarning("warning 1"), new BuildWarning("warning 2") });
+        }
+
+        [Fact]
+        public void ShouldProvideBuildResultWhenFailedAndHasErrors()
+        {
+            // Given
+            var listener = CreateInstance();
+
+            // When
+            listener.Visit(new BuildError("error 1"));
+            listener.Visit(new BuildError("error 2"));
+            listener.Visit(new BuildWarning("warning 1"));
+            listener.Visit(new BuildWarning("warning 2"));
+            listener.OnExitCode(0);
+            var result = listener.Result;
+
+            // Then
+            result.Success.ShouldBeFalse();
+            result.Errors.ShouldBe(new[] { new BuildError("error 1"), new BuildError("error 2") });
+            result.Warnings.ShouldBe(new[] { new BuildWarning("warning 1"), new BuildWarning("warning 2") });
+        }
+
+        [Fact]
+        public void ShouldProvideBuildResultWhenFailedAndHasNoErrors()
+        {
+            // Given
+            var listener = CreateInstance();
+
+            // When
+            listener.Visit(new BuildWarning("warning 1"));
+            listener.Visit(new BuildWarning("warning 2"));
+            listener.OnExitCode(99);
+            var result = listener.Result;
+
+            // Then
+            result.Success.ShouldBeFalse();
+            result.Errors.ShouldBeEmpty();
+            result.Warnings.ShouldBe(new[] { new BuildWarning("warning 1"), new BuildWarning("warning 2") });
+        }
+
+        [Fact]
+        public void ShouldProvideBuildResultWhenSuccess()
+        {
+            // Given
+            var listener = CreateInstance();
+
+            // When
+            listener.Visit(new BuildWarning("warning 1"));
+            listener.Visit(new BuildWarning("warning 2"));
+            listener.OnExitCode(0);
+            var result = listener.Result;
+
+            // Then
+            result.Success.ShouldBeTrue();
+            result.Errors.ShouldBeEmpty();
+            result.Warnings.ShouldBe(new[] { new BuildWarning("warning 1"), new BuildWarning("warning 2") });
         }
 
         private BuildListener CreateInstance() => new BuildListener(
