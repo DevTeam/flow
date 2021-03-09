@@ -18,7 +18,7 @@
             Color = color;
         }
 
-        public static implicit operator Text[](Text text) => new[] {text};
+        public static implicit operator Text[](Text text) => new[] { text };
 
         public static Text[] operator + (Text text1, Text text2) => new[] { text1, text2 };
 
@@ -41,15 +41,14 @@
         public static implicit operator Text([NotNull] string variable)
         {
             if (variable == null) throw new ArgumentNullException(nameof(variable));
-            using (var enumerator = variable.GetEnumerator())
+            using (var text = variable.GetEnumerator())
             {
-                var (colorStr, value) = enumerator.ParseTuple(':');
-                if (!Enum.TryParse<Color>(colorStr, true, out var color))
+                if (variable.Contains(":"))
                 {
-                    color = Color.Default;
+                    return Parse(text);
                 }
 
-                return new Text(value, color);
+                return new Text(variable);
             }
         }
 
@@ -58,6 +57,11 @@
         Text IFromText<Text>.Parse(IEnumerator<char> text)
         {
             if (text == null) throw new ArgumentNullException(nameof(text));
+            return Parse(text);
+        }
+
+        private static Text Parse(IEnumerator<char> text)
+        {
             var (colorStr, value) = text.ParseTuple(':');
             if (!Enum.TryParse<Color>(colorStr, true, out var color))
             {

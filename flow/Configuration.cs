@@ -71,7 +71,7 @@
 
                 // Command Line
                 .Bind<ICommandLineService>().To<CommandLineService>()
-                .Bind<IProcessFactory>().Bind<IChain<IProcessWrapper>>().As(Singleton).Tag().To<CurrentProcessFactory>()
+                .Bind<IProcessFactory>().Bind<IChain<IProcessWrapper>>().As(Singleton).Tag().To<CompositeProcessFactory>()
                 .Bind<IProcessFactory>().Tag(Base).To<ProcessFactory>()
                 .Bind<IConverter<CommandLineArgument, string>>().To<ArgumentToStringConverter>()
                 .Bind<IConverter<IEnumerable<CommandLineArgument>, string>>().To<ArgumentsToStringConverter>()

@@ -9,14 +9,14 @@
         private readonly Mock<IProcessFactory> _processFactory;
         private readonly Mock<IProcessWrapper> _processWrapper;
         private readonly Mock<IProcess> _process;
+        private readonly Mock<ILog<CompositeProcessFactory>> _log;
 
         public CompositeProcessFactoryTests()
         {
+            _log = new Mock<ILog<CompositeProcessFactory>>();
             _process = new Mock<IProcess>();
             _process.Setup(i => i.Run(It.IsAny<IProcessListener>())).Returns(99);
-
             _processFactory = new Mock<IProcessFactory>();
-
             _processWrapper = new Mock<IProcessWrapper>();
         }
 
@@ -61,7 +61,7 @@
             _processFactory.Verify(i => i.Create(originalProcessInfo));
         }
 
-        private CurrentProcessFactory CreateInstance() =>
-            new CurrentProcessFactory(_processFactory.Object);
+        private CompositeProcessFactory CreateInstance() =>
+            new CompositeProcessFactory(_log.Object, _processFactory.Object);
     }
 }
