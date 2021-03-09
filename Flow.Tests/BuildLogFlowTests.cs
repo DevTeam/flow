@@ -12,9 +12,11 @@
     {
         private readonly Mock<IStdOut> _stdOut;
         private readonly Mock<Func<IBuildLogFlow>> _flowFactory;
+        private readonly Mock<ILog<BuildLogFlow>> _log;
 
         public BuildLogFlowTests()
         {
+            _log = new Mock<ILog<BuildLogFlow>>();
             _stdOut = new Mock<IStdOut>();
             _flowFactory = new Mock<Func<IBuildLogFlow>>();
         }
@@ -159,6 +161,7 @@
         private BuildLogFlow CreateInstance(int tabs = 0)
         {
             var flow = new BuildLogFlow(
+                _log.Object,
                 _stdOut.Object,
                 _flowFactory.Object);
 
