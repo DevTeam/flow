@@ -38,14 +38,14 @@
                 {
                     new Text("Starting", Color.Header),
                     Text.NewLine,
-                    "FileName: ",
-                    _process.StartInfo.FileName,
+                    new Text("FileName: "),
+                    new Text(_process.StartInfo.FileName),
                     Text.NewLine,
-                    "WorkingDirectory: ",
-                    _process.StartInfo.WorkingDirectory,
+                    new Text("WorkingDirectory: "),
+                    new Text(_process.StartInfo.WorkingDirectory),
                     Text.NewLine,
-                    "Arguments: ",
-                    _process.StartInfo.Arguments,
+                    new Text("Arguments: "),
+                    new Text(_process.StartInfo.Arguments),
                     Text.NewLine
                 };
 
@@ -56,7 +56,7 @@
                     foreach (var env in _process.StartInfo.Environment)
                     {
                         text.Add(Text.Tab);
-                        text.Add($"{env.Key}={env.Value}");
+                        text.Add(new Text($"{env.Key}={env.Value}"));
                         text.Add(Text.NewLine);
                     }
                 }
@@ -72,17 +72,17 @@
             {
                 new Text("Started", Color.Header),
                 Text.NewLine,
-                "Id: ",
+                new Text("Id: "),
                 new Text(_process.Id.ToString(), Color.Header),
                 Text.NewLine,
-                "Process Name: ",
-                _process.ProcessName,
+                new Text("Process Name: "),
+                new Text(_process.ProcessName),
                 Text.NewLine,
-                "Base Priority: ",
-                _process.BasePriority.ToString(),
+                new Text("Base Priority: "),
+                new Text(_process.BasePriority.ToString()),
                 Text.NewLine,
-                "Start Time: ",
-                _process.StartTime.ToString("O")
+                new Text("Start Time: "),
+                new Text(_process.StartTime.ToString("O"))
             });
 
             _process.BeginOutputReadLine();
@@ -96,19 +96,19 @@
                 {
                     new Text("Finished", Color.Header),
                     Text.NewLine,
-                    "Id: ",
+                    new Text("Id: "),
                     new Text(_process.Id.ToString(), Color.Header),
                     Text.NewLine,
-                    "Process Name: ",
+                    new Text("Process Name: "),
                     _process.ProcessName,
                     Text.NewLine,
-                    "Exit Code: ",
-                    _process.ExitCode.ToString(),
+                    new Text("Exit Code: "),
+                    new Text(_process.ExitCode.ToString()),
                     Text.NewLine,
-                    "Exit Time: ",
-                    _process.ExitTime.ToString("O"),
+                    new Text("Exit Time: "),
+                    new Text(_process.ExitTime.ToString("O")),
                     Text.NewLine,
-                    "Duration: ",
+                    new Text("Duration: "),
                     new Text(stopwatch.Elapsed.ToString("G"), Color.Header)
                 });
             }

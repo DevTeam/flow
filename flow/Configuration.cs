@@ -98,6 +98,7 @@
                 .Bind<IDotnetWrapperService>().To<DotnetWrapperService>()
                 .Bind<IDotnetBuildService>().To<DotnetBuildService>()
                 .Bind<IProcessListener<BuildResult>>().To<BuildListener>()
+                .Bind<IMessageProcessor>().To<MessageProcessor>()
                 .Bind<IBuildLogFlow>().To<BuildLogFlow>()
 
                 // TeamCity messages

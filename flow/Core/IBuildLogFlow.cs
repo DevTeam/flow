@@ -8,6 +8,6 @@
 
         IBuildLogFlow CreateChild();
 
-        bool ProcessMessage(IServiceMessageProcessor processor, IBuildVisitor buildVisitor, IServiceMessage message);
+        bool ProcessMessage(IMessageProcessor processor, IBuildVisitor buildVisitor, IServiceMessage message);
     }
 }

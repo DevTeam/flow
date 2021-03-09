@@ -29,7 +29,7 @@
             return childFlow;
         }
 
-        public bool ProcessMessage(IServiceMessageProcessor processor, IBuildVisitor buildVisitor, IServiceMessage message)
+        public bool ProcessMessage(IMessageProcessor processor, IBuildVisitor buildVisitor, IServiceMessage message)
         {
             var processed = false;
 
@@ -52,7 +52,7 @@
                                 break;
                         }
 
-                        if (!parseInternal || !processor.ProcessServiceMessages(text))
+                        if (!parseInternal || !processor.ProcessServiceMessages(text, buildVisitor))
                         {
                             WriteLine(text);
                             processed = true;
@@ -72,9 +72,6 @@
                     _tabs--;
                     _tabsString = new string(' ', _tabs * Text.Tab.Value.Length);
                     processed = true;
-                    break;
-
-                default:
                     break;
             }
 
