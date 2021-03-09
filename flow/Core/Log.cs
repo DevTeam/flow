@@ -46,14 +46,14 @@
             if (message == null) throw new ArgumentNullException(nameof(message));
             if (_verbosity > Verbosity.Quiet)
             {
-                WriteLine(message, true, Color.Warning);
+                WriteLine(message, _verbosity > Verbosity.Normal, Color.Warning);
             }
         }
 
         public void Error(params Text[] message)
         {
             if (message == null) throw new ArgumentNullException(nameof(message));
-            WriteLine(message, true, Color.Error);
+            WriteLine(message, _verbosity > Verbosity.Normal, Color.Error);
         }
 
         private void WriteLine(Text[] message, bool showPrefix, Color color = Color.Default)
@@ -63,7 +63,7 @@
                 return;
             }
 
-            for (var i = 1; i < message.Length; i++)
+            for (var i = 0; i < message.Length; i++)
             {
                 var item = message[i];
                 if (color != Color.Default && item.Color == Color.Default)
