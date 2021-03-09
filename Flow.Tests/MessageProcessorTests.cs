@@ -18,10 +18,12 @@
         private readonly Mock<IServiceMessageParser> _serviceMessageParser;
         private readonly Mock<Func<IBuildLogFlow>> _flowFactory;
         private readonly Mock<IBuildVisitor> _buildVisitor;
+        private readonly  Mock<IServiceMessageFormatter> _messageFormatter;
 
         public MessageProcessorTests()
         {
             _log = new Mock<ILog<MessageProcessor>>();
+            _messageFormatter = new Mock<IServiceMessageFormatter>();
             _serviceMessageParser = new Mock<IServiceMessageParser>();
             _flowFactory = new Mock<Func<IBuildLogFlow>>();
             _buildVisitor = new Mock<IBuildVisitor>();
@@ -224,6 +226,7 @@
         private MessageProcessor CreateInstance() =>
             new MessageProcessor(
                 _log.Object,
+                _messageFormatter.Object,
                 _serviceMessageParser.Object,
                 _flowFactory.Object);
     }

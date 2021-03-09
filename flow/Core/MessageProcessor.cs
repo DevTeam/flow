@@ -3,22 +3,27 @@
     using System;
     using System.Collections.Generic;
     using IoC;
+    using JetBrains.TeamCity.ServiceMessages;
     using JetBrains.TeamCity.ServiceMessages.Read;
+    using JetBrains.TeamCity.ServiceMessages.Write;
 
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class MessageProcessor: IMessageProcessor
     {
         [NotNull] private readonly ILog<MessageProcessor> _log;
+        [NotNull] private readonly IServiceMessageFormatter _messageFormatter;
         [NotNull] private readonly IServiceMessageParser _serviceMessageParser;
         [NotNull] private readonly Func<IBuildLogFlow> _flowFactory;
         [NotNull] private readonly Dictionary<string, IBuildLogFlow> _flows = new Dictionary<string, IBuildLogFlow>();
 
         public MessageProcessor(
             [NotNull] ILog<MessageProcessor> log,
+            [NotNull] IServiceMessageFormatter messageFormatter,
             [NotNull] IServiceMessageParser serviceMessageParser,
             [NotNull] Func<IBuildLogFlow> flowFactory)
         {
             _log = log ?? throw new ArgumentNullException(nameof(log));
+            _messageFormatter = messageFormatter ?? throw new ArgumentNullException(nameof(messageFormatter));
             _serviceMessageParser = serviceMessageParser ?? throw new ArgumentNullException(nameof(serviceMessageParser));
             _flowFactory = flowFactory ?? throw new ArgumentNullException(nameof(flowFactory));
         }
@@ -38,7 +43,7 @@
             var processed = false;
             foreach (var message in _serviceMessageParser.ParseServiceMessages(text))
             {
-                _log.Trace(() => new[] { new Text($"Start message processing {message}") });
+                _log.Trace(() => new[] { new Text($"Start message processing "), ToText(message) });
 
                 var flowId = message.GetValue("parent") ?? message.GetValue("flowId") ?? string.Empty;
                 if (!_flows.TryGetValue(flowId, out var flow))
@@ -73,10 +78,17 @@
                         break;
                 }
 
-                _log.Trace(() => new[] { new Text($"Finish message processing  {message}") });
+                _log.Trace(() => new[] { new Text($"Finish message processing"), ToText(message) });
             }
 
             return processed;
+        }
+
+        private Text ToText(IServiceMessage message)
+        {
+            var str = _messageFormatter.FormatMessage(message);
+            str = str.Replace("##teamcity", "@@teamcity");
+            return new Text(str);
         }
     }
 }

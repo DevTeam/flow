@@ -32,6 +32,7 @@
             yield return container
                 .Bind<IAutowiringStrategy>().To(ctx => autowiringStrategy)
                 // Settings
+                .Bind<DateTime>().To(ctx => DateTime.Now)
                 .Bind<Verbosity>().To(ctx => _verbosity)
                 .Bind<ILog<TT>>().As(Singleton).To<Log<TT>>()
                 .Bind<IChain<TT>>().As(Singleton).To<Chain<TT>>()
@@ -102,7 +103,11 @@
                 .Bind<IBuildLogFlow>().To<BuildLogFlow>()
 
                 // TeamCity messages
-                .Bind<ITeamCityWriter>().To(ctx => CreateWriter(ctx.Container.Inject<IStdOut>(Base)))
+                .Bind<IServiceMessageFormatter>().As(Singleton).To<ServiceMessageFormatter>()
+                .Bind<IFlowIdGenerator>().As(Singleton).To<FlowIdGenerator>()
+                .Bind<IServiceMessageUpdater>().As(Singleton).To<TimestampUpdater>()
+                .Bind<TeamCityServiceMessages>().As(Singleton).To()
+                .Bind<ITeamCityWriter>().To(ctx => ctx.Container.Inject<TeamCityServiceMessages>().CreateWriter(line => ctx.Container.Inject<IStdOut>(Base).WriteLine(line)))
                 .Bind<IServiceMessageParser>().As(Singleton).To<ServiceMessageParser>();
         }
 
@@ -110,13 +115,5 @@
             args.Length == 1 && args[0] is TArg arg
                 ? arg
                 : throw new ArgumentException($"Please resolve using Func<{nameof(TArg)}, {nameof(TTarget)}>.", name);
-
-        private static ITeamCityWriter CreateWriter(IStdOut stdOut)
-        {
-            return new TeamCityServiceMessages(
-                new ServiceMessageFormatter(),
-                new FlowIdGenerator(),
-                new IServiceMessageUpdater[] { new TimestampUpdater(() => DateTime.Now) }).CreateWriter(stdOut.WriteLine);
-        }
     }
 }
