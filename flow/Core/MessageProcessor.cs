@@ -20,11 +20,13 @@
             _flowFactory = flowFactory ?? throw new ArgumentNullException(nameof(flowFactory));
         }
 
+        internal IDictionary<string, IBuildLogFlow> Flows => _flows;
+
         public bool ProcessServiceMessages(string text, IBuildVisitor buildVisitor)
         {
             if (buildVisitor == null) throw new ArgumentNullException(nameof(buildVisitor));
 
-            if (text == null)
+            if (string.IsNullOrWhiteSpace(text))
             {
                 return false;
             }
