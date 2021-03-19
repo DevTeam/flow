@@ -12,13 +12,16 @@
     {
         private readonly IDockerArgumentsProvider _dockerEnvironmentArgumentsProvider;
         [NotNull] private readonly IDockerArgumentsProvider _dockerVolumesArgumentsProvider;
+        [NotNull] private readonly Func<IPathNormalizer> _pathNormalizer;
 
         public DockerArgumentsProvider(
             [NotNull, Tag(DockerEnvironment)] IDockerArgumentsProvider dockerEnvironmentArgumentsProvider,
-            [NotNull, Tag(DockerVolumes)] IDockerArgumentsProvider dockerVolumesArgumentsProvider)
+            [NotNull, Tag(DockerVolumes)] IDockerArgumentsProvider dockerVolumesArgumentsProvider,
+            [NotNull] Func<IPathNormalizer> pathNormalizer)
         {
             _dockerEnvironmentArgumentsProvider = dockerEnvironmentArgumentsProvider ?? throw new ArgumentNullException(nameof(dockerEnvironmentArgumentsProvider));
             _dockerVolumesArgumentsProvider = dockerVolumesArgumentsProvider ?? throw new ArgumentNullException(nameof(dockerVolumesArgumentsProvider));
+            _pathNormalizer = pathNormalizer ?? throw new ArgumentNullException(nameof(pathNormalizer));
         }
 
         public IEnumerable<CommandLineArgument> GetArguments(DockerWrapperInfo wrapperInfo, ProcessInfo processInfo)
@@ -48,25 +51,28 @@
                     throw new ArgumentOutOfRangeException();
             }
 
-            if (wrapperInfo.Pull != DockerPullType.Missing)
+            switch (wrapperInfo.Pull)
             {
-                yield return "--pull";
-                switch (wrapperInfo.Pull)
-                {
-                    case DockerPullType.Missing:
-                        break;
+                case DockerPullType.Missing:
+                    break;
 
-                    case DockerPullType.Always:
-                        yield return "always";
-                        break;
+                case DockerPullType.Always:
+                    yield return "--pull";
+                    yield return "always";
+                    break;
 
-                    case DockerPullType.Never:
-                        yield return "never";
-                        break;
+                case DockerPullType.Never:
+                    yield return "--pull";
+                    yield return "never";
+                    break;
 
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            if (!processInfo.WorkingDirectory.IsEmpty)
+            {
+                yield return $"--workdir={_pathNormalizer().Normalize(processInfo.WorkingDirectory)}";
             }
 
             var args =

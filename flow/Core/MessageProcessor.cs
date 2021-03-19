@@ -78,7 +78,7 @@
                         break;
                 }
 
-                _log.Trace(() => new[] { new Text($"Finish message processing"), ToText(message) });
+                _log.Trace(() => new[] { new Text("Finish message processing "), ToText(message) });
             }
 
             return processed;
