@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using IoC;
-    using OperatingSystem = OperatingSystem;
 
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class DockerEnvironmentArgumentsProvider : IDockerArgumentsProvider

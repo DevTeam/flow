@@ -7,7 +7,7 @@
     using Moq;
     using Shouldly;
     using Xunit;
-    using OperatingSystem = Flow.OperatingSystem;
+    using OperatingSystem = OperatingSystem;
 
     public class DockerArgumentsProviderTests
     {

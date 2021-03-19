@@ -38,18 +38,17 @@
         {
             var baseValues = new []
             {
-                _tempDirectory.Value,
-                _workingDirectory.Value,
-                processInfo.WorkingDirectory.Value
+                _tempDirectory,
+                _workingDirectory,
+                processInfo.WorkingDirectory
             };
 
             return baseValues
-                .Where(i => !string.IsNullOrWhiteSpace(i))
+                .Where(i => !i.IsEmpty)
+                .Select(i => i.Value)
+                .Distinct()
                 .Select(System.IO.Path.GetFullPath)
-                .Distinct()
-                .Select(System.IO.Path.GetDirectoryName)
                 .Where(i => !string.IsNullOrWhiteSpace(i))
-                .Distinct()
                 .Select(i => new Path(i))
                 .Where(_fileSystem.DirectoryExists)
                 .Select(i => i.Value)
