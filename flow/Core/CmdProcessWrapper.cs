@@ -58,7 +58,7 @@
             }
 
             yield return $"{_quote}{processInfo.Executable.Value}{_quote}{_separator}{_argumentsToStringConverter.Convert(processInfo.Arguments)}";
-            yield return "set exitCode = %errorlevel%";
+            yield return "set exitCode=%errorlevel%";
             if (hasWorkingDirectory)
             {
                 yield return "popd";
