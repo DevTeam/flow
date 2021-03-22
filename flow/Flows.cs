@@ -9,6 +9,7 @@
     using System.Activities.XamlIntegration;
 #endif
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public static class Flows
     {
         public static int Run([NotNull] string[] args)

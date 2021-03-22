@@ -5,6 +5,7 @@
     using System.ComponentModel;
     using Core;
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public sealed class CommandLine : CodeActivity<ExitCode>
     {
         [RequiredArgument]

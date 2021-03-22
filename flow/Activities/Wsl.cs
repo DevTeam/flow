@@ -7,6 +7,7 @@
     using System.ComponentModel;
     using Core;
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     [Designer("System.Activities.Core.Presentation.SequenceDesigner, System.Activities.Core.Presentation, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35")]
     public class Wsl : NativeActivity
     {

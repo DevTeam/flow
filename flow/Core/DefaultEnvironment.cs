@@ -9,7 +9,6 @@
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class DefaultEnvironment : IEnvironment, IPathNormalizer
     {
-
         public OperatingSystem OperatingSystem
         {
             get

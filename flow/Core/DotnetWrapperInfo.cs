@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     internal readonly struct DotnetWrapperInfo
     {
         public readonly Path SolutionDirectory;

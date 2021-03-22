@@ -12,6 +12,7 @@
     using static Core.Tags;
     using static IoC.Lifetime;
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     internal class Configuration: IConfiguration
     {
         internal const char CommandLineArgumentsSeparatorChar = ' ';
