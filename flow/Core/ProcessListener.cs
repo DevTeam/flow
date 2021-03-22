@@ -25,7 +25,6 @@
         {
             _log.Info(() => new Text($"Starting: {System.IO.Path.GetFileName(startInfo.FileName)} {startInfo.Arguments}", Color.Header));
             _log.Info(() => new Text($"in directory: {System.IO.Path.GetFullPath(startInfo.WorkingDirectory)}", Color.Header));
-
         }
 
         public void OnStdOut(string line)

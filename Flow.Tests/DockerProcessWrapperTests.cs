@@ -1,6 +1,5 @@
 ﻿namespace Flow.Tests
 {
-    using System.Linq;
     using Core;
     using Moq;
     using Xunit;

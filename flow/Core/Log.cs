@@ -7,13 +7,13 @@
     // ReSharper disable once ClassNeverInstantiated.Global
     internal class Log<T> : ILog<T>
     {
-        private readonly Verbosity _verbosity;
+        private readonly Func<Verbosity> _verbosity;
         private readonly IColorfulStdOut _stdOut;
         private readonly Text _prefix;
         private readonly Text _emptyPrefix;
 
         public Log(
-            Verbosity verbosity,
+            Func<Verbosity> verbosity,
             [NotNull] IColorfulStdOut stdOut)
         {
             _verbosity = verbosity;
@@ -26,7 +26,7 @@
         public void Trace(Func<Text[]> messageFactory)
         {
             if (messageFactory == null) throw new ArgumentNullException(nameof(messageFactory));
-            if (_verbosity > Verbosity.Detailed)
+            if (_verbosity() > Verbosity.Detailed)
             {
                 WriteLine(messageFactory(), true, Color.Trace);
             }
@@ -35,7 +35,7 @@
         public void Info(Func<Text[]> messageFactory)
         {
             if (messageFactory == null) throw new ArgumentNullException(nameof(messageFactory));
-            if (_verbosity > Verbosity.Minimal)
+            if (_verbosity() > Verbosity.Minimal)
             {
                 WriteLine(messageFactory(), false, Color.Trace);
             }
@@ -44,16 +44,16 @@
         public void Warning(params Text[] message)
         {
             if (message == null) throw new ArgumentNullException(nameof(message));
-            if (_verbosity > Verbosity.Quiet)
+            if (_verbosity() > Verbosity.Quiet)
             {
-                WriteLine(message, _verbosity > Verbosity.Normal, Color.Warning);
+                WriteLine(message, _verbosity() > Verbosity.Normal, Color.Warning);
             }
         }
 
         public void Error(params Text[] message)
         {
             if (message == null) throw new ArgumentNullException(nameof(message));
-            WriteLine(message, _verbosity > Verbosity.Normal, Color.Error);
+            WriteLine(message, _verbosity() > Verbosity.Normal, Color.Error);
         }
 
         private void WriteLine(Text[] message, bool showPrefix, Color color = Color.Default)

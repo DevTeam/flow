@@ -29,7 +29,7 @@
         public void ShouldLogInfo(Verbosity verbosity, string messages, string expectedLog)
         {
             // Given
-            var log = new Log<LogTests>(verbosity, _stdOut.Object);
+            var log = new Log<LogTests>(() => verbosity, _stdOut.Object);
             Enumerable<Text> text = messages;
             
             // When
@@ -50,7 +50,7 @@
         public void ShouldLogError(Verbosity verbosity, string messages, string expectedLog)
         {
             // Given
-            var log = new Log<LogTests>(verbosity, _stdOut.Object);
+            var log = new Log<LogTests>(() => verbosity, _stdOut.Object);
             Enumerable<Text> text = messages;
 
             // When
@@ -71,7 +71,7 @@
         public void ShouldLogWarning(Verbosity verbosity, string messages, string expectedLog)
         {
             // Given
-            var log = new Log<LogTests>(verbosity, _stdOut.Object);
+            var log = new Log<LogTests>(() => verbosity, _stdOut.Object);
             Enumerable<Text> text = messages;
 
             // When
@@ -92,7 +92,7 @@
         public void ShouldLogTrace(Verbosity verbosity, string messages, string expectedLog)
         {
             // Given
-            var log = new Log<LogTests>(verbosity, _stdOut.Object);
+            var log = new Log<LogTests>(() => verbosity, _stdOut.Object);
             Enumerable<Text> text = messages;
 
             // When

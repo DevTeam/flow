@@ -4,6 +4,7 @@
     using System.Text;
     using IoC;
 
+    // ReSharper disable once ClassNeverInstantiated.Global
     internal class ColorfulStdOut : IColorfulStdOut
     {
         [NotNull] private readonly IStdOut _stdOut;

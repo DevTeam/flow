@@ -3,15 +3,16 @@
     using System.Collections.Generic;
     using System.Linq;
 
+    // ReSharper disable once InconsistentNaming
     internal class MSBuildParameterToStringConverter: IConverter<MSBuildParameter, string>
     {
         public string Convert(MSBuildParameter parameter) =>
             $"/p:{NormalizeName(parameter.Name)}={NormalizeValue(parameter.Value, false)}";
 
-        private string NormalizeName(string name) => 
+        internal string NormalizeName(string name) => 
             new string(name.Select((c, index) => (index == 0 ? IsValidInitialElementNameCharacter(c) : IsValidSubsequentElementNameCharacter(c)) ? c : '_').ToArray());
 
-        private string NormalizeValue(string value, bool isCommandLineParameter)
+        internal string NormalizeValue(string value, bool isCommandLineParameter)
         {
             var str = new string(EscapeSymbols(value, isCommandLineParameter).ToArray());
             if (string.IsNullOrWhiteSpace(str) || str.Contains(';'))
@@ -34,7 +35,7 @@
             (c == '_') ||
             (c == '-');
 
-        private IEnumerable<char> EscapeSymbols(IEnumerable<char> chars, bool isCommandLineParameter)
+        private static IEnumerable<char> EscapeSymbols(IEnumerable<char> chars, bool isCommandLineParameter)
         { 
             foreach (var ch in chars)
             {
@@ -45,7 +46,7 @@
                 else
                 {
                     yield return '%';
-                    foreach (var c in string.Format("%02X", ch))
+                    foreach (var c in $"{(byte)ch:X02}")
                     {
                         yield return c;
                     }

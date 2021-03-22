@@ -5,6 +5,7 @@
     using System.Reflection;
     using IoC;
 
+    // ReSharper disable once ClassNeverInstantiated.Global
     internal class TeamCitySettings : ITeamCitySettings
     {
         public TeamCitySettings([NotNull] IEnumerable<EnvironmentVariable> variables)

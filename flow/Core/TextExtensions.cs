@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     internal static class TextExtensions
     {
         public static IEnumerable<Text> Join(this IEnumerable<Text> text, Text separator)

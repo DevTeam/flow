@@ -3,6 +3,7 @@
     using System;
 
     // ReSharper disable once UnusedType.Global
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     internal class StdErr : IStdErr
     {
         public void WriteLine(string error)

@@ -3,6 +3,7 @@
     using System;
 
     [AttributeUsage(AttributeTargets.Parameter)]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     internal class TagAttribute: Attribute
     {
         public readonly Tags Tag;

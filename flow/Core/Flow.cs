@@ -4,12 +4,12 @@
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
-    using System.Text;
     using System.Threading;
     using IoC;
     using static Tags;
 
     // ReSharper disable once ClassNeverInstantiated.Global
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     internal class Flow : IStages
     {
         [NotNull] private readonly ILog<Flow> _log;

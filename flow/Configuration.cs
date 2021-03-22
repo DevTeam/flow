@@ -14,14 +14,8 @@
 
     internal class Configuration: IConfiguration
     {
-        private readonly Verbosity _verbosity;
         internal const char CommandLineArgumentsSeparatorChar = ' ';
         internal const char CommandLineArgumentsQuoteChar = '"';
-
-        public Configuration(Verbosity verbosity)
-        {
-            _verbosity = verbosity;
-        }
 
         public IEnumerable<IToken> Apply(IMutableContainer container)
         {
@@ -33,7 +27,8 @@
                 .Bind<IAutowiringStrategy>().To(ctx => autowiringStrategy)
                 // Settings
                 .Bind<DateTime>().To(ctx => DateTime.Now)
-                .Bind<Verbosity>().To(ctx => _verbosity)
+                .Bind<ISettings>().Bind<ISettingsSetup>().As(Singleton).To<Settings>()
+                .Bind<Verbosity>().To(ctx => ctx.Container.Inject<ISettings>().Verbosity)
                 .Bind<ILog<TT>>().As(Singleton).To<Log<TT>>()
                 .Bind<IChain<TT>>().As(Singleton).To<Chain<TT>>()
                 .Bind<IEnvironment>().Tag(Base).To<DefaultEnvironment>()
@@ -42,7 +37,7 @@
                 .Bind<OperatingSystem>().To(ctx => ctx.Container.Inject<IEnvironment>().OperatingSystem)
                 .Bind<IPathNormalizer>().To(ctx => ctx.Container.Inject<IEnvironment>().PathNormalizer)
                 .Bind<IEnumerable<EnvironmentVariable>>().To(ctx => ctx.Container.Inject<IEnvironment>().Variables)
-                .Bind<ITeamCitySettings>().To<TeamCitySettings>()
+                .Bind<ITeamCitySettings>().As(Singleton).To<TeamCitySettings>()
                 .Bind<IStages>().To<Flow>()
                 .Bind<ILocator>().As(Singleton).To<Locator>(ctx => ctx.Container.Assign(ctx.It.SearchTool, ctx.Container.Inject<OperatingSystem>() == OperatingSystem.Windows ? "where.exe" : "which"))
                 .Bind<IToolResolver>().As(Singleton).To<ToolResolver>()
@@ -59,6 +54,7 @@
                     Guid.NewGuid().ToString().Replace("-", string.Empty))))
 
                 // Common
+                .Bind<ICommandLineParser>().As(Singleton).To<CommandLineParser>()
                 .Bind<IColorTheme>().As(Singleton).To<ColorTheme>()
                 .Bind<IColorfulStdOut>().As(Singleton).To<ColorfulStdOut>()
                 .Bind<IStdOut>().To(ctx => ctx.Container.Inject<IStdOut>(ctx.Container.Inject<ITeamCitySettings>().IsUnderTeamCity ? TeamCity : Base))

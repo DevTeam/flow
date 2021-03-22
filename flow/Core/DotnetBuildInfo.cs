@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using IoC;
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     internal readonly struct DotnetBuildInfo
     {
         [NotNull] public readonly IEnumerable<CommandLineArgument> Arguments;

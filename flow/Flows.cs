@@ -11,14 +11,23 @@
 
     public static class Flows
     {
+        public static int Run([NotNull] string[] args)
+        {
+            if (args == null) throw new ArgumentNullException(nameof(args));
+            using (var compositionRoot = CreateCompositionRoot())
+            {
+                return compositionRoot.Instance.Run(args);
+            }
+        }
+
         [NotNull] public static IDictionary<string, object> Run([NotNull] string activityName, [NotNull] IDictionary<string, object> inputs, TimeSpan timeout, Verbosity verbosity = Verbosity.Normal)
         {
             if (activityName == null) throw new ArgumentNullException(nameof(activityName));
             if (inputs == null) throw new ArgumentNullException(nameof(inputs));
 
-            using (var compositionRoot = Container.Create().Using(new Configuration(verbosity)).BuildUp<FlowEntry>())
+            using (var compositionRoot = CreateCompositionRoot())
             {
-                return compositionRoot.Instance.Run(activityName, inputs, timeout);
+                return compositionRoot.Instance.Run(activityName, inputs, timeout, verbosity);
             }
         }
 
@@ -27,10 +36,13 @@
             if (activity == null) throw new ArgumentNullException(nameof(activity));
             if (inputs == null) throw new ArgumentNullException(nameof(inputs));
 
-            using (var compositionRoot = Container.Create().Using(new Configuration(verbosity)).BuildUp<FlowEntry>())
+            using (var compositionRoot = CreateCompositionRoot())
             {
-                return compositionRoot.Instance.Run(activity, inputs, timeout);
+                return compositionRoot.Instance.Run(activity, inputs, timeout, verbosity);
             }
         }
+
+        private static ICompositionRoot<FlowEntry> CreateCompositionRoot() =>
+            Container.Create().Using<Configuration>().BuildUp<FlowEntry>();
     }
 }

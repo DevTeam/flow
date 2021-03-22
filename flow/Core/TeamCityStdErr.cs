@@ -3,6 +3,7 @@
     using System;
 
     // ReSharper disable once ClassNeverInstantiated.Global
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     internal class TeamCityStdErr : IStdErr
     {
         public void WriteLine(string error)

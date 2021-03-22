@@ -6,6 +6,7 @@
     using System.Linq;
     using OperatingSystem = OperatingSystem;
 
+    // ReSharper disable once ClassNeverInstantiated.Global
     internal class DefaultEnvironment : IEnvironment, IPathNormalizer
     {
 

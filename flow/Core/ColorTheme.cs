@@ -3,6 +3,7 @@
     using System;
 
     // ReSharper disable once ClassNeverInstantiated.Global
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     internal class ColorTheme : IColorTheme
     {
         public string GetAnsiColor(Color color)

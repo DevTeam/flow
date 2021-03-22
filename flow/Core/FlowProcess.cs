@@ -5,6 +5,7 @@
     using System.Diagnostics;
     using IoC;
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     internal class FlowProcess : IProcess
     {
         [NotNull] private readonly ILog<FlowProcess> _log;
@@ -38,14 +39,14 @@
                 {
                     new Text("Starting", Color.Header),
                     Text.NewLine,
-                    new Text("FileName: "),
-                    new Text(_process.StartInfo.FileName),
+                    "FileName: ",
+                    _process.StartInfo.FileName,
                     Text.NewLine,
-                    new Text("WorkingDirectory: "),
-                    new Text(_process.StartInfo.WorkingDirectory),
+                    "WorkingDirectory: ",
+                    _process.StartInfo.WorkingDirectory,
                     Text.NewLine,
-                    new Text("Arguments: "),
-                    new Text(_process.StartInfo.Arguments),
+                    "Arguments: ",
+                    _process.StartInfo.Arguments,
                     Text.NewLine
                 };
 
@@ -56,7 +57,7 @@
                     foreach (var env in _process.StartInfo.Environment)
                     {
                         text.Add(Text.Tab);
-                        text.Add(new Text($"{env.Key}={env.Value}"));
+                        text.Add($"{env.Key}={env.Value}");
                         text.Add(Text.NewLine);
                     }
                 }

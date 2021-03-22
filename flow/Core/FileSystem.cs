@@ -8,6 +8,7 @@
     using Path = Path;
 
     // ReSharper disable once ClassNeverInstantiated.Global
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     internal class FileSystem : IFileSystem
     {
         [NotNull] private readonly Func<string> _newLineString;
