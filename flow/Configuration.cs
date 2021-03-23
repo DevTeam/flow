@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using Core;
     using IoC;
     using JetBrains.TeamCity.ServiceMessages.Read;
@@ -73,14 +72,14 @@
                 .Bind<IProcessFactory>().Tag(Base).To<ProcessFactory>()
                 .Bind<IConverter<CommandLineArgument, string>>().To<ArgumentToStringConverter>()
                 .Bind<IConverter<IEnumerable<CommandLineArgument>, string>>().To<ArgumentsToStringConverter>()
-                .Bind<IProcess>().To<FlowProcess>(ctx => new FlowProcess(ctx.Container.Inject<ILog<FlowProcess>>(),Arg<Process, IProcess>(ctx.Args, "process")))
+                .Bind<IProcess>().To<FlowProcess>()
                 .Bind<IProcessListener>().Tag(StdOutErr).To<ProcessListener>()
                 
                 // Process Wrappers
                 .Bind<IProcessWrapper>().Tag(CmdScriptWrapper).To<CmdProcessWrapper>()
                 .Bind<IProcessWrapper>().Tag(ShScriptWrapper).To<ShProcessWrapper>()
                 .Bind<IProcessWrapper>().Tag(WslScriptWrapper).To<ShProcessWrapper>()
-                .Bind<IProcessWrapper>().Tag(DockerWrapper).To<DockerProcessWrapper>(ctx => ctx.It.Initialize(Arg<DockerWrapperInfo, DockerProcessWrapper>(ctx.Args, "info")))
+                .Bind<IProcessWrapper>().Tag(DockerWrapper).To<DockerProcessWrapper>()
 
                 // Docker Wrapper
                 .Bind<IDockerWrapperService>().To<DockerWrapperService>()
@@ -107,10 +106,5 @@
                 .Bind<ITeamCityWriter>().To(ctx => ctx.Container.Inject<TeamCityServiceMessages>().CreateWriter(line => ctx.Container.Inject<IStdOut>(Base).WriteLine(line)))
                 .Bind<IServiceMessageParser>().As(Singleton).To<ServiceMessageParser>();
         }
-
-        private static TArg Arg<TArg, TTarget>(object[] args, string name) => 
-            args.Length == 1 && args[0] is TArg arg
-                ? arg
-                : throw new ArgumentException($"Please resolve using Func<{nameof(TArg)}, {nameof(TTarget)}>.", name);
     }
 }

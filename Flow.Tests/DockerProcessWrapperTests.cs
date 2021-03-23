@@ -17,9 +17,8 @@
         public void ShouldWrap()
         {
             // Given
-            var wrapper = CreateInstance();
             var wrapperInfo = DockerWrapperInfoExtensions.Create();
-            wrapper.Initialize(wrapperInfo);
+            var wrapper = CreateInstance(wrapperInfo);
             var processInfo = ProcessInfoExtensions.Create();
 
             // When
@@ -28,7 +27,7 @@
             // Then
         }
 
-        private DockerProcessWrapper CreateInstance() => 
-            new DockerProcessWrapper(_dockerArgumentsProvider.Object);
+        private DockerProcessWrapper CreateInstance(DockerWrapperInfo wrapperInfo) => 
+            new DockerProcessWrapper(_dockerArgumentsProvider.Object, wrapperInfo);
     }
 }

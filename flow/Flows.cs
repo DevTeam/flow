@@ -15,9 +15,9 @@
         public static int Run([NotNull] string[] args)
         {
             if (args == null) throw new ArgumentNullException(nameof(args));
-            using (var compositionRoot = CreateCompositionRoot())
+            using (var container = CreateContainer())
             {
-                return compositionRoot.Instance.Run(args);
+                return container.Resolve<FlowEntry>().Run(args);
             }
         }
 
@@ -26,9 +26,9 @@
             if (activityName == null) throw new ArgumentNullException(nameof(activityName));
             if (inputs == null) throw new ArgumentNullException(nameof(inputs));
 
-            using (var compositionRoot = CreateCompositionRoot())
+            using (var container = CreateContainer())
             {
-                return compositionRoot.Instance.Run(activityName, inputs, timeout, verbosity);
+                return container.Resolve<FlowEntry>().Run(activityName, inputs, timeout, verbosity);
             }
         }
 
@@ -37,13 +37,13 @@
             if (activity == null) throw new ArgumentNullException(nameof(activity));
             if (inputs == null) throw new ArgumentNullException(nameof(inputs));
 
-            using (var compositionRoot = CreateCompositionRoot())
+            using (var container = CreateContainer())
             {
-                return compositionRoot.Instance.Run(activity, inputs, timeout, verbosity);
+                return container.Resolve<FlowEntry>().Run(activity, inputs, timeout, verbosity);
             }
         }
 
-        private static ICompositionRoot<FlowEntry> CreateCompositionRoot() =>
-            Container.Create().Using<Configuration>().BuildUp<FlowEntry>();
+        private static IMutableContainer CreateContainer() =>
+            Container.Create().Using<Configuration>();
     }
 }

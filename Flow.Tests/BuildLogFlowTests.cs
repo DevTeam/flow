@@ -11,14 +11,14 @@
     public class BuildLogFlowTests
     {
         private readonly Mock<IStdOut> _stdOut;
-        private readonly Mock<Func<IBuildLogFlow>> _flowFactory;
+        private readonly Mock<Func<int, IBuildLogFlow>> _flowFactory;
         private readonly Mock<ILog<BuildLogFlow>> _log;
 
         public BuildLogFlowTests()
         {
             _log = new Mock<ILog<BuildLogFlow>>();
             _stdOut = new Mock<IStdOut>();
-            _flowFactory = new Mock<Func<IBuildLogFlow>>();
+            _flowFactory = new Mock<Func<int, IBuildLogFlow>>();
         }
 
         [Fact]
@@ -27,14 +27,13 @@
             // Given
             var childFlow = new Mock<IBuildLogFlow>();
             var flow = CreateInstance(2);
-            _flowFactory.Setup(i => i()).Returns(childFlow.Object);
+            _flowFactory.Setup(i => i(2)).Returns(childFlow.Object);
 
             // When
             var actualChildFlow = flow.CreateChild();
 
             // Then
             actualChildFlow.ShouldBe(childFlow.Object);
-            childFlow.Verify(i => i.Initialize(2));
         }
 
         [Fact]
@@ -43,7 +42,7 @@
             // Given
             var childFlow = new Mock<IBuildLogFlow>();
             var flow = CreateInstance(2);
-            _flowFactory.Setup(i => i()).Returns(childFlow.Object);
+            _flowFactory.Setup(i => i(3)).Returns(childFlow.Object);
             
             var blockOpenedMessage = new ServiceMessage("blocKopened")
             {
@@ -59,7 +58,6 @@
             flow.CreateChild();
 
             // Then
-            childFlow.Verify(i => i.Initialize(3));
             _stdOut.Verify(i => i.WriteLine("bl[0;37;40m"));
         }
 
@@ -69,7 +67,7 @@
             // Given
             var childFlow = new Mock<IBuildLogFlow>();
             var flow = CreateInstance(2);
-            _flowFactory.Setup(i => i()).Returns(childFlow.Object);
+            _flowFactory.Setup(i => i(2)).Returns(childFlow.Object);
 
             var blockOpenedMessage = new ServiceMessage("blocKopened");
             var blockClosedMessage = new ServiceMessage("blocKclosed");
@@ -88,7 +86,6 @@
             flow.CreateChild();
 
             // Then
-            childFlow.Verify(i => i.Initialize(2));
         }
 
         [Theory]
@@ -111,7 +108,7 @@
             // Given
             var childFlow = new Mock<IBuildLogFlow>();
             var flow = CreateInstance(2);
-            _flowFactory.Setup(i => i()).Returns(childFlow.Object);
+            _flowFactory.Setup(i => i(It.IsAny<int>())).Returns(childFlow.Object);
 
             var blockOpenedMessage = new ServiceMessage("meSsage")
             {
@@ -158,16 +155,11 @@
             }
         }
 
-        private BuildLogFlow CreateInstance(int tabs = 0)
-        {
-            var flow = new BuildLogFlow(
+        private BuildLogFlow CreateInstance(int tabs = 0) =>
+            new BuildLogFlow(
                 _log.Object,
                 _stdOut.Object,
-                _flowFactory.Object);
-
-            flow.Initialize(tabs);
-
-            return flow;
-        }
+                _flowFactory.Object,
+                tabs);
     }
 }

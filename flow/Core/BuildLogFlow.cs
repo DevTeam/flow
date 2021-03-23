@@ -9,28 +9,23 @@
     {
         [NotNull] private readonly ILog<BuildLogFlow> _log;
         [NotNull] private readonly IStdOut _stdOut;
-        [NotNull] private readonly Func<IBuildLogFlow> _flowFactory;
+        [NotNull] private readonly Func<int, IBuildLogFlow> _flowFactory;
         private int _tabs;
         private string _tabsString;
 
         public BuildLogFlow(
             [NotNull] ILog<BuildLogFlow> log,
             [NotNull, Tag(Tags.Base)] IStdOut stdOut,
-            [NotNull] Func<IBuildLogFlow> flowFactory)
+            [NotNull] Func<int, IBuildLogFlow> flowFactory,
+            int tabs)
         {
             _log = log ?? throw new ArgumentNullException(nameof(log));
             _stdOut = stdOut ?? throw new ArgumentNullException(nameof(stdOut));
             _flowFactory = flowFactory ?? throw new ArgumentNullException(nameof(flowFactory));
+            _tabs = tabs;
         }
 
-        public void Initialize(int tabs) => _tabs = tabs;
-
-        public IBuildLogFlow CreateChild()
-        {
-            var childFlow = _flowFactory();
-            childFlow.Initialize(_tabs);
-            return childFlow;
-        }
+        public IBuildLogFlow CreateChild() => _flowFactory(_tabs);
 
         public bool ProcessMessage(IMessageProcessor processor, IBuildVisitor buildVisitor, IServiceMessage message)
         {
