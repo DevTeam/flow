@@ -24,6 +24,7 @@
             _pathNormalizer = pathNormalizer ?? throw new ArgumentNullException(nameof(pathNormalizer));
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "StringLiteralTypo")]
         public IEnumerable<CommandLineArgument> GetArguments(DockerWrapperInfo wrapperInfo, ProcessInfo processInfo)
         {
             yield return "run";

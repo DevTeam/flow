@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using Core;
     using Moq;
@@ -9,6 +10,7 @@
     using Xunit;
     using OperatingSystem = OperatingSystem;
 
+    [SuppressMessage("ReSharper", "StringLiteralTypo")]
     public class DockerArgumentsProviderTests
     {
         private static readonly CommandLineArgument EnvArg = new CommandLineArgument("dockerArgs");

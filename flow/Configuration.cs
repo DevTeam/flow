@@ -62,7 +62,7 @@
                 .Bind<IStdOut>().As(Singleton).Tag(TeamCity).To<TeamCityStdOut>()
                 .Bind<IStdErr>().To(ctx => ctx.Container.Inject<IStdErr>(ctx.Container.Inject<ITeamCitySettings>().IsUnderTeamCity ? TeamCity : Base))
                 .Bind<IStdErr>().As(Singleton).Tag(Base).To<TeamCityStdErr>()
-                .Bind<IStdErr>().As(Singleton).Tag(Tags.TeamCity).To<TeamCityStdErr>()
+                .Bind<IStdErr>().As(Singleton).Tag(TeamCity).To<TeamCityStdErr>()
                 .Bind<IFileSystem>().As(Singleton).To<FileSystem>()
                 .Bind<IConverter<MSBuildParameter, string>>().As(Singleton).To<MSBuildParameterToStringConverter>()
 

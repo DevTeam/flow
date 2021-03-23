@@ -27,6 +27,7 @@
 
         public IBuildLogFlow CreateChild() => _flowFactory(_tabs);
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "StringLiteralTypo")]
         public bool ProcessMessage(IMessageProcessor processor, IBuildVisitor buildVisitor, IServiceMessage message)
         {
             var processed = false;

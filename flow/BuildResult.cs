@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using IoC;
 
-    public struct BuildResult
+    public readonly struct BuildResult
     {
         public readonly bool Success;
         [NotNull] public readonly IReadOnlyCollection<BuildError> Errors;

@@ -1,6 +1,7 @@
 ﻿namespace Flow.Tests
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using Core;
     using JetBrains.TeamCity.ServiceMessages.Write;
@@ -8,6 +9,7 @@
     using Shouldly;
     using Xunit;
 
+    [SuppressMessage("ReSharper", "StringLiteralTypo")]
     public class BuildLogFlowTests
     {
         private readonly Mock<IStdOut> _stdOut;

@@ -30,6 +30,7 @@
 
         internal IDictionary<string, IBuildLogFlow> Flows => _flows;
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "StringLiteralTypo")]
         public bool ProcessServiceMessages(string text, IBuildVisitor buildVisitor)
         {
             if (buildVisitor == null) throw new ArgumentNullException(nameof(buildVisitor));
@@ -43,7 +44,7 @@
             var processed = false;
             foreach (var message in _serviceMessageParser.ParseServiceMessages(text))
             {
-                _log.Trace(() => new[] { new Text($"Start message processing "), ToText(message) });
+                _log.Trace(() => new[] { new Text("Start message processing "), ToText(message) });
 
                 var flowId = message.GetValue("parent") ?? message.GetValue("flowId") ?? string.Empty;
                 if (!_flows.TryGetValue(flowId, out var flow))
@@ -73,6 +74,7 @@
 
                     default:
                         var result = flow.ProcessMessage(this, buildVisitor, message);
+                        // ReSharper disable once AccessToModifiedClosure
                         _log.Trace(() => new[] { new Text($"Processed: {result}") });
                         processed |= result;
                         break;

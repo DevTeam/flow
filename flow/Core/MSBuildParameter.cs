@@ -3,7 +3,8 @@
     using System;
     using IoC;
 
-    internal struct MSBuildParameter
+    // ReSharper disable once InconsistentNaming
+    internal readonly struct MSBuildParameter
     {
         public readonly string Name;
         public readonly string Value;

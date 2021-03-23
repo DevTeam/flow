@@ -1,12 +1,14 @@
 ﻿namespace Flow.Tests
 {
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using Core;
     using Moq;
     using Shouldly;
     using Xunit;
 
+    [SuppressMessage("ReSharper", "StringLiteralTypo")]
     public class CmdProcessWrapperTests
     {
         private readonly Path _tempFilePath = new Path("Tmp");

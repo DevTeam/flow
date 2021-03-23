@@ -2,11 +2,13 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using Core;
     using Moq;
     using Shouldly;
     using Xunit;
 
+    [SuppressMessage("ReSharper", "StringLiteralTypo")]
     public class SettingsTests
     {
         public static IEnumerable<object[]> TestData => new List<object[]>

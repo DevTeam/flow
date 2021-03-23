@@ -43,6 +43,7 @@
                 Enumerable.Empty<EnvironmentVariable>());
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "StringLiteralTypo")]
         private IEnumerable<string> GetCmdContent(ProcessInfo processInfo)
         {
             yield return "@echo off";

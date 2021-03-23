@@ -3,6 +3,7 @@
     using System;
     using IoC;
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "UnusedTypeParameter")]
     internal interface ILog<T>
     {
         void Trace([NotNull] Func<Text[]> messageFactory);

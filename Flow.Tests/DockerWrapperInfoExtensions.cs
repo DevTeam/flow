@@ -1,8 +1,10 @@
 ﻿namespace Flow.Tests
 {
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using Core;
 
+    [SuppressMessage("ReSharper", "StringLiteralTypo")]
     internal class DockerWrapperInfoExtensions
     {
         public static DockerWrapperInfo Create()

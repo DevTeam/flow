@@ -43,7 +43,7 @@
                 .Cast<DictionaryEntry>()
                 .Select(i => Tuple.Create((string)i.Key, (string)i.Value))
                 .Where(i => !string.IsNullOrWhiteSpace(i.Item1))
-                .Select(i => new EnvironmentVariable((string) i.Item1, (string) i.Item2));
+                .Select(i => new EnvironmentVariable(i.Item1, i.Item2));
 
         public Path Normalize(Path path) =>
             path.Value

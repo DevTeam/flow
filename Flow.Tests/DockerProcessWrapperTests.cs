@@ -1,7 +1,10 @@
 ﻿namespace Flow.Tests
 {
+    using System.Collections.Generic;
+    using System.Linq;
     using Core;
     using Moq;
+    using Shouldly;
     using Xunit;
 
     public class DockerProcessWrapperTests
@@ -25,6 +28,9 @@
             var actualProcessInfo = wrapper.Wrap(processInfo);
 
             // Then
+            actualProcessInfo.Executable.ShouldBe("docker");
+            actualProcessInfo.WorkingDirectory.ShouldBe("wd");
+            actualProcessInfo.Variables.ToList().ShouldBe(new List<EnvironmentVariable>() { "var1=val1", "var2=val2" });
         }
 
         private DockerProcessWrapper CreateInstance(DockerWrapperInfo wrapperInfo) => 

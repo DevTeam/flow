@@ -1,6 +1,5 @@
 ﻿namespace Flow.Core
 {
-    using System.Collections;
     using System.Collections.Generic;
 
     [Public]

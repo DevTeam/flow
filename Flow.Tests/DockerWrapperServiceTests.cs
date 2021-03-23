@@ -1,11 +1,13 @@
 ﻿namespace Flow.Tests
 {
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using Core;
     using Moq;
     using Xunit;
     using OperatingSystem = OperatingSystem;
 
+    [SuppressMessage("ReSharper", "StringLiteralTypo")]
     public class DockerWrapperServiceTests
     {
         private readonly Mock<IChain<IProcessWrapper>> _processChain;
